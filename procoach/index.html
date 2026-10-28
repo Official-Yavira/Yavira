@@ -61,6 +61,13 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 @media(max-width:700px){.library-heading{display:block}.library-heading #createExerciseBtn{margin:6px 0 15px}.pc-form-grid,.pc-detail-grid{grid-template-columns:1fr}.pc-form-grid .full{grid-column:auto}.pc-board-heading{display:block}.pc-board-heading .pc-board-tools{margin-top:10px}.pc-wide{max-height:92vh!important}.pc-tactic-board{max-height:280px}}
 
 
+.pc-create-mode-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 16px;padding:5px;background:#f2f6f3;border-radius:12px}
+.pc-create-mode{border:1px solid transparent;background:transparent;color:#536259;border-radius:9px;padding:12px 10px;font-size:12px;font-weight:850;cursor:pointer;transition:background .15s,border-color .15s}
+.pc-create-mode.active{background:#fff;color:#176b3a;border-color:#dbe8de;box-shadow:0 2px 8px rgba(20,50,30,.06)}
+.pc-create-mode:focus-visible{outline:2px solid #21884a;outline-offset:2px}
+.pc-session-preview{margin-top:18px}
+.pc-session-preview .resource-grid{margin-top:12px}
+@media(max-width:560px){.pc-create-mode{font-size:11px;padding:10px 6px}}
 .pc-reference-preview{margin:12px 0 2px;border:1px solid #e2e9e3;border-radius:10px;overflow:hidden;background:#fff}
 .pc-reference-preview img{display:block;width:100%;max-height:260px;object-fit:contain;background:#f5f7f5}
 .pc-reference-preview figcaption{padding:7px 10px;color:#718078;font-size:10px}
@@ -91,12 +98,12 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 </header>
 <div class="content">
 <section class="page active" id="page-home">
- <div class="hero"><div class="hero-copy"><div class="eyebrow">IL TUO STAFF TECNICO, IN UN UNICO POSTO</div><h1>Allenare meglio.<br><span>Un'idea alla volta.</span></h1><p>Esercizi, sedute, principi di gioco e confronto con altri allenatori. Organizza le tue idee e portale in campo con semplicità.</p><div class="hero-actions"><button class="btn primary" data-go="planner">＋ Crea una seduta</button><button class="btn ghost" data-go="library">Esplora esercizi ↗</button></div></div></div>
+ <div class="hero"><div class="hero-copy"><div class="eyebrow">IL TUO STAFF TECNICO, IN UN UNICO POSTO</div><h1>Allenare meglio.<br><span>Un'idea alla volta.</span></h1><p>Esercizi, sedute, principi di gioco e confronto con altri allenatori. Organizza le tue idee e portale in campo con semplicità.</p><div class="hero-actions"><button class="btn primary" id="homeCreateSessionBtn" type="button">＋ Crea sessione o esercizio</button><button class="btn ghost" data-go="library">Esplora esercizi ↗</button></div></div></div>
  <div class="metrics"><div class="metric"><div class="metric-ico">▤</div><div><strong>6</strong><small>Esercizi pronti da esplorare</small></div></div><div class="metric"><div class="metric-ico">🧤</div><div><strong>6</strong><small>Proposte specifiche per portieri</small></div></div><div class="metric"><div class="metric-ico">◉</div><div><strong id="savedCount">0</strong><small>Sedute salvate in questo browser</small></div></div></div>
- <div class="section-head"><div><h2>Da dove vuoi iniziare?</h2><p>Le funzioni principali, senza passaggi inutili.</p></div><button class="btn primary" id="createExerciseHomeBtn" type="button">＋ Crea esercizio con lavagnetta</button></div>
+ <div class="section-head"><div><h2>Da dove vuoi iniziare?</h2><p>Le funzioni principali, senza passaggi inutili.</p></div><button class="btn primary" id="createExerciseHomeBtn" type="button">＋ Crea esercizio o sessione</button></div>
  <div class="quick-grid">
   <button class="quick-card" data-go="library"><span class="q-icon">⚽</span><strong>Trova un esercizio</strong><small>Filtra per obiettivo, categoria e ruolo.</small></button>
-  <button class="quick-card" data-go="planner"><span class="q-icon">▦</span><strong>Prepara una seduta</strong><small>Organizza i blocchi e salva il piano.</small></button>
+  <button class="quick-card" id="homePlanQuickBtn" type="button"><span class="q-icon">▦</span><strong>Prepara una seduta</strong><small>Scegli se creare un esercizio o una sessione.</small></button>
   <button class="quick-card" data-go="community"><span class="q-icon">☷</span><strong>Parla con gli allenatori</strong><small>Apri i canali di confronto tematici.</small></button>
   <button class="quick-card" data-go="pro"><span class="q-icon">★</span><strong>Impara dai professionisti</strong><small>Apri le risorse di club e federazioni.</small></button>
  </div>
@@ -112,8 +119,8 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 </section>
 
 <section class="page" id="page-planner">
- <div class="eyebrow">Pianificazione</div><h1 class="page-title">Prepara una seduta</h1><p class="subtext">Imposta la sessione e crea una prima traccia da personalizzare. Salvataggio locale, senza account.</p>
- <div class="profile-card" style="max-width:850px">
+ <div class="eyebrow">Pianificazione</div><h1 class="page-title">Le mie sedute</h1><p class="subtext">Crea un nuovo contenuto dalla finestra unica, oppure ritrova qui le sessioni salvate.</p><div style="margin:16px 0 22px"><button class="btn primary" id="createFromPlannerBtn" type="button">＋ Crea esercizio o sessione</button></div>
+ <div class="profile-card" id="legacyPlannerGenerator" style="max-width:850px;display:none">
   <form id="plannerForm" class="form-grid">
    <div class="field"><label for="planTeam">Categoria</label><select id="planTeam"><option>U9–U11</option><option>U12–U15</option><option>U16–U19</option><option>Dilettanti</option><option>Adulti / agonistica</option><option>Portieri</option></select></div>
    <div class="field"><label for="planGoal">Obiettivo principale</label><select id="planGoal"><option>Possesso e smarcamento</option><option>Pressing e riaggressione</option><option>Transizioni</option><option>Finalizzazione</option><option>Tecnica individuale</option><option>Portieri</option></select></div>
@@ -366,9 +373,11 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   bindBoardEditor();
   document.querySelectorAll('[data-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.boardTool===boardTool)});
  }
- function createExerciseModal(){
+ function createExerciseModal(initialMode){
   boardState=freshBoard('Possesso');boardTool='player';boardHistory=[];arrowStart=null;
-  const body='<p class="pc-creator-intro">Compila i dettagli che un altro allenatore dovrebbe conoscere per riproporre l’esercizio. La lavagnetta è modificabile: puoi aggiungere e spostare giocatori, avversari, pallone e coni, oppure tracciare le frecce.</p>'+
+  const body='<div class="pc-create-mode-switch" role="group" aria-label="Scegli cosa creare"><button type="button" class="pc-create-mode active" data-create-mode="exercise" aria-pressed="true">⚽ Esercizio singolo</button><button type="button" class="pc-create-mode" data-create-mode="session" aria-pressed="false">▦ Sessione completa</button></div>'+
+   '<div id="pcExerciseMode">'+
+   '<p class="pc-creator-intro">Compila i dettagli che un altro allenatore dovrebbe conoscere per riproporre l’esercizio. La lavagnetta è modificabile: puoi aggiungere e spostare giocatori, avversari, pallone e coni, oppure tracciare le frecce.</p>'+
    '<form id="pcExerciseForm" class="pc-form-grid">'+
    '<div class="field full"><label for="pcExTitle">Nome dell’esercizio *</label><input id="pcExTitle" maxlength="100" required placeholder="Es. Uscita dalla pressione e terzo uomo"></div>'+
    '<div class="field"><label for="pcExType">Tipologia</label><select id="pcExType"><option>Possesso</option><option>Pressing</option><option>Transizioni</option><option>Tecnica</option><option>Portieri</option></select></div>'+
@@ -390,15 +399,53 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    '<div class="pc-board-slot" id="pcBoardSlot"></div><p class="pc-board-hint">Il disegno è uno schema schematico in 2D e verrà salvato insieme alla scheda, solo in questo browser.</p></div></div>'+
    '<div class="field full"><button class="btn primary" type="submit">Salva esercizio nella mia libreria</button></div>'+
    '</form>'+
-   '<div class="pc-exercise-tip">Riferimenti e diritti: se inserisci materiali di altri autori, aggiungi il collegamento alla fonte e verifica sempre permessi e licenze. Evita di caricare dati personali dei giocatori minorenni.</div>';
-  openModal('Crea un esercizio',body,'LIBRERIA PERSONALE');
+   '<div class="pc-exercise-tip">Riferimenti e diritti: se inserisci materiali di altri autori, aggiungi il collegamento alla fonte e verifica sempre permessi e licenze. Evita di caricare dati personali dei giocatori minorenni.</div>'+
+   '</div>'+
+   '<div id="pcSessionMode" style="display:none">'+
+   '<p class="pc-creator-intro">Imposta la categoria, l’obiettivo e il tempo a disposizione. PROCOACH prepara una struttura ordinata; puoi salvarla e ritrovarla nell’archivio delle sedute.</p>'+
+   '<form id="pcSessionForm" class="pc-form-grid">'+
+   '<div class="field"><label for="pcPlanTeam">Categoria</label><select id="pcPlanTeam"><option>U9–U11</option><option>U12–U15</option><option>U16–U19</option><option>Dilettanti</option><option>Adulti / agonistica</option><option>Portieri</option></select></div>'+
+   '<div class="field"><label for="pcPlanGoal">Obiettivo principale</label><select id="pcPlanGoal"><option>Possesso e smarcamento</option><option>Pressing e riaggressione</option><option>Transizioni</option><option>Finalizzazione</option><option>Tecnica individuale</option><option>Portieri</option></select></div>'+
+   '<div class="field"><label for="pcPlanDuration">Durata totale</label><select id="pcPlanDuration"><option value="60">60 minuti</option><option value="75" selected>75 minuti</option><option value="90">90 minuti</option><option value="105">105 minuti</option></select></div>'+
+   '<div class="field"><label for="pcPlanPlayers">Giocatori disponibili</label><select id="pcPlanPlayers"><option>8–10</option><option selected>12–16</option><option>17–22</option><option>Solo portieri</option></select></div>'+
+   '<div class="field full"><button class="btn primary" type="submit">Genera la struttura della sessione →</button></div>'+
+   '</form><div id="pcSessionPreview" class="pc-session-preview"></div>'+
+   '<p class="pc-exercise-tip">La proposta è una traccia da adattare alla tua squadra, agli spazi disponibili e all’età dei giocatori.</p>'+
+   '</div>';
+  openModal('Crea esercizio o sessione',body,'NUOVO CONTENUTO');
   $('modalBackdrop').querySelector('.modal').classList.add('pc-wide');
+  const modeButtons=Array.from(document.querySelectorAll('[data-create-mode]'));
+  function setCreateMode(mode){
+   $('pcExerciseMode').style.display=mode==='exercise'?'block':'none';
+   $('pcSessionMode').style.display=mode==='session'?'block':'none';
+   modeButtons.forEach(function(b){const active=b.dataset.createMode===mode;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active?'true':'false')});
+   $('modalKicker').textContent=mode==='exercise'?'ESERCIZIO PERSONALE':'PIANIFICAZIONE SESSIONE';
+   if(mode==='exercise')renderBoardEditor();
+  }
+  modeButtons.forEach(function(b){b.addEventListener('click',function(){setCreateMode(b.dataset.createMode)})});
+  setCreateMode(initialMode==='session'?'session':'exercise');
   renderBoardEditor();
   document.querySelectorAll('[data-board-tool]').forEach(function(b){b.addEventListener('click',function(){setBoardTool(b.dataset.boardTool)})});
   $('pcBoardUndo').addEventListener('click',function(){if(!boardHistory.length){toast('Nessuna azione da annullare');return}boardState=JSON.parse(boardHistory.pop());arrowStart=null;renderBoardEditor()});
   $('pcBoardReset').addEventListener('click',function(){if(confirm('Ripristinare la lavagnetta iniziale?')){saveBoardSnapshot();boardState=freshBoard($('pcExType').value);renderBoardEditor()}});
   $('pcBoardExport').addEventListener('click',function(){const svg=boardSvg(boardState,false).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ');const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='lavagnetta-procoach.svg';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('Lavagnetta scaricata in formato SVG')});
   $('pcExType').addEventListener('change',function(){if(!boardState||boardState.tokens.length===0)boardState=freshBoard(this.value)});
+  $('pcSessionForm').addEventListener('submit',function(e){
+   e.preventDefault();
+   const duration=Number($('pcPlanDuration').value),team=$('pcPlanTeam').value,goal=$('pcPlanGoal').value,players=$('pcPlanPlayers').value;
+   let blocks;
+   if(duration===60)blocks=[['Attivazione',10],['Tecnica legata all’obiettivo',15],['Gioco a tema',25],['Ritorno alla calma',10]];
+   else if(duration===90)blocks=[['Attivazione',15],['Tecnica legata all’obiettivo',20],['Gioco a tema',30],['Partita condizionata',20],['Ritorno alla calma',5]];
+   else if(duration===105)blocks=[['Attivazione',15],['Tecnica legata all’obiettivo',20],['Gioco a tema',30],['Situazione di partita',30],['Ritorno alla calma',10]];
+   else blocks=[['Attivazione',12],['Tecnica legata all’obiettivo',18],['Gioco a tema',25],['Partita condizionata',15],['Ritorno alla calma',5]];
+   const descriptions=blocks.map(function(b,i){return i===0?'Mobilità, coordinazione e attivazione con palla.':i===1?'Esercizi tecnici orientati a '+goal.toLowerCase()+'.':i===2?'Gioco a tema con vincoli, obiettivo chiaro e feedback mirati.':i===blocks.length-1?'Defaticamento e breve riflessione su quanto allenato.':'Applicare l’obiettivo in una situazione più vicina alla partita.'});
+   $('pcSessionPreview').innerHTML='<div class="section-head"><div><h2>Struttura proposta</h2><p>'+esc(team)+' · '+esc(goal)+' · '+esc(players)+' giocatori · '+duration+' minuti</p></div><button class="btn primary small" type="button" id="pcSaveSession">Salva sessione</button></div><div class="resource-grid">'+blocks.map(function(b,i){return '<article class="resource-card"><span class="resource-type">Blocco '+(i+1)+' · '+b[1]+' min</span><h3>'+esc(b[0])+'</h3><p>'+esc(descriptions[i])+'</p></article>'}).join('')+'</div>';
+   $('pcSaveSession').addEventListener('click',function(){
+    const plans=read('procoachSavedPlans',[]);
+    plans.push({id:Date.now(),team:team,goal:goal,players:players,duration:duration,blocks:blocks,created:new Date().toLocaleDateString('it-IT')});
+    write('procoachSavedPlans',plans);renderPlans();updateMetrics();closeModal();showPage('planner');toast('Sessione salvata nel tuo archivio');
+   });
+  });
   $('pcExerciseForm').addEventListener('submit',function(e){
    e.preventDefault();
    const title=$('pcExTitle').value.trim(),type=$('pcExType').value,level=$('pcExLevel').value,duration=Number($('pcExDuration').value);
@@ -414,7 +461,10 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   });
  }
  document.getElementById('createExerciseBtn')?.addEventListener('click',createExerciseModal);
- document.getElementById('createExerciseHomeBtn')?.addEventListener('click',createExerciseModal);
+ document.getElementById('createExerciseHomeBtn')?.addEventListener('click',function(){createExerciseModal('exercise')});
+ document.getElementById('homeCreateSessionBtn')?.addEventListener('click',function(){createExerciseModal('session')});
+ document.getElementById('homePlanQuickBtn')?.addEventListener('click',function(){createExerciseModal('session')});
+ document.getElementById('createFromPlannerBtn')?.addEventListener('click',function(){createExerciseModal('session')});
  // Modal sizing is reset when closing any dialog after the wider exercise creator.
  const originalClose=closeModal;
  window.closeModal=function(){document.querySelector('#modalBackdrop .modal')?.classList.remove('pc-wide');originalClose()};
