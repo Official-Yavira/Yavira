@@ -68,6 +68,23 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-session-preview{margin-top:18px}
 .pc-session-preview .resource-grid{margin-top:12px}
 @media(max-width:560px){.pc-create-mode{font-size:11px;padding:10px 6px}}
+.pc-session-meta{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
+.pc-session-block{grid-column:1/-1;padding:14px}
+.pc-session-block h3{margin:0 0 9px}
+.pc-session-block .pc-form-grid{gap:10px}
+.pc-session-board{border:1px solid #dce7dd;border-radius:12px;padding:14px;margin-top:16px;background:#fbfdfb}
+.pc-session-board-tools{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.pc-session-board-tools button{border:1px solid #d7e1d8;border-radius:7px;background:white;color:#304537;padding:7px 9px;font-size:11px;font-weight:750;cursor:pointer}
+.pc-session-board-tools button.active{background:#e3f4e7;border-color:#5ba876;color:#176b3a}
+.pc-session-board-slot{width:100%;margin:8px 0}
+.pc-session-board-slot .pc-tactic-board{display:block;width:100%;max-height:330px;touch-action:pan-y}
+.pc-session-board-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.pc-session-board-tabs button{padding:8px 10px;border:1px solid #d6e2d8;border-radius:8px;background:#fff;color:#46594b;font-size:11px;font-weight:750;cursor:pointer}
+.pc-session-board-tabs button.active{background:#e9f6ec;border-color:#6bae7e;color:#176b3a}
+.pc-session-saved-board{margin:10px 0}
+.pc-session-saved-board svg{display:block;width:100%;max-width:430px}
+.pc-session-details{font-size:12px;line-height:1.6;color:var(--muted);margin:6px 0 12px}
+@media(max-width:700px){.pc-session-meta{grid-template-columns:1fr}.pc-session-block{padding:10px}.pc-session-board{padding:9px}.pc-session-board-slot .pc-tactic-board{max-height:260px}}
 .pc-reference-preview{margin:12px 0 2px;border:1px solid #e2e9e3;border-radius:10px;overflow:hidden;background:#fff}
 .pc-reference-preview img{display:block;width:100%;max-height:260px;object-fit:contain;background:#f5f7f5}
 .pc-reference-preview figcaption{padding:7px 10px;color:#718078;font-size:10px}
@@ -247,8 +264,8 @@ $('newQuestionBtn').addEventListener('click',openNewDiscussion);$('newPostBtn').
 function openNewDiscussion(){openModal('Nuova discussione','<p>Condividi una situazione concreta: più contesto dai, più facile sarà per gli altri aiutarti.</p><form id="discussionForm"><div class="field"><label for="discussionTitle">Titolo</label><input id="discussionTitle" maxlength="100" required placeholder="Es. Come allenare la costruzione dal basso?"></div><div class="field" style="margin-top:12px"><label for="discussionChannel">Canale</label><select id="discussionChannel"><option value="generale">Generale</option><option value="giovanile">Settore giovanile</option><option value="tattica">Tattica</option><option value="portieri">Portieri</option><option value="preparazione">Preparazione</option><option value="esercizi">Esercitazioni</option></select></div><div class="field" style="margin-top:12px"><label for="discussionBody">Domanda</label><textarea id="discussionBody" maxlength="1000" required placeholder="Categoria, obiettivo, cosa hai già provato..."></textarea></div><div class="modal-actions"><button type="button" class="btn outline" data-modal-close>Annulla</button><button type="submit" class="btn primary">Pubblica</button></div></form>','COMMUNITY')}
 document.addEventListener('submit',e=>{if(e.target.id!=='discussionForm')return;e.preventDefault();const room=$('discussionChannel').value,all=read('procoachChatMessagesV2',{}),p=profile(),name=((p.firstName||'Allenatore')+' '+(p.lastName||'')).trim(),title=$('discussionTitle').value.trim(),body=$('discussionBody').value.trim();all[room]=all[room]||[];all[room].push({author:name,text:title+'\n'+body,time:new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),mine:true});write('procoachChatMessagesV2',all);activeRoom=room;showPage('community');document.querySelectorAll('.room').forEach(b=>b.classList.toggle('active',b.dataset.room===room));closeModal();renderChat();toast('Discussione aggiunta al canale')});
 $('plannerForm').addEventListener('submit',e=>{e.preventDefault();const duration=Number($('planDuration').value),team=$('planTeam').value,goal=$('planGoal').value,players=$('planPlayers').value;let blocks;if(duration===60)blocks=[['Attivazione',10],['Tecnica legata all’obiettivo',15],['Gioco a tema',25],['Ritorno alla calma',10]];else if(duration===90)blocks=[['Attivazione',15],['Tecnica legata all’obiettivo',20],['Gioco a tema',30],['Partita condizionata',20],['Ritorno alla calma',5]];else if(duration===105)blocks=[['Attivazione',15],['Tecnica legata all’obiettivo',20],['Gioco a tema',30],['Situazione di partita',30],['Ritorno alla calma',10]];else blocks=[['Attivazione',12],['Tecnica legata all’obiettivo',18],['Gioco a tema',25],['Partita condizionata',15],['Ritorno alla calma',5]];$('planResult').innerHTML='<div class="section-head"><div><h2>Struttura proposta</h2><p>'+esc(team)+' · '+esc(goal)+' · '+esc(players)+' giocatori · '+duration+' minuti</p></div><button class="btn primary small" id="savePlan">Salva seduta</button></div><div class="resource-grid">'+blocks.map((b,i)=>'<article class="resource-card"><span class="resource-type">Blocco '+(i+1)+' · '+b[1]+' min</span><h3>'+esc(b[0])+'</h3><p>'+(i===0?'Mobilità, coordinazione e attivazione con palla.':i===1?'Esercizi semplici orientati a '+esc(goal.toLowerCase())+'.':i===2?'Gioco a tema con vincoli e feedback mirati.':i===blocks.length-1?'Defaticamento e breve riflessione.':'Applicare l’obiettivo in situazione più vicina alla partita.')+'</p></article>').join('')+'</div>';$('savePlan').addEventListener('click',()=>{const plans=read('procoachSavedPlans',[]);plans.push({id:Date.now(),team,goal,players,duration,blocks,created:new Date().toLocaleDateString('it-IT')});write('procoachSavedPlans',plans);renderPlans();updateMetrics();toast('Seduta salvata')})});
-function renderPlans(){const plans=read('procoachSavedPlans',[]);$('savedPlans').innerHTML=plans.length?plans.slice().reverse().map(p=>'<article class="resource-card"><span class="resource-type">'+esc(p.created||'Seduta salvata')+'</span><h3>'+esc(p.goal)+'</h3><p>'+esc(p.team)+' · '+esc(p.players)+' giocatori · '+esc(p.duration)+' min</p><button class="btn outline small" data-delete-plan="'+p.id+'">Elimina</button></article>').join(''):'<div class="empty" style="grid-column:1/-1">Non hai ancora salvato sedute.</div>'}
-document.addEventListener('click',e=>{const b=e.target.closest('[data-delete-plan]');if(!b)return;write('procoachSavedPlans',read('procoachSavedPlans',[]).filter(p=>String(p.id)!==b.dataset.deletePlan));renderPlans();updateMetrics();toast('Seduta eliminata')});
+function renderPlans(){const plans=read('procoachSavedPlans',[]);$('savedPlans').innerHTML=plans.length?plans.slice().reverse().map(p=>'<article class="resource-card"><span class="resource-type">'+esc(p.updated?'Aggiornata '+p.updated:(p.created||'Seduta salvata'))+'</span><h3>'+esc(p.title||p.goal||'Sessione PROCOACH')+'</h3><p>'+esc(p.team||'Categoria da definire')+' · '+esc(p.goal||'Obiettivo da definire')+' · '+esc(p.players||'Giocatori da definire')+' giocatori · '+esc(p.duration)+' min</p><p>'+((p.blocks||[]).length)+' fasi · '+((p.blocks||[]).filter(function(b){return b&&b.board}).length)+' lavagnette salvate</p><div class="pc-session-saved-board">'+(p.blocks&&p.blocks[0]&&p.blocks[0].board?boardSvg(p.blocks[0].board,false):'')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary small" data-edit-plan="'+p.id+'">Apri e modifica</button><button class="btn outline small" data-delete-plan="'+p.id+'">Elimina</button></div></article>').join(''):'<div class="empty" style="grid-column:1/-1">Non hai ancora salvato sedute.</div>'}
+document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit-plan]');if(edit){const plan=read('procoachSavedPlans',[]).find(p=>String(p.id)===edit.dataset.editPlan);if(plan)createExerciseModal('session',plan);return}const b=e.target.closest('[data-delete-plan]');if(!b)return;write('procoachSavedPlans',read('procoachSavedPlans',[]).filter(p=>String(p.id)!==b.dataset.deletePlan));renderPlans();updateMetrics();toast('Seduta eliminata')});
 $('clearPlans').addEventListener('click',()=>{if(confirm('Vuoi eliminare tutte le sedute salvate in questo browser?')){write('procoachSavedPlans',[]);renderPlans();updateMetrics();toast('Archivio svuotato')}});
 function updateMetrics(){$('savedCount').textContent=read('procoachSavedPlans',[]).length}
 renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics();
@@ -373,7 +390,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   bindBoardEditor();
   document.querySelectorAll('[data-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.boardTool===boardTool)});
  }
- function createExerciseModal(initialMode){
+ function createExerciseModal(initialMode,initialPlan){
   boardState=freshBoard('Possesso');boardTool='player';boardHistory=[];arrowStart=null;
   const body='<div class="pc-create-mode-switch" role="group" aria-label="Scegli cosa creare"><button type="button" class="pc-create-mode active" data-create-mode="exercise" aria-pressed="true">⚽ Esercizio singolo</button><button type="button" class="pc-create-mode" data-create-mode="session" aria-pressed="false">▦ Sessione completa</button></div>'+
    '<div id="pcExerciseMode">'+
@@ -402,15 +419,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    '<div class="pc-exercise-tip">Riferimenti e diritti: se inserisci materiali di altri autori, aggiungi il collegamento alla fonte e verifica sempre permessi e licenze. Evita di caricare dati personali dei giocatori minorenni.</div>'+
    '</div>'+
    '<div id="pcSessionMode" style="display:none">'+
-   '<p class="pc-creator-intro">Imposta la categoria, l’obiettivo e il tempo a disposizione. PROCOACH prepara una struttura ordinata; puoi salvarla e ritrovarla nell’archivio delle sedute.</p>'+
-   '<form id="pcSessionForm" class="pc-form-grid">'+
-   '<div class="field"><label for="pcPlanTeam">Categoria</label><select id="pcPlanTeam"><option>U9–U11</option><option>U12–U15</option><option>U16–U19</option><option>Dilettanti</option><option>Adulti / agonistica</option><option>Portieri</option></select></div>'+
-   '<div class="field"><label for="pcPlanGoal">Obiettivo principale</label><select id="pcPlanGoal"><option>Possesso e smarcamento</option><option>Pressing e riaggressione</option><option>Transizioni</option><option>Finalizzazione</option><option>Tecnica individuale</option><option>Portieri</option></select></div>'+
-   '<div class="field"><label for="pcPlanDuration">Durata totale</label><select id="pcPlanDuration"><option value="60">60 minuti</option><option value="75" selected>75 minuti</option><option value="90">90 minuti</option><option value="105">105 minuti</option></select></div>'+
-   '<div class="field"><label for="pcPlanPlayers">Giocatori disponibili</label><select id="pcPlanPlayers"><option>8–10</option><option selected>12–16</option><option>17–22</option><option>Solo portieri</option></select></div>'+
-   '<div class="field full"><button class="btn primary" type="submit">Genera la struttura della sessione →</button></div>'+
-   '</form><div id="pcSessionPreview" class="pc-session-preview"></div>'+
-   '<p class="pc-exercise-tip">La proposta è una traccia da adattare alla tua squadra, agli spazi disponibili e all’età dei giocatori.</p>'+
+   <p class="pc-creator-intro">Imposta categoria e durata, poi personalizza ogni fase della seduta. Puoi descrivere obiettivi, organizzazione, svolgimento e correzioni e disegnare una lavagnetta separata per ogni blocco.</p><form id="pcSessionForm" class="pc-form-grid"><div class="field full"><label for="pcSessionTitle">Nome della sessione *</label><input id="pcSessionTitle" maxlength="120" required placeholder="Es. U15 · Uscita dal pressing e transizioni"></div><div class="field"><label for="pcPlanTeam">Categoria</label><select id="pcPlanTeam"><option>U9–U11</option><option>U12–U15</option><option>U16–U19</option><option>Dilettanti</option><option>Adulti / agonistica</option><option>Portieri</option></select></div><div class="field"><label for="pcPlanGoal">Obiettivo principale</label><select id="pcPlanGoal"><option>Possesso e smarcamento</option><option>Pressing e riaggressione</option><option>Transizioni</option><option>Finalizzazione</option><option>Tecnica individuale</option><option>Portieri</option></select></div><div class="field"><label for="pcPlanDuration">Durata totale</label><select id="pcPlanDuration"><option value="60">60 minuti</option><option value="75" selected>75 minuti</option><option value="90">90 minuti</option><option value="105">105 minuti</option></select></div><div class="field"><label for="pcPlanPlayers">Giocatori disponibili</label><select id="pcPlanPlayers"><option>8–10</option><option selected>12–16</option><option>17–22</option><option>Solo portieri</option></select></div><div class="field"><label for="pcSessionSpace">Spazio disponibile</label><input id="pcSessionSpace" maxlength="120" placeholder="Es. metà campo, 40 × 30 m"></div><div class="field"><label for="pcSessionEquipment">Materiale a disposizione</label><input id="pcSessionEquipment" maxlength="220" placeholder="Palloni, cinesini, porte, casacche..."></div><div class="field full"><label for="pcSessionPrinciples">Principi di gioco da allenare</label><textarea id="pcSessionPrinciples" maxlength="900" placeholder="Es. ampiezza, sostegno, terzo uomo, riaggressione immediata..."></textarea></div><div class="field full"><label for="pcSessionCoachNotes">Indicazioni per lo staff</label><textarea id="pcSessionCoachNotes" maxlength="900" placeholder="Messaggi chiave, intensità, rotazioni, carichi o adattamenti per la categoria..."></textarea></div><div class="field full"><button class="btn primary" type="submit">Genera e personalizza le fasi →</button></div></form><div id="pcSessionPreview" class="pc-session-preview"></div><p class="pc-exercise-tip">Ogni fase ha campi modificabili e una lavagnetta dedicata. Puoi cambiare fase, aggiungere simboli, spostare giocatori e tracciare movimenti con le frecce.</p>
    '</div>';
   openModal('Crea esercizio o sessione',body,'NUOVO CONTENUTO');
   $('modalBackdrop').querySelector('.modal').classList.add('pc-wide');
@@ -430,22 +439,91 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   $('pcBoardReset').addEventListener('click',function(){if(confirm('Ripristinare la lavagnetta iniziale?')){saveBoardSnapshot();boardState=freshBoard($('pcExType').value);renderBoardEditor()}});
   $('pcBoardExport').addEventListener('click',function(){const svg=boardSvg(boardState,false).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ');const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='lavagnetta-procoach.svg';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('Lavagnetta scaricata in formato SVG')});
   $('pcExType').addEventListener('change',function(){if(!boardState||boardState.tokens.length===0)boardState=freshBoard(this.value)});
+
+  let sessionDraftBlocks=[],sessionActiveBoardIndex=0,sessionBoardTool='player',sessionBoardHistory=[],sessionArrowStart=null,sessionDragToken=null,sessionEditingId=initialPlan&&initialPlan.id?initialPlan.id:null;
+  function makeDefaultSessionBlocks(duration,goal){
+   let specs;
+   if(duration===60)specs=[['Attivazione e tecnica dinamica',10],['Possesso orientato',15],['Gioco a tema',25],['Defaticamento e feedback',10]];
+   else if(duration===90)specs=[['Attivazione con palla',15],['Tecnica situazionale',20],['Gioco a tema',30],['Partita condizionata',20],['Defaticamento e feedback',5]];
+   else if(duration===105)specs=[['Attivazione con palla',15],['Tecnica situazionale',20],['Gioco a tema',30],['Situazione di partita',30],['Defaticamento e feedback',10]];
+   else specs=[['Attivazione con palla',12],['Tecnica situazionale',18],['Gioco a tema',25],['Partita condizionata',15],['Defaticamento e feedback',5]];
+   return specs.map(function(spec,i){
+    const isWarm=i===0,isCool=i===specs.length-1,isGame=/gioco|partita|situazione/i.test(spec[0]);
+    const objective=isWarm?'Preparare il gruppo con palla, coordinazione e mobilità.':isCool?'Ridurre gradualmente l’intensità e verificare gli apprendimenti.': 'Allenare '+goal.toLowerCase()+' in situazione progressiva.';
+    return {title:spec[0],minutes:spec[1],objective:objective,organization:isWarm?'Giocatori distribuiti nello spazio, una palla a testa o a coppie; progressione da semplice a dinamico.':isCool?'Giocatori in cerchio, recupero attivo e confronto guidato.':isGame?'Definire campo, squadre, direzione di gioco e regole condizionanti. Ruotare i gruppi e riprendere rapidamente il gioco.':'Gruppi ridotti, distanze coerenti con la categoria e ripetizioni brevi; aumentare gradualmente complessità e opposizione.',instructions:isWarm?'Guidare con dimostrazione breve; osservare qualità del gesto e mobilità.':isCool?'Chiedere ai giocatori quale principio hanno applicato e cosa migliorare.': 'Osservare postura, tempi di scelta e collaborazione in relazione a '+goal.toLowerCase()+'.',coaching:isCool?'Respiro, idratazione e feedback positivi con un punto da migliorare.':'Orientamento del corpo, scansione prima di ricevere, tempi di supporto e qualità della prima scelta.',equipment:'Palloni, cinesini e casacche',board:freshBoard(goal)};
+   });
+  }
+  function sessionField(id){const el=$(id);return el?el.value.trim():''}
+  function syncSessionBlockInputs(){
+   document.querySelectorAll('#pcSessionPreview [data-block-field]').forEach(function(el){
+    const ix=Number(el.dataset.blockIndex),key=el.dataset.blockField;
+    if(sessionDraftBlocks[ix])sessionDraftBlocks[ix][key]=key==='minutes'?Math.max(1,Number(el.value)||1):el.value;
+   });
+  }
+  function renderSessionPreview(){
+   const preview=$('pcSessionPreview');
+   if(!preview)return;
+   if(!sessionDraftBlocks.length){preview.innerHTML='';return}
+   const allMinutes=sessionDraftBlocks.reduce(function(sum,b){return sum+Math.max(1,Number(b.minutes)||1)},0);
+   const goal=sessionField('pcPlanGoal'),team=sessionField('pcPlanTeam'),players=sessionField('pcPlanPlayers'),duration=Number($('pcPlanDuration').value);
+   preview.innerHTML='<div class="section-head"><div><h2>Fasi della sessione</h2><p>'+esc(team)+' · '+esc(goal)+' · '+esc(players)+' giocatori · '+allMinutes+' min su '+duration+' min previsti</p></div><button class="btn primary small" type="button" id="pcSaveSession">'+(sessionEditingId?'Aggiorna sessione':'Salva sessione')+'</button></div>'+
+    '<div class="pc-session-details">Tema: '+esc(sessionField('pcSessionTitle'))+' · Spazio: '+esc(sessionField('pcSessionSpace')||'da definire')+' · Materiali: '+esc(sessionField('pcSessionEquipment')||'da definire')+'</div>'+
+    '<div class="resource-grid">'+sessionDraftBlocks.map(function(b,i){return '<article class="resource-card pc-session-block"><span class="resource-type">FASE '+(i+1)+' · '+Math.max(1,Number(b.minutes)||1)+' MIN</span><div class="pc-form-grid"><div class="field full"><label for="pcBlockTitle'+i+'">Nome della fase</label><input id="pcBlockTitle'+i+'" data-block-index="'+i+'" data-block-field="title" maxlength="120" value="'+esc(b.title)+'"></div><div class="field"><label for="pcBlockMinutes'+i+'">Durata (minuti)</label><input id="pcBlockMinutes'+i+'" type="number" min="1" max="120" data-block-index="'+i+'" data-block-field="minutes" value="'+esc(b.minutes)+'"></div><div class="field"><label for="pcBlockMaterials'+i+'">Materiale</label><input id="pcBlockMaterials'+i+'" data-block-index="'+i+'" data-block-field="equipment" maxlength="220" value="'+esc(b.equipment||'')+'"></div><div class="field full"><label for="pcBlockObjective'+i+'">Obiettivo della fase</label><textarea id="pcBlockObjective'+i+'" data-block-index="'+i+'" data-block-field="objective" maxlength="700">'+esc(b.objective||'')+'</textarea></div><div class="field full"><label for="pcBlockOrg'+i+'">Organizzazione e regole</label><textarea id="pcBlockOrg'+i+'" data-block-index="'+i+'" data-block-field="organization" maxlength="1000">'+esc(b.organization||'')+'</textarea></div><div class="field full"><label for="pcBlockInstructions'+i+'">Svolgimento / progressione</label><textarea id="pcBlockInstructions'+i+'" data-block-index="'+i+'" data-block-field="instructions" maxlength="1200">'+esc(b.instructions||'')+'</textarea></div><div class="field full"><label for="pcBlockCoaching'+i+'">Punti chiave e correzioni</label><textarea id="pcBlockCoaching'+i+'" data-block-index="'+i+'" data-block-field="coaching" maxlength="900">'+esc(b.coaching||'')+'</textarea></div></div><button type="button" class="btn outline small" data-session-board-index="'+i+'">✎ Modifica lavagnetta della fase '+(i+1)+'</button></article>'}).join('')+'</div>'+
+    '<div class="pc-session-board"><div class="pc-board-heading"><div><strong id="pcSessionBoardTitle">Lavagnetta della fase</strong><small>Seleziona uno strumento. Trascina i simboli per spostarli; per una freccia seleziona il punto di partenza e poi quello di arrivo.</small></div></div><div id="pcSessionBoardTabs" class="pc-session-board-tabs">'+sessionDraftBlocks.map(function(b,i){return '<button type="button" data-session-board-index="'+i+'" class="'+(i===sessionActiveBoardIndex?'active':'')+'">Fase '+(i+1)+' · '+esc(b.title)+'</button>'}).join('')+'</div><div class="pc-session-board-tools"><button type="button" data-session-board-tool="player" class="active">＋ Giocatore</button><button type="button" data-session-board-tool="opponent">＋ Avversario</button><button type="button" data-session-board-tool="ball">⚽ Pallone</button><button type="button" data-session-board-tool="cone">▲ Cono</button><button type="button" data-session-board-tool="arrow">↗ Freccia</button><button type="button" data-session-board-tool="erase">⌫ Cancella</button><button type="button" id="pcSessionBoardUndo">Annulla</button><button type="button" id="pcSessionBoardReset">Ripristina</button><button type="button" id="pcSessionBoardExport">Scarica SVG</button></div><div id="pcSessionBoardSlot" class="pc-session-board-slot"></div><p class="pc-board-hint">La lavagnetta viene conservata separatamente per ogni fase della sessione.</p></div>';
+   preview.querySelectorAll('[data-block-field]').forEach(function(el){el.addEventListener('input',function(){const ix=Number(el.dataset.blockIndex);if(sessionDraftBlocks[ix])sessionDraftBlocks[ix][el.dataset.blockField]=el.dataset.blockField==='minutes'?Math.max(1,Number(el.value)||1):el.value;if(el.dataset.blockField==='title'){const tab=preview.querySelector('[data-session-board-index="'+ix+'"]');if(tab)tab.textContent='Fase '+(ix+1)+' · '+el.value;if(ix===sessionActiveBoardIndex)$('pcSessionBoardTitle').textContent='Lavagnetta · '+el.value}})});
+   preview.querySelectorAll('[data-session-board-index]').forEach(function(btn){btn.addEventListener('click',function(){syncSessionBlockInputs();sessionActiveBoardIndex=Number(btn.dataset.sessionBoardIndex);sessionArrowStart=null;renderSessionPreview();renderSessionBoard()})});
+   $('pcSaveSession').addEventListener('click',saveSessionDraft);
+   renderSessionBoard();
+  }
+  function sessionBoard(){if(!sessionDraftBlocks[sessionActiveBoardIndex])return freshBoard('Possesso');sessionDraftBlocks[sessionActiveBoardIndex].board=safeBoard(sessionDraftBlocks[sessionActiveBoardIndex].board);return sessionDraftBlocks[sessionActiveBoardIndex].board}
+  function saveSessionBoardSnapshot(){sessionBoardHistory.push({index:sessionActiveBoardIndex,board:JSON.parse(JSON.stringify(sessionBoard()))});if(sessionBoardHistory.length>40)sessionBoardHistory.shift()}
+  function sessionBoardPoint(svg,event){const r=svg.getBoundingClientRect();return {x:Math.max(12,Math.min(588,(event.clientX-r.left)*600/r.width)),y:Math.max(12,Math.min(348,(event.clientY-r.top)*360/r.height))}}
+  function renderSessionBoard(){
+   const slot=$('pcSessionBoardSlot');if(!slot||!sessionDraftBlocks.length)return;
+   slot.innerHTML=boardSvg(sessionBoard(),true);
+   const title=$('pcSessionBoardTitle');if(title)title.textContent='Lavagnetta · '+(sessionDraftBlocks[sessionActiveBoardIndex].title||('Fase '+(sessionActiveBoardIndex+1)));
+   document.querySelectorAll('[data-session-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.sessionBoardTool===sessionBoardTool)});
+   const svg=slot.querySelector('svg');if(!svg)return;
+   svg.addEventListener('pointerdown',function(e){const g=e.target.closest('[data-token-index]');if(!g)return;saveSessionBoardSnapshot();sessionDragToken=Number(g.dataset.tokenIndex);svg.setPointerCapture(e.pointerId);e.preventDefault()});
+   svg.addEventListener('pointermove',function(e){if(sessionDragToken===null)return;const p=sessionBoardPoint(svg,e),item=sessionBoard().tokens[sessionDragToken];if(!item)return;item.x=p.x;item.y=p.y;const g=svg.querySelector('[data-token-index="'+sessionDragToken+'"]');if(g)g.setAttribute('transform','translate('+p.x+' '+p.y+')')});
+   svg.addEventListener('pointerup',function(){if(sessionDragToken!==null){sessionDragToken=null;renderSessionBoard()}});
+   svg.addEventListener('pointercancel',function(){sessionDragToken=null;renderSessionBoard()});
+   svg.addEventListener('click',function(e){
+    if(e.target.closest('[data-token-index]'))return;
+    const p=sessionBoardPoint(svg,e),board=sessionBoard();
+    if(sessionBoardTool==='arrow'){if(!sessionArrowStart){sessionArrowStart=p;toast('Ora clicca sul punto di arrivo della freccia');return}saveSessionBoardSnapshot();board.arrows.push({x1:sessionArrowStart.x,y1:sessionArrowStart.y,x2:p.x,y2:p.y});sessionArrowStart=null;renderSessionBoard();return}
+    if(sessionBoardTool==='erase'){let nearest=-1,dist=26;board.tokens.forEach(function(t,i){const d=Math.hypot(t.x-p.x,t.y-p.y);if(d<dist){dist=d;nearest=i}});if(nearest>=0){saveSessionBoardSnapshot();board.tokens.splice(nearest,1);renderSessionBoard()}return}
+    saveSessionBoardSnapshot();board.tokens.push({x:p.x,y:p.y,kind:sessionBoardTool});renderSessionBoard();
+   });
+  }
+  document.querySelectorAll('[data-session-board-tool]').forEach(function(btn){btn.addEventListener('click',function(){sessionBoardTool=btn.dataset.sessionBoardTool;sessionArrowStart=null;document.querySelectorAll('[data-session-board-tool]').forEach(function(x){x.classList.toggle('active',x===btn)})})});
+  $('pcSessionBoardUndo')?.addEventListener('click',function(){if(!sessionBoardHistory.length){toast('Nessuna azione da annullare');return}const snap=sessionBoardHistory.pop();if(snap.index<sessionDraftBlocks.length)sessionDraftBlocks[snap.index].board=snap.board;sessionActiveBoardIndex=snap.index;renderSessionPreview()});
+  $('pcSessionBoardReset')?.addEventListener('click',function(){if(confirm('Ripristinare la lavagnetta della fase corrente?')){saveSessionBoardSnapshot();sessionDraftBlocks[sessionActiveBoardIndex].board=freshBoard(sessionField('pcPlanGoal'));renderSessionBoard()}});
+  $('pcSessionBoardExport')?.addEventListener('click',function(){const svg=boardSvg(sessionBoard(),false).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ');const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='procoach-sessione-fase-'+(sessionActiveBoardIndex+1)+'.svg';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('Lavagnetta della fase scaricata')});
+  function saveSessionDraft(){
+   syncSessionBlockInputs();
+   if(!sessionDraftBlocks.length){toast('Genera prima le fasi della sessione');return}
+   const duration=Number($('pcPlanDuration').value),blocks=sessionDraftBlocks.map(function(b){return {...b,minutes:Math.max(1,Number(b.minutes)||1),board:safeBoard(b.board)}});
+   const plan={id:sessionEditingId||Date.now(),title:sessionField('pcSessionTitle')||'Sessione PROCOACH',team:sessionField('pcPlanTeam'),goal:sessionField('pcPlanGoal'),players:sessionField('pcPlanPlayers'),duration:duration,space:sessionField('pcSessionSpace'),equipment:sessionField('pcSessionEquipment'),principles:sessionField('pcSessionPrinciples'),coachNotes:sessionField('pcSessionCoachNotes'),blocks:blocks,created:initialPlan&&initialPlan.created?initialPlan.created:new Date().toLocaleDateString('it-IT'),updated:new Date().toLocaleDateString('it-IT')};
+   const plans=read('procoachSavedPlans',[]);
+   const ix=plans.findIndex(function(p){return String(p.id)===String(plan.id)});
+   if(ix>=0)plans[ix]=plan;else plans.push(plan);
+   write('procoachSavedPlans',plans);renderPlans();updateMetrics();closeModal();showPage('planner');toast(ix>=0?'Sessione aggiornata':'Sessione salvata nel tuo archivio');
+  }
   $('pcSessionForm').addEventListener('submit',function(e){
    e.preventDefault();
-   const duration=Number($('pcPlanDuration').value),team=$('pcPlanTeam').value,goal=$('pcPlanGoal').value,players=$('pcPlanPlayers').value;
-   let blocks;
-   if(duration===60)blocks=[['Attivazione',10],['Tecnica legata all’obiettivo',15],['Gioco a tema',25],['Ritorno alla calma',10]];
-   else if(duration===90)blocks=[['Attivazione',15],['Tecnica legata all’obiettivo',20],['Gioco a tema',30],['Partita condizionata',20],['Ritorno alla calma',5]];
-   else if(duration===105)blocks=[['Attivazione',15],['Tecnica legata all’obiettivo',20],['Gioco a tema',30],['Situazione di partita',30],['Ritorno alla calma',10]];
-   else blocks=[['Attivazione',12],['Tecnica legata all’obiettivo',18],['Gioco a tema',25],['Partita condizionata',15],['Ritorno alla calma',5]];
-   const descriptions=blocks.map(function(b,i){return i===0?'Mobilità, coordinazione e attivazione con palla.':i===1?'Esercizi tecnici orientati a '+goal.toLowerCase()+'.':i===2?'Gioco a tema con vincoli, obiettivo chiaro e feedback mirati.':i===blocks.length-1?'Defaticamento e breve riflessione su quanto allenato.':'Applicare l’obiettivo in una situazione più vicina alla partita.'});
-   $('pcSessionPreview').innerHTML='<div class="section-head"><div><h2>Struttura proposta</h2><p>'+esc(team)+' · '+esc(goal)+' · '+esc(players)+' giocatori · '+duration+' minuti</p></div><button class="btn primary small" type="button" id="pcSaveSession">Salva sessione</button></div><div class="resource-grid">'+blocks.map(function(b,i){return '<article class="resource-card"><span class="resource-type">Blocco '+(i+1)+' · '+b[1]+' min</span><h3>'+esc(b[0])+'</h3><p>'+esc(descriptions[i])+'</p></article>'}).join('')+'</div>';
-   $('pcSaveSession').addEventListener('click',function(){
-    const plans=read('procoachSavedPlans',[]);
-    plans.push({id:Date.now(),team:team,goal:goal,players:players,duration:duration,blocks:blocks,created:new Date().toLocaleDateString('it-IT')});
-    write('procoachSavedPlans',plans);renderPlans();updateMetrics();closeModal();showPage('planner');toast('Sessione salvata nel tuo archivio');
-   });
+   const duration=Number($('pcPlanDuration').value),goal=sessionField('pcPlanGoal');
+   sessionDraftBlocks=makeDefaultSessionBlocks(duration,goal);
+   sessionActiveBoardIndex=0;sessionBoardTool='player';sessionBoardHistory=[];sessionArrowStart=null;renderSessionPreview();
   });
+  if(initialPlan){
+   $('pcSessionTitle').value=initialPlan.title||((initialPlan.team||'')+' · '+(initialPlan.goal||'Sessione'));
+   ['pcPlanTeam','pcPlanGoal','pcPlanDuration','pcPlanPlayers'].forEach(function(id){const el=$(id),key={'pcPlanTeam':'team','pcPlanGoal':'goal','pcPlanDuration':'duration','pcPlanPlayers':'players'}[id];if(initialPlan[key]!=null&&Array.from(el.options).some(function(o){return o.value===String(initialPlan[key])||o.text===String(initialPlan[key])}))el.value=String(initialPlan[key])});
+   $('pcSessionSpace').value=initialPlan.space||'';$('pcSessionEquipment').value=initialPlan.equipment||'';$('pcSessionPrinciples').value=initialPlan.principles||'';$('pcSessionCoachNotes').value=initialPlan.coachNotes||'';
+   sessionDraftBlocks=(initialPlan.blocks||[]).map(function(b,i){if(Array.isArray(b)){return {title:b[0],minutes:b[1],objective:'',organization:'',instructions:'',coaching:'',equipment:initialPlan.equipment||'',board:freshBoard(initialPlan.goal)}}return {...b,board:safeBoard(b.board||freshBoard(initialPlan.goal))}});
+   if(!sessionDraftBlocks.length)sessionDraftBlocks=makeDefaultSessionBlocks(Number(initialPlan.duration)||75,initialPlan.goal||'Possesso e smarcamento');
+   sessionActiveBoardIndex=0;renderSessionPreview();
+  }
   $('pcExerciseForm').addEventListener('submit',function(e){
    e.preventDefault();
    const title=$('pcExTitle').value.trim(),type=$('pcExType').value,level=$('pcExLevel').value,duration=Number($('pcExDuration').value);
