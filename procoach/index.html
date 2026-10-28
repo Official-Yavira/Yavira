@@ -334,7 +334,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    '<div class="modal-detail"><strong>Svolgimento</strong><ol class="pc-step-list">'+steps+'</ol></div>'+
    (e.variant?'<div class="modal-detail"><strong>Variante</strong><p style="margin:6px 0 0">'+esc(e.variant)+'</p></div>':'')+
    sourceBlock(e)+
-   '<div class="modal-actions">'+(custom?'<button type="button" class="btn outline pc-delete-exercise" data-delete-custom="'+esc(e.id)+'">Elimina esercizio</button>':'')+'<button class="btn outline" data-modal-close>Chiudi</button><button class="btn primary" data-plan-from="'+esc(e.id||e.title)+'">Usa nella seduta</button></div>';
+   '<div class="modal-actions">'+(custom?'<button type="button" class="btn outline pc-delete-exercise" data-delete-custom="'+esc(e.id)+'">Elimina esercizio</button>':'')+'<button class="btn outline" data-edit-tactical-board="'+esc(e.id||e.title)+'">Personalizza lavagnetta</button><button class="btn outline" data-modal-close>Chiudi</button><button class="btn primary" data-plan-from="'+esc(e.id||e.title)+'">Usa nella seduta</button></div>';
   openModal(e.title,html,'SCHEDA ESERCIZIO');
  }
  window.openExercise=openDetailedExercise;
@@ -597,9 +597,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  // Replace the details dialog so every sheet includes method, tactical sketch and references.
  function openExercise(e){
   const steps=(e.steps||[]).map(function(s){return '<li>'+esc(s)+'</li>'}).join('');
-  const board=safeBoard(e.board||freshBoard(['Base','Tuffo','Piedi','Gara'].includes(e.type)?'Portieri':e.type));
+  const savedExerciseBoards=read('procoachExerciseBoardsV1',{});const board=safeBoard(savedExerciseBoards[e.id]||e.board||freshBoard(['Base','Tuffo','Piedi','Gara'].includes(e.type)?'Portieri':e.type));
   const custom=!!e.custom;
-  const html=(e.official?'<div class="pc-official-source-note">Fonte federale ufficiale: la scheda riassume il contenuto del collegamento. I dettagli della fonte sono in sola lettura; lo schema tattico visualizzato è illustrativo e non sostituisce il diagramma originale.</div>':'')+'<p>'+esc(e.summary||'Esercizio tecnico')+'</p>'+
+  const html=(e.official?'<div class="pc-official-source-note">Fonte federale ufficiale: la scheda riassume il contenuto del collegamento. Obiettivo, organizzazione e svolgimento sono in sola lettura; lo schema tattico visualizzato è illustrativo e non sostituisce il diagramma originale.</div>':'')+'<p>'+esc(e.summary||'Esercizio tecnico')+'</p>'+
    '<div class="resource-meta"><span class="pill">'+esc(e.type)+'</span><span class="pill">'+esc(e.duration)+'</span><span class="pill">'+esc(e.level||'Tutti i livelli')+'</span></div>'+
    boardBlock(board)+
    '<div class="pc-detail-grid">'+detailItem('Obiettivo',e.objective||e.summary)+detailItem('Categoria consigliata',e.category||e.level)+detailItem('Giocatori',e.players||'Indicati nell’organizzazione')+detailItem('Spazio',e.space||e.setup)+detailItem('Materiale',e.equipment||'Adattare al gruppo')+detailItem('Organizzazione',e.setup)+detailItem('Punti chiave',e.coaching)+detailItem('Progressione',e.progression||e.variant)+'</div>'+
@@ -610,6 +610,55 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   openModal(e.title,html,'SCHEDA ESERCIZIO');
  }
  window.openExercise=openExercise;
+
+ function openTacticalBoardEditor(ex){
+  const originalBoard=safeBoard(ex.board||freshBoard(['Base','Tuffo','Piedi','Gara'].includes(ex.type)?'Portieri':ex.type));
+  const saved=read('procoachExerciseBoardsV1',{});
+  let draft=safeBoard(saved[ex.id]||originalBoard),tool='player',history=[],arrowStartPoint=null,dragging=null;
+  const body='<p class="pc-creator-intro">Modifica solo la lavagnetta: la scheda tecnica ufficiale resta invariata e in sola lettura. Puoi iniziare dallo schema illustrativo oppure scegliere “Da zero”.</p>'+
+   '<div class="pc-board-panel"><div class="pc-board-heading"><div><strong>'+esc(ex.title)+'</strong><small>Trascina i simboli per spostarli. Con “Cancella” elimina il simbolo o la freccia più vicina al punto cliccato.</small></div></div>'+
+   '<div class="pc-board-tools"><button type="button" class="pc-board-tool active" data-official-board-tool="player">＋ Giocatore</button><button type="button" class="pc-board-tool" data-official-board-tool="opponent">＋ Avversario</button><button type="button" class="pc-board-tool" data-official-board-tool="ball">⚽ Pallone</button><button type="button" class="pc-board-tool" data-official-board-tool="cone">▲ Cono</button><button type="button" class="pc-board-tool" data-official-board-tool="arrow">↗ Freccia</button><button type="button" class="pc-board-tool" data-official-board-tool="erase">⌫ Cancella</button><button type="button" class="pc-board-tool" data-official-board-action="undo">Annulla</button><button type="button" class="pc-board-tool" data-official-board-action="blank">＋ Da zero</button><button type="button" class="pc-board-tool" data-official-board-action="reset">Ripristina schema</button><button type="button" class="pc-board-tool" data-official-board-action="export">Scarica SVG</button></div>'+
+   '<div class="pc-board-slot" id="pcOfficialBoardSlot"></div><p class="pc-board-hint">La lavagnetta personalizzata viene salvata solo in questo browser, collegata a questa scheda; non modifica i dettagli ufficiali né il diagramma di origine.</p>'+
+   '<div class="modal-actions"><button type="button" class="btn outline" data-modal-close>Annulla</button><button type="button" class="btn primary" data-official-board-action="save">Salva lavagnetta</button></div></div>';
+  openModal('Personalizza lavagnetta',body,'DIAGRAMMA PERSONALE · TESTO ORIGINALE IN SOLA LETTURA');
+  $('modalBackdrop').querySelector('.modal').classList.add('pc-wide');
+  function snapshot(){history.push(JSON.stringify(draft));if(history.length>40)history.shift()}
+  function render(){
+   const slot=$('pcOfficialBoardSlot');if(!slot)return;
+   slot.innerHTML=boardSvg(draft,true);
+   document.querySelectorAll('[data-official-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.officialBoardTool===tool)});
+   const svg=slot.querySelector('svg');if(!svg)return;
+   svg.addEventListener('pointerdown',function(e){const g=e.target.closest('[data-token-index]');if(!g||tool==='erase')return;snapshot();dragging=Number(g.dataset.tokenIndex);svg.setPointerCapture(e.pointerId);e.preventDefault()});
+   svg.addEventListener('pointermove',function(e){if(dragging===null)return;const p=boardPoint(svg,e),t=draft.tokens[dragging];if(!t)return;t.x=p.x;t.y=p.y;const g=svg.querySelector('[data-token-index="'+dragging+'"]');if(g)g.setAttribute('transform','translate('+p.x+' '+p.y+')')});
+   svg.addEventListener('pointerup',function(){if(dragging!==null){dragging=null;render()}});
+   svg.addEventListener('pointercancel',function(){dragging=null;render()});
+   svg.addEventListener('click',function(e){
+    if(e.target.closest('[data-token-index]')&&tool!=='erase')return;
+    const p=boardPoint(svg,e);
+    if(tool==='arrow'){if(!arrowStartPoint){arrowStartPoint=p;toast('Ora scegli il punto di arrivo della freccia');return}snapshot();draft.arrows.push({x1:arrowStartPoint.x,y1:arrowStartPoint.y,x2:p.x,y2:p.y});arrowStartPoint=null;render();return}
+    if(tool==='erase'){
+     let tokenIndex=-1,tokenDist=26;draft.tokens.forEach(function(t,i){const d=Math.hypot(t.x-p.x,t.y-p.y);if(d<tokenDist){tokenDist=d;tokenIndex=i}});
+     if(tokenIndex>=0){snapshot();draft.tokens.splice(tokenIndex,1);render();return}
+     let arrowIndex=-1,arrowDist=14;draft.arrows.forEach(function(a,i){const d=pointSegmentDistance(p,a);if(d<arrowDist){arrowDist=d;arrowIndex=i}});
+     if(arrowIndex>=0){snapshot();draft.arrows.splice(arrowIndex,1);render()}else toast('Nessun elemento vicino: prova a cliccare più vicino al simbolo o alla freccia');
+     return;
+    }
+    snapshot();draft.tokens.push({x:p.x,y:p.y,kind:tool});render();
+   });
+  }
+  document.querySelectorAll('[data-official-board-tool]').forEach(function(b){b.addEventListener('click',function(){tool=b.dataset.officialBoardTool;arrowStartPoint=null;document.querySelectorAll('[data-official-board-tool]').forEach(function(x){x.classList.toggle('active',x===b)})})});
+  document.querySelectorAll('[data-official-board-action]').forEach(function(b){b.addEventListener('click',function(){
+   const action=b.dataset.officialBoardAction;
+   if(action==='undo'){if(!history.length){toast('Nessuna azione da annullare');return}draft=safeBoard(JSON.parse(history.pop()));arrowStartPoint=null;render();return}
+   if(action==='blank'){snapshot();draft={tokens:[],arrows:[]};arrowStartPoint=null;render();toast('Lavagnetta vuota: aggiungi gli elementi che ti servono');return}
+   if(action==='reset'){if(confirm('Ripristinare lo schema di partenza di questa scheda?')){snapshot();draft=safeBoard(originalBoard);arrowStartPoint=null;render()}return}
+   if(action==='export'){const svg=boardSvg(draft,false).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ');const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='procoach-lavagnetta-'+String(ex.id||'esercizio').replace(/[^a-z0-9_-]/gi,'-')+'.svg';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('Lavagnetta scaricata in formato SVG');return}
+   if(action==='save'){const all=read('procoachExerciseBoardsV1',{});all[ex.id]=safeBoard(draft);write('procoachExerciseBoardsV1',all);openExercise(ex);toast('Lavagnetta personalizzata salvata');}
+  })});
+  render();
+ }
+ document.addEventListener('click',function(e){const b=e.target.closest('[data-edit-tactical-board]');if(!b)return;const ex=lookupExercise(b.dataset.editTacticalBoard);if(ex)openTacticalBoardEditor(ex)});
+
  // Re-render after augmenting the original built-in exercise list with any local custom entries.
  renderLibrary();renderGoalkeepers();updateMetrics();
 })();
