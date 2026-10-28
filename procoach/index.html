@@ -23,6 +23,43 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 @media(max-width:1120px){.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.exercise-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.content{padding:24px}.topbar{padding:0 24px}}
 @media(max-width:780px){.sidebar{width:72px;padding:17px 8px}.brand{justify-content:center;padding:2px 0 23px}.brand>div:last-child,.nav-label,.nav span:not(.icon),.side-bottom{display:none}.nav{justify-content:center;padding:11px 7px}.nav .icon{font-size:17px}.nav{position:relative}.nav:hover:after{content:attr(aria-label);position:absolute;left:55px;white-space:nowrap;background:#183d29;padding:7px 10px;border-radius:7px;z-index:50}.brand-mark{width:40px}.sidebar .nav-label{display:none}main{margin-left:72px}.topbar{padding:0 17px;height:64px}.content{padding:18px}.hero{padding:23px;min-height:0}.hero:after{right:-24px;font-size:140px}.metrics{gap:8px}.metric{padding:11px;gap:8px}.metric-ico{width:32px;height:32px}.community-layout{grid-template-columns:160px minmax(0,1fr)}}
 @media(max-width:560px){.sidebar{position:fixed;inset:auto 0 0 0;width:100%;height:62px;flex-direction:row;padding:5px 6px;overflow-x:auto;overflow-y:hidden;justify-content:flex-start;background:#14291d;box-shadow:0 -4px 20px #12281b18}.brand,.side-bottom,.nav-label{display:none!important}.sidebar .nav{display:flex;flex:0 0 48px;justify-content:center;margin:0;padding:8px 4px;height:50px}.sidebar .nav span:not(.icon){display:none}.sidebar .nav .icon{width:auto;font-size:18px}.sidebar .nav:hover:after{display:none}main{margin-left:0;padding-bottom:62px}.topbar{height:auto;min-height:62px;padding:10px 12px;gap:8px;flex-wrap:wrap}.searchbox{order:3;max-width:none;flex-basis:100%}.top-actions{margin-left:auto}.profile-button .profile-name{display:none}.content{padding:13px 12px 28px}.hero{padding:19px 16px;border-radius:13px}.hero h1{font-size:27px}.hero p{font-size:11px}.metrics{grid-template-columns:1fr;gap:7px;margin:12px 0 20px}.metric{padding:10px}.metric strong{font-size:16px}.quick-grid,.exercise-grid,.resource-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.quick-card{padding:12px;min-height:120px}.quick-card .q-icon{margin-bottom:9px}.resource-card{padding:12px}.section-head h2{font-size:14px}.community-layout{grid-template-columns:1fr;min-height:0}.rooms{display:flex;overflow-x:auto;gap:4px;border-right:0;border-bottom:1px solid var(--line);padding:7px}.rooms-heading{display:none}.room{flex:0 0 auto;width:auto;padding:7px 9px;white-space:nowrap}.room .room-icon{width:24px;height:24px}.room small{display:none}.chat-scroll{max-height:360px;min-height:280px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.profile-card{padding:15px}.modal-backdrop{padding:8px}.modal{border-radius:14px}.modal-head{padding:16px 16px 12px}.modal-body{padding:15px 16px 18px}.footer-note{margin-bottom:16px}}
+
+/* Exercise creator, richer exercise sheets and tactical whiteboard */
+.library-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:20px}
+.library-heading .subtext{margin-bottom:0;max-width:720px}
+.pc-wide{width:min(960px,100%)!important}
+.pc-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pc-form-grid .field{margin:0;min-width:0}
+.pc-form-grid .full{grid-column:1/-1}
+.pc-form-grid .field input,.pc-form-grid .field select,.pc-form-grid .field textarea{width:100%;box-sizing:border-box}
+.pc-form-grid .field textarea{min-height:88px;resize:vertical}
+.pc-board-panel{border:1px solid var(--line);border-radius:13px;padding:13px;background:#f7faf7;margin-top:8px}
+.pc-board-heading{display:flex;justify-content:space-between;align-items:start;gap:12px;margin-bottom:10px}
+.pc-board-heading strong{font-size:13px}
+.pc-board-heading small{display:block;color:var(--muted);font-size:11px;line-height:1.45;margin-top:3px}
+.pc-board-tools{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.pc-board-tool{border:1px solid #dce6de;background:#fff;color:#405247;border-radius:8px;padding:7px 10px;font-size:11px;font-weight:750;cursor:pointer}
+.pc-board-tool.active{background:#1e6e3b;color:#fff;border-color:#1e6e3b}
+.pc-board-slot{background:#e8f2e7;border:1px solid #cfded0;border-radius:10px;overflow:hidden}
+.pc-tactic-board{display:block;width:100%;height:auto;max-height:370px}
+.pc-board-hint{font-size:10px;color:#718078;line-height:1.5;margin:8px 1px 0}
+.pc-exercise-board{margin:15px 0 12px}
+.pc-exercise-board h3{font-size:13px;margin:0 0 8px}
+.pc-exercise-board .pc-board-slot{border-color:#d8e4d9}
+.pc-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}
+.pc-detail-item{background:#f6f9f6;border:1px solid #e9eee9;border-radius:9px;padding:10px 11px;min-width:0}
+.pc-detail-item strong{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:#718078;margin-bottom:4px}
+.pc-detail-item span{display:block;color:#33473a;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+.pc-step-list{padding-left:20px;margin:8px 0 0}
+.pc-step-list li{padding-left:3px;margin:0 0 5px}
+.pc-source-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.pc-source-links a{display:inline-flex;align-items:center;border:1px solid #d6e3d8;background:#fff;color:#1e6e3b!important;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:800;text-decoration:none}
+.pc-creator-intro{font-size:12px;color:var(--muted);line-height:1.65;margin:0 0 16px}
+.pc-section-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--green);font-weight:850;margin:7px 0 0}
+.pc-exercise-tip{background:#edf6ef;border-radius:9px;padding:10px 12px;font-size:11px;line-height:1.55;color:#45614c;margin-top:12px}
+.pc-delete-exercise{margin-right:auto;color:#9c3535!important;border-color:#eed7d7!important}
+@media(max-width:700px){.library-heading{display:block}.library-heading #createExerciseBtn{margin:6px 0 15px}.pc-form-grid,.pc-detail-grid{grid-template-columns:1fr}.pc-form-grid .full{grid-column:auto}.pc-board-heading{display:block}.pc-board-heading .pc-board-tools{margin-top:10px}.pc-wide{max-height:92vh!important}.pc-tactic-board{max-height:280px}}
+
 </style>
 </head>
 <body>
@@ -63,7 +100,7 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 </section>
 
 <section class="page" id="page-library">
- <div class="eyebrow">Libreria tecnica</div><h1 class="page-title">Esercizi e idee di campo</h1><p class="subtext">Schede concise, con indicazioni operative e varianti da adattare al tuo gruppo.</p>
+ <div class="eyebrow">Libreria tecnica</div><div class="library-heading"><div><h1 class="page-title">Esercizi e idee di campo</h1><p class="subtext">Schede operative, disegni tattici e riferimenti per adattare ogni attività alla tua squadra.</p></div><button class="btn primary" id="createExerciseBtn" type="button">＋ Crea esercizio</button></div>
  <div class="toolbar" id="exerciseFilters"><button class="filter active" data-filter="Tutti">Tutti</button><button class="filter" data-filter="Possesso">Possesso</button><button class="filter" data-filter="Pressing">Pressing</button><button class="filter" data-filter="Transizioni">Transizioni</button><button class="filter" data-filter="Tecnica">Tecnica</button><button class="filter" data-filter="Portieri">Portieri</button></div>
  <div class="exercise-grid" id="libraryExercises"></div>
 </section>
@@ -202,6 +239,213 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-delete-pla
 $('clearPlans').addEventListener('click',()=>{if(confirm('Vuoi eliminare tutte le sedute salvate in questo browser?')){write('procoachSavedPlans',[]);renderPlans();updateMetrics();toast('Archivio svuotato')}});
 function updateMetrics(){$('savedCount').textContent=read('procoachSavedPlans',[]).length}
 renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics();
+</script>
+<script>
+
+/* PROCOACH exercise detail upgrade + local tactical board editor */
+(function initExerciseStudio(){
+ const STORE='procoachCustomExercisesV1';
+ let customExercises=read(STORE,[]);
+ if(!Array.isArray(customExercises)) customExercises=[];
+ const existingIds=new Set(exercises.map(function(e){return e.id}));
+ customExercises=customExercises.filter(function(e){return e&&e.id&&e.title&&!existingIds.has(e.id)});
+ customExercises.forEach(function(e){exercises.push(e)});
+ let boardState=null, boardTool='player', boardHistory=[], arrowStart=null, dragToken=null;
+
+ function freshBoard(type){
+  const t=String(type||'').toLowerCase();
+  let tokens=[
+   {x:175,y:105,kind:'player'},{x:275,y:70,kind:'player'},{x:380,y:110,kind:'player'},
+   {x:205,y:240,kind:'player'},{x:385,y:240,kind:'player'},
+   {x:290,y:150,kind:'opponent'},{x:345,y:205,kind:'opponent'},
+   {x:130,y:170,kind:'ball'}
+  ];
+  let arrows=[{x1:186,y1:105,x2:250,y2:78},{x1:288,y1:82,x2:365,y2:110},{x1:205,y1:224,x2:250,y2:178}];
+  if(t.includes('press')){
+   tokens=[{x:115,y:175,kind:'player'},{x:205,y:125,kind:'player'},{x:190,y:235,kind:'player'},{x:300,y:165,kind:'opponent'},{x:380,y:95,kind:'opponent'},{x:380,y:240,kind:'opponent'},{x:260,y:165,kind:'ball'}];
+   arrows=[{x1:130,y1:175,x2:250,y2:167},{x1:205,y1:140,x2:270,y2:165},{x1:190,y1:220,x2:270,y2:180}];
+  }else if(t.includes('trans')){
+   tokens=[{x:170,y:100,kind:'player'},{x:240,y:150,kind:'player'},{x:170,y:245,kind:'player'},{x:360,y:90,kind:'opponent'},{x:410,y:185,kind:'opponent'},{x:350,y:260,kind:'opponent'},{x:285,y:155,kind:'ball'}];
+   arrows=[{x1:250,y1:147,x2:325,y2:112},{x1:270,y1:171,x2:330,y2:220},{x1:200,y1:245,x2:270,y2:185}];
+  }else if(t.includes('tecn')||t.includes('final')||t.includes('portier')){
+   tokens=[{x:130,y:160,kind:'player'},{x:240,y:105,kind:'player'},{x:350,y:165,kind:'player'},{x:455,y:180,kind:'opponent'},{x:280,y:230,kind:'opponent'},{x:190,y:160,kind:'ball'},{x:500,y:150,kind:'cone'}];
+   arrows=[{x1:200,y1:153,x2:230,y2:115},{x1:253,y1:115,x2:330,y2:153},{x1:366,y1:165,x2:435,y2:175}];
+  }
+  return {tokens:tokens,arrows:arrows};
+ }
+ function safeBoard(b){return b&&Array.isArray(b.tokens)&&Array.isArray(b.arrows)?{tokens:b.tokens.filter(function(t){return t&&Number.isFinite(t.x)&&Number.isFinite(t.y)&&['player','opponent','ball','cone'].includes(t.kind)}).map(function(t){return {x:Math.max(12,Math.min(588,t.x)),y:Math.max(12,Math.min(348,t.y)),kind:t.kind}}),arrows:b.arrows.filter(function(a){return a&&['x1','y1','x2','y2'].every(function(k){return Number.isFinite(a[k])})}).map(function(a){return {x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2}})}:freshBoard('Possesso')}
+ function boardSvg(board,editable){
+  const b=safeBoard(board);
+  const arrows=b.arrows.map(function(a){return '<line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-width="3.5" stroke-linecap="round" marker-end="url(#pcArrowHead)" />'}).join('');
+  const tokens=b.tokens.map(function(t,i){
+   if(t.kind==='ball')return '<g transform="translate('+t.x+' '+t.y+')" '+(editable?'data-token-index="'+i+'" style="cursor:grab"':'')+'><circle r="9" fill="#fff" stroke="#28382c" stroke-width="1.8"/><path d="M-3 -3 L2 -4 L5 1 L1 5 L-4 2 Z" fill="#26332b"/></g>';
+   if(t.kind==='cone')return '<g transform="translate('+t.x+' '+t.y+')" '+(editable?'data-token-index="'+i+'" style="cursor:grab"':'')+'><path d="M0 -11 L10 9 L-10 9 Z" fill="#ed8b39" stroke="#9c591d" stroke-width="1.5"/></g>';
+   const home=t.kind==='player';
+   const label=home?'P':'A';
+   const count=b.tokens.slice(0,i+1).filter(function(x){return x.kind===t.kind}).length;
+   return '<g transform="translate('+t.x+' '+t.y+')" '+(editable?'data-token-index="'+i+'" style="cursor:grab"':'')+'><circle r="12.5" fill="'+(home?'#27834b':'#c64c4c')+'" stroke="#fff" stroke-width="2"/><text y="4" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">'+label+count+'</text></g>';
+  }).join('');
+  return '<svg class="pc-tactic-board" viewBox="0 0 600 360" role="img" aria-label="Lavagna tattica schematica">'+
+   '<defs><marker id="pcArrowHead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#f07a32"/></marker><pattern id="pcPitchLines" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#d4e4d3" stroke-width=".8"/></pattern></defs>'+
+   '<rect x="7" y="7" width="586" height="346" rx="8" fill="#edf6e9" stroke="#99b99b" stroke-width="2"/><rect x="7" y="7" width="586" height="346" rx="8" fill="url(#pcPitchLines)"/>'+
+   '<g fill="none" stroke="#9abd9c" stroke-width="1.7"><rect x="20" y="20" width="560" height="320"/><line x1="300" y1="20" x2="300" y2="340"/><circle cx="300" cy="180" r="52"/><circle cx="300" cy="180" r="2.5" fill="#9abd9c"/><rect x="20" y="100" width="72" height="160"/><rect x="508" y="100" width="72" height="160"/><rect x="20" y="140" width="26" height="80"/><rect x="554" y="140" width="26" height="80"/></g>'+arrows+tokens+
+   '</svg>';
+ }
+ function boardBlock(board){return '<div class="pc-exercise-board"><h3>Lavagnetta tattica</h3><div class="pc-board-slot">'+boardSvg(board||freshBoard('Possesso'),false)+'</div><p class="pc-board-hint">Schema illustrativo: le posizioni sono indicative. Adatta distanze, numero di giocatori e direzioni al contesto della tua squadra.</p></div>'}
+ function detailItem(label,value){return '<div class="pc-detail-item"><strong>'+esc(label)+'</strong><span>'+esc(value||'Da definire in base al gruppo')+'</span></div>'}
+ function validHttpUrl(value){try{const u=new URL(value);return u.protocol==='https:'||u.protocol==='http:'}catch(e){return false}}
+ function sourceBlock(e){
+  let links='';
+  if(e.sourceUrl&&validHttpUrl(e.sourceUrl))links+='<a href="'+esc(e.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+esc(e.sourceName||'Apri il riferimento')+' ↗</a>';
+  if(!e.sourceUrl){links+='<a href="https://www.fifatrainingcentre.com/en/" target="_blank" rel="noopener noreferrer">Approfondimenti FIFA ↗</a><a href="https://www.uefa.com/development/coaches/" target="_blank" rel="noopener noreferrer">Formazione UEFA ↗</a>'}
+  return '<div class="modal-detail"><strong>Riferimenti</strong><p style="margin:6px 0 0">'+esc(e.sourceNote||(e.custom?'Riferimento inserito dall’allenatore. Verifica sempre che il materiale sia adatto alla tua categoria e rispetta le licenze originali.':'Questa è una scheda dimostrativa PROCOACH. I collegamenti sono approfondimenti esterni, non necessariamente la fonte diretta dell’esercizio.'))+'</p><div class="pc-source-links">'+links+'</div></div>';
+ }
+ function openDetailedExercise(e){
+  const steps=(e.steps||[]).map(function(s){return '<li>'+esc(s)+'</li>'}).join('');
+  const b=safeBoard(e.board||freshBoard(e.type));
+  const custom=!!e.custom;
+  const html='<p>'+esc(e.summary||e.objective||'Esercizio tecnico')+'</p>'+
+   '<div class="resource-meta"><span class="pill">'+esc(e.type)+'</span><span class="pill">'+esc(e.duration)+'</span><span class="pill">'+esc(e.level||'Tutti i livelli')+'</span></div>'+
+   boardBlock(b)+
+   '<div class="pc-detail-grid">'+detailItem('Obiettivo',e.objective||e.summary)+detailItem('Categoria consigliata',e.category||e.level)+detailItem('Giocatori',e.players||'Indicato nell’organizzazione')+detailItem('Spazio',e.space||e.setup)+detailItem('Materiale',e.equipment||'Palloni e coni, da adattare')+detailItem('Organizzazione',e.setup)+detailItem('Focus allenatore',e.coaching)+detailItem('Progressione',e.progression||e.variant)+'</div>'+
+   '<div class="modal-detail"><strong>Svolgimento</strong><ol class="pc-step-list">'+steps+'</ol></div>'+
+   (e.variant?'<div class="modal-detail"><strong>Variante</strong><p style="margin:6px 0 0">'+esc(e.variant)+'</p></div>':'')+
+   sourceBlock(e)+
+   '<div class="modal-actions">'+(custom?'<button type="button" class="btn outline pc-delete-exercise" data-delete-custom="'+esc(e.id)+'">Elimina esercizio</button>':'')+'<button class="btn outline" data-modal-close>Chiudi</button><button class="btn primary" data-plan-from="'+esc(e.id||e.title)+'">Usa nella seduta</button></div>';
+  openModal(e.title,html,'SCHEDA ESERCIZIO');
+ }
+ window.openExercise=openDetailedExercise;
+ function storeCustom(){write(STORE,customExercises)}
+ function saveBoardSnapshot(){boardHistory.push(JSON.stringify(boardState));if(boardHistory.length>30)boardHistory.shift()}
+ function boardPoint(svg,event){const r=svg.getBoundingClientRect();return {x:Math.max(12,Math.min(588,(event.clientX-r.left)*600/r.width)),y:Math.max(12,Math.min(348,(event.clientY-r.top)*360/r.height))}}
+ function setBoardTool(tool){boardTool=tool;arrowStart=null;document.querySelectorAll('[data-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.boardTool===tool)})}
+ function bindBoardEditor(){
+  const slot=$('pcBoardSlot');if(!slot)return;
+  slot.innerHTML=boardSvg(boardState,true);
+  const svg=slot.querySelector('svg');
+  svg.addEventListener('pointerdown',function(e){
+   const g=e.target.closest('[data-token-index]');if(!g)return;
+   dragToken=Number(g.dataset.tokenIndex);svg.setPointerCapture(e.pointerId);e.preventDefault();
+  });
+  svg.addEventListener('pointermove',function(e){
+   if(dragToken===null)return;
+   const p=boardPoint(svg,e);const item=boardState.tokens[dragToken];if(!item)return;
+   item.x=p.x;item.y=p.y;
+   const g=svg.querySelector('[data-token-index="'+dragToken+'"]');if(g)g.setAttribute('transform','translate('+p.x+' '+p.y+')');
+  });
+  svg.addEventListener('pointerup',function(e){if(dragToken!==null){dragToken=null;renderBoardEditor()}});
+  svg.addEventListener('pointercancel',function(){dragToken=null;renderBoardEditor()});
+  svg.addEventListener('click',function(e){
+   if(e.target.closest('[data-token-index]'))return;
+   const p=boardPoint(svg,e);
+   if(boardTool==='arrow'){
+    if(!arrowStart){arrowStart=p;toast('Ora clicca sul punto di arrivo della freccia');return}
+    saveBoardSnapshot();boardState.arrows.push({x1:arrowStart.x,y1:arrowStart.y,x2:p.x,y2:p.y});arrowStart=null;renderBoardEditor();return;
+   }
+   if(boardTool==='erase'){
+    let nearest=-1,dist=26;
+    boardState.tokens.forEach(function(t,i){const d=Math.hypot(t.x-p.x,t.y-p.y);if(d<dist){dist=d;nearest=i}});
+    if(nearest>=0){saveBoardSnapshot();boardState.tokens.splice(nearest,1);renderBoardEditor()}
+    return;
+   }
+   saveBoardSnapshot();boardState.tokens.push({x:p.x,y:p.y,kind:boardTool});renderBoardEditor();
+  });
+ }
+ function renderBoardEditor(){
+  bindBoardEditor();
+  document.querySelectorAll('[data-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.boardTool===boardTool)});
+ }
+ function createExerciseModal(){
+  boardState=freshBoard('Possesso');boardTool='player';boardHistory=[];arrowStart=null;
+  const body='<p class="pc-creator-intro">Compila i dettagli che un altro allenatore dovrebbe conoscere per riproporre l’esercizio. La lavagnetta è modificabile: puoi aggiungere e spostare giocatori, avversari, pallone e coni, oppure tracciare le frecce.</p>'+
+   '<form id="pcExerciseForm" class="pc-form-grid">'+
+   '<div class="field full"><label for="pcExTitle">Nome dell’esercizio *</label><input id="pcExTitle" maxlength="100" required placeholder="Es. Uscita dalla pressione e terzo uomo"></div>'+
+   '<div class="field"><label for="pcExType">Tipologia</label><select id="pcExType"><option>Possesso</option><option>Pressing</option><option>Transizioni</option><option>Tecnica</option><option>Portieri</option></select></div>'+
+   '<div class="field"><label for="pcExLevel">Categoria / livello</label><select id="pcExLevel"><option>U9–U11</option><option>U12–U15</option><option>U16–U19</option><option>Dilettanti</option><option>Adulti / agonistica</option><option>Portieri</option><option>Tutti i livelli</option></select></div>'+
+   '<div class="field"><label for="pcExDuration">Durata (minuti)</label><input id="pcExDuration" type="number" min="1" max="120" value="12" required></div>'+
+   '<div class="field"><label for="pcExPlayers">Numero giocatori</label><input id="pcExPlayers" maxlength="80" placeholder="Es. 8 + 2 portieri" required></div>'+
+   '<div class="field"><label for="pcExSpace">Spazio e dimensioni</label><input id="pcExSpace" maxlength="160" placeholder="Es. 25 × 20 m" required></div>'+
+   '<div class="field"><label for="pcExEquipment">Materiale</label><input id="pcExEquipment" maxlength="200" placeholder="Palloni, cinesini, porticine..." required></div>'+
+   '<div class="field full"><label for="pcExObjective">Obiettivo tecnico / tattico *</label><textarea id="pcExObjective" maxlength="600" required placeholder="Quale comportamento vuoi allenare e perché?"></textarea></div>'+
+   '<div class="field full"><label for="pcExSetup">Organizzazione dello spazio e dei giocatori *</label><textarea id="pcExSetup" maxlength="700" required placeholder="Descrivi campo, squadre, posizioni iniziali e rotazioni."></textarea></div>'+
+   '<div class="field full"><label for="pcExSteps">Svolgimento, un passaggio per riga *</label><textarea id="pcExSteps" maxlength="1800" required placeholder="1. Inizio dell’azione&#10;2. Reazione dei giocatori&#10;3. Rotazione e ripartenza"></textarea></div>'+
+   '<div class="field"><label for="pcExCoaching">Punti chiave e correzioni</label><textarea id="pcExCoaching" maxlength="700" placeholder="Cosa osservare? Quali errori correggere?"></textarea></div>'+
+   '<div class="field"><label for="pcExProgression">Progressione / difficoltà</label><textarea id="pcExProgression" maxlength="500" placeholder="Come aumentare o ridurre la difficoltà?"></textarea></div>'+
+   '<div class="field full"><label for="pcExVariant">Variante o regola di punteggio</label><textarea id="pcExVariant" maxlength="500" placeholder="Vincoli, punti bonus, semplificazioni..."></textarea></div>'+
+   '<div class="field"><label for="pcExSourceName">Nome della fonte / riferimento</label><input id="pcExSourceName" maxlength="120" placeholder="Es. FIFA Training Centre, libro, allenatore"></div>'+
+   '<div class="field"><label for="pcExSourceUrl">Link a video, immagine o articolo</label><input id="pcExSourceUrl" type="url" maxlength="500" placeholder="https://..."></div>'+
+   '<div class="field full"><div class="pc-section-label">Lavagnetta tattica</div><div class="pc-board-panel"><div class="pc-board-heading"><div><strong>Disegna l’esercizio</strong><small>Seleziona uno strumento. Trascina i simboli già presenti per spostarli. Per una freccia, clicca prima il punto di partenza e poi quello d’arrivo.</small></div></div>'+
+   '<div class="pc-board-tools"><button type="button" class="pc-board-tool active" data-board-tool="player">＋ Giocatore</button><button type="button" class="pc-board-tool" data-board-tool="opponent">＋ Avversario</button><button type="button" class="pc-board-tool" data-board-tool="ball">⚽ Pallone</button><button type="button" class="pc-board-tool" data-board-tool="cone">▲ Cono</button><button type="button" class="pc-board-tool" data-board-tool="arrow">↗ Freccia</button><button type="button" class="pc-board-tool" data-board-tool="erase">⌫ Cancella</button><button type="button" class="pc-board-tool" id="pcBoardUndo">Annulla</button><button type="button" class="pc-board-tool" id="pcBoardReset">Ripristina</button></div>'+
+   '<div class="pc-board-slot" id="pcBoardSlot"></div><p class="pc-board-hint">Il disegno è uno schema schematico in 2D e verrà salvato insieme alla scheda, solo in questo browser.</p></div></div>'+
+   '<div class="field full"><button class="btn primary" type="submit">Salva esercizio nella mia libreria</button></div>'+
+   '</form>'+
+   '<div class="pc-exercise-tip">Riferimenti e diritti: se inserisci materiali di altri autori, aggiungi il collegamento alla fonte e verifica sempre permessi e licenze. Evita di caricare dati personali dei giocatori minorenni.</div>';
+  openModal('Crea un esercizio',body,'LIBRERIA PERSONALE');
+  $('modalBackdrop').querySelector('.modal').classList.add('pc-wide');
+  renderBoardEditor();
+  document.querySelectorAll('[data-board-tool]').forEach(function(b){b.addEventListener('click',function(){setBoardTool(b.dataset.boardTool)})});
+  $('pcBoardUndo').addEventListener('click',function(){if(!boardHistory.length){toast('Nessuna azione da annullare');return}boardState=JSON.parse(boardHistory.pop());arrowStart=null;renderBoardEditor()});
+  $('pcBoardReset').addEventListener('click',function(){if(confirm('Ripristinare la lavagnetta iniziale?')){saveBoardSnapshot();boardState=freshBoard($('pcExType').value);renderBoardEditor()}});
+  $('pcExType').addEventListener('change',function(){if(!boardState||boardState.tokens.length===0)boardState=freshBoard(this.value)});
+  $('pcExerciseForm').addEventListener('submit',function(e){
+   e.preventDefault();
+   const title=$('pcExTitle').value.trim(),type=$('pcExType').value,level=$('pcExLevel').value,duration=Number($('pcExDuration').value);
+   const objective=$('pcExObjective').value.trim(),setup=$('pcExSetup').value.trim();
+   const lines=$('pcExSteps').value.split(/\r?\n/).map(function(s){return s.replace(/^\s*(?:\d+[.)]\s*)?/,'').trim()}).filter(Boolean);
+   const sourceUrl=$('pcExSourceUrl').value.trim();
+   if(!title||!objective||!setup||lines.length===0){toast('Completa nome, obiettivo, organizzazione e svolgimento');return}
+   if(sourceUrl&&!validHttpUrl(sourceUrl)){toast('Il link di riferimento deve iniziare con http:// o https://');return}
+   const ex={id:'custom-'+Date.now().toString(36),title:title,type:type,duration:duration+' min',level:level,icon:type==='Portieri'?'🧤':type==='Pressing'?'↗':type==='Transizioni'?'⚡':type==='Tecnica'?'⚽':'◈',summary:objective,objective:objective,category:level,players:$('pcExPlayers').value.trim(),space:$('pcExSpace').value.trim(),equipment:$('pcExEquipment').value.trim(),setup:setup,steps:lines,coaching:$('pcExCoaching').value.trim(),progression:$('pcExProgression').value.trim(),variant:$('pcExVariant').value.trim(),sourceName:$('pcExSourceName').value.trim(),sourceUrl:sourceUrl,sourceNote:sourceUrl?'Riferimento aggiunto dall’autore della scheda. Consulta sempre la fonte originale.':'Nessun riferimento esterno inserito.',board:safeBoard(boardState),custom:true,createdAt:new Date().toISOString()};
+   customExercises.push(ex);exercises.push(ex);storeCustom();
+   renderLibrary();renderExerciseLists();showPage('library');closeModal();toast('Esercizio salvato nella tua libreria');
+  });
+ }
+ document.getElementById('createExerciseBtn')?.addEventListener('click',createExerciseModal);
+ // Modal sizing is reset when closing any dialog after the wider exercise creator.
+ const originalClose=closeModal;
+ window.closeModal=function(){document.querySelector('#modalBackdrop .modal')?.classList.remove('pc-wide');originalClose()};
+ function openDetailedExerciseAndExport(){}
+ function renderLibrary(){
+  const q=$('globalSearch').value.trim().toLocaleLowerCase('it');
+  const visible=exercises.filter(function(e){
+   const text=[e.title,e.type,e.summary,e.level,e.objective,e.setup,e.players,e.equipment].join(' ').toLocaleLowerCase('it');
+   return (activeFilter==='Tutti'||e.type===activeFilter)&&text.includes(q);
+  });
+  $('libraryExercises').innerHTML=visible.length?visible.map(exerciseCard).join(''):'<div class="empty" style="grid-column:1/-1">Nessun esercizio trovato. Prova un altro termine o filtro.</div>';
+ }
+ function lookupDetailed(key){
+  return exercises.find(function(e){return e.id===key})||exercises.find(function(e){return e.title===key})||gkExercises.find(function(e){return ('gk-'+e.title.replace(/\W/g,'-'))===key});
+ }
+ window.lookupExercise=lookupDetailed;
+ document.addEventListener('click',function(e){
+  const del=e.target.closest('[data-delete-custom]');
+  if(!del)return;
+  const id=del.dataset.deleteCustom;
+  if(!confirm('Eliminare questo esercizio dalla libreria locale?'))return;
+  customExercises=customExercises.filter(function(x){return x.id!==id});
+  exercises.splice(0,exercises.length,...exercises.filter(function(x){return x.id!==id}));
+  storeCustom();renderLibrary();renderExerciseLists();closeModal();toast('Esercizio eliminato');
+ });
+ // Replace the details dialog so every sheet includes method, tactical sketch and references.
+ function openExercise(e){
+  const steps=(e.steps||[]).map(function(s){return '<li>'+esc(s)+'</li>'}).join('');
+  const board=safeBoard(e.board||freshBoard(e.type));
+  const custom=!!e.custom;
+  const html='<p>'+esc(e.summary||'Esercizio tecnico')+'</p>'+
+   '<div class="resource-meta"><span class="pill">'+esc(e.type)+'</span><span class="pill">'+esc(e.duration)+'</span><span class="pill">'+esc(e.level||'Tutti i livelli')+'</span></div>'+
+   boardBlock(board)+
+   '<div class="pc-detail-grid">'+detailItem('Obiettivo',e.objective||e.summary)+detailItem('Categoria consigliata',e.category||e.level)+detailItem('Giocatori',e.players||'Indicati nell’organizzazione')+detailItem('Spazio',e.space||e.setup)+detailItem('Materiale',e.equipment||'Adattare al gruppo')+detailItem('Organizzazione',e.setup)+detailItem('Punti chiave',e.coaching)+detailItem('Progressione',e.progression||e.variant)+'</div>'+
+   '<div class="modal-detail"><strong>Svolgimento</strong><ol class="pc-step-list">'+steps+'</ol></div>'+
+   (e.variant?'<div class="modal-detail"><strong>Variante</strong><p style="margin:6px 0 0">'+esc(e.variant)+'</p></div>':'')+
+   sourceBlock(e)+
+   '<div class="modal-actions">'+(custom?'<button type="button" class="btn outline pc-delete-exercise" data-delete-custom="'+esc(e.id)+'">Elimina esercizio</button>':'')+'<button class="btn outline" data-modal-close>Chiudi</button><button class="btn primary" data-plan-from="'+esc(e.id||e.title)+'">Usa nella seduta</button></div>';
+  openModal(e.title,html,'SCHEDA ESERCIZIO');
+ }
+ window.openExercise=openExercise;
+ // Re-render after augmenting the original built-in exercise list with any local custom entries.
+ renderLibrary();
+})();
+
 </script>
 </body>
 </html>
