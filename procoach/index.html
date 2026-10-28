@@ -375,7 +375,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    '<div class="field"><label for="pcExSourceName">Nome della fonte / riferimento</label><input id="pcExSourceName" maxlength="120" placeholder="Es. FIFA Training Centre, libro, allenatore"></div>'+
    '<div class="field"><label for="pcExSourceUrl">Link a video, immagine o articolo</label><input id="pcExSourceUrl" type="url" maxlength="500" placeholder="https://..."></div>'+
    '<div class="field full"><div class="pc-section-label">Lavagnetta tattica</div><div class="pc-board-panel"><div class="pc-board-heading"><div><strong>Disegna l’esercizio</strong><small>Seleziona uno strumento. Trascina i simboli già presenti per spostarli. Per una freccia, clicca prima il punto di partenza e poi quello d’arrivo.</small></div></div>'+
-   '<div class="pc-board-tools"><button type="button" class="pc-board-tool active" data-board-tool="player">＋ Giocatore</button><button type="button" class="pc-board-tool" data-board-tool="opponent">＋ Avversario</button><button type="button" class="pc-board-tool" data-board-tool="ball">⚽ Pallone</button><button type="button" class="pc-board-tool" data-board-tool="cone">▲ Cono</button><button type="button" class="pc-board-tool" data-board-tool="arrow">↗ Freccia</button><button type="button" class="pc-board-tool" data-board-tool="erase">⌫ Cancella</button><button type="button" class="pc-board-tool" id="pcBoardUndo">Annulla</button><button type="button" class="pc-board-tool" id="pcBoardReset">Ripristina</button></div>'+
+   '<div class="pc-board-tools"><button type="button" class="pc-board-tool active" data-board-tool="player">＋ Giocatore</button><button type="button" class="pc-board-tool" data-board-tool="opponent">＋ Avversario</button><button type="button" class="pc-board-tool" data-board-tool="ball">⚽ Pallone</button><button type="button" class="pc-board-tool" data-board-tool="cone">▲ Cono</button><button type="button" class="pc-board-tool" data-board-tool="arrow">↗ Freccia</button><button type="button" class="pc-board-tool" data-board-tool="erase">⌫ Cancella</button><button type="button" class="pc-board-tool" id="pcBoardUndo">Annulla</button><button type="button" class="pc-board-tool" id="pcBoardReset">Ripristina</button><button type="button" class="pc-board-tool" id="pcBoardExport">Scarica SVG</button></div>'+
    '<div class="pc-board-slot" id="pcBoardSlot"></div><p class="pc-board-hint">Il disegno è uno schema schematico in 2D e verrà salvato insieme alla scheda, solo in questo browser.</p></div></div>'+
    '<div class="field full"><button class="btn primary" type="submit">Salva esercizio nella mia libreria</button></div>'+
    '</form>'+
@@ -386,6 +386,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   document.querySelectorAll('[data-board-tool]').forEach(function(b){b.addEventListener('click',function(){setBoardTool(b.dataset.boardTool)})});
   $('pcBoardUndo').addEventListener('click',function(){if(!boardHistory.length){toast('Nessuna azione da annullare');return}boardState=JSON.parse(boardHistory.pop());arrowStart=null;renderBoardEditor()});
   $('pcBoardReset').addEventListener('click',function(){if(confirm('Ripristinare la lavagnetta iniziale?')){saveBoardSnapshot();boardState=freshBoard($('pcExType').value);renderBoardEditor()}});
+  $('pcBoardExport').addEventListener('click',function(){const svg=boardSvg(boardState,false).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ');const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='lavagnetta-procoach.svg';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('Lavagnetta scaricata in formato SVG')});
   $('pcExType').addEventListener('change',function(){if(!boardState||boardState.tokens.length===0)boardState=freshBoard(this.value)});
   $('pcExerciseForm').addEventListener('submit',function(e){
    e.preventDefault();
@@ -397,6 +398,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    if(sourceUrl&&!validHttpUrl(sourceUrl)){toast('Il link di riferimento deve iniziare con http:// o https://');return}
    const ex={id:'custom-'+Date.now().toString(36),title:title,type:type,duration:duration+' min',level:level,icon:type==='Portieri'?'🧤':type==='Pressing'?'↗':type==='Transizioni'?'⚡':type==='Tecnica'?'⚽':'◈',summary:objective,objective:objective,category:level,players:$('pcExPlayers').value.trim(),space:$('pcExSpace').value.trim(),equipment:$('pcExEquipment').value.trim(),setup:setup,steps:lines,coaching:$('pcExCoaching').value.trim(),progression:$('pcExProgression').value.trim(),variant:$('pcExVariant').value.trim(),sourceName:$('pcExSourceName').value.trim(),sourceUrl:sourceUrl,sourceNote:sourceUrl?'Riferimento aggiunto dall’autore della scheda. Consulta sempre la fonte originale.':'Nessun riferimento esterno inserito.',board:safeBoard(boardState),custom:true,createdAt:new Date().toISOString()};
    customExercises.push(ex);exercises.push(ex);storeCustom();
+   activeFilter='Tutti';document.querySelectorAll('#exerciseFilters .filter').forEach(function(b){b.classList.toggle('active',b.dataset.filter==='Tutti')});
    renderLibrary();renderExerciseLists();showPage('library');closeModal();toast('Esercizio salvato nella tua libreria');
   });
  }
@@ -404,6 +406,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  // Modal sizing is reset when closing any dialog after the wider exercise creator.
  const originalClose=closeModal;
  window.closeModal=function(){document.querySelector('#modalBackdrop .modal')?.classList.remove('pc-wide');originalClose()};
+ $('modalClose').addEventListener('click',function(){document.querySelector('#modalBackdrop .modal')?.classList.remove('pc-wide')});
+ $('modalBackdrop').addEventListener('click',function(e){if(e.target===$('modalBackdrop'))document.querySelector('#modalBackdrop .modal')?.classList.remove('pc-wide')});
+ document.addEventListener('click',function(e){if(e.target.closest('[data-modal-close]')||e.target.closest('[data-plan-from]'))document.querySelector('#modalBackdrop .modal')?.classList.remove('pc-wide')});
  function openDetailedExerciseAndExport(){}
  function renderLibrary(){
   const q=$('globalSearch').value.trim().toLocaleLowerCase('it');
