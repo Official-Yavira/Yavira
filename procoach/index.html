@@ -89,6 +89,15 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-official-source-note{border-left:3px solid #358352;background:#eff7f0;border-radius:0 8px 8px 0;padding:10px 12px;margin:0 0 12px;font-size:11px;line-height:1.55;color:#3e5c46}
 .pc-board-tools .pc-board-tool#pcBoardBlank{background:#eff8f0;color:#176b3a;border-color:#bfdec7}
 .pc-session-board-tools #pcSessionBoardBlank{background:#eff8f0;color:#176b3a;border-color:#bfdec7}
+.pc-source-library-banner{display:flex;align-items:center;gap:16px;margin:22px 0;padding:20px;border:1px solid #d8e7db;border-radius:16px;background:linear-gradient(120deg,#f4faf5,#fff);box-shadow:0 4px 18px rgba(30,70,42,.045)}
+.pc-source-banner-mark{flex:0 0 42px;width:42px;height:42px;display:grid;place-items:center;border-radius:12px;background:#dff1e3;color:#176b3a;font-weight:900;font-size:23px}
+.pc-source-banner-content{flex:1;min-width:0}
+.pc-source-banner-kicker{font-size:10px;font-weight:900;letter-spacing:.11em;color:#237243;margin-bottom:5px}
+.pc-source-banner-content h3{font-size:15px;line-height:1.4;margin:0 0 6px;color:#223c2b}
+.pc-source-banner-content p{font-size:12px;line-height:1.65;color:#5d6c61;margin:0 0 10px}
+.pc-source-banner-tags{display:flex;flex-wrap:wrap;gap:6px}
+.pc-source-banner-tags span{padding:5px 8px;border-radius:20px;background:#e9f4eb;color:#356747;font-size:10px;font-weight:800}
+@media(max-width:760px){.pc-source-library-banner{align-items:flex-start;flex-wrap:wrap;padding:14px}.pc-source-banner-content{flex:1 1 calc(100% - 60px)}.pc-source-library-banner>.btn{margin-left:58px}.pc-source-banner-content h3{font-size:14px}}
 .pc-reference-preview{margin:12px 0 2px;border:1px solid #e2e9e3;border-radius:10px;overflow:hidden;background:#fff}
 .pc-reference-preview img{display:block;width:100%;max-height:260px;object-fit:contain;background:#f5f7f5}
 .pc-reference-preview figcaption{padding:7px 10px;color:#718078;font-size:10px}
@@ -128,6 +137,16 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
   <button class="quick-card" data-go="community"><span class="q-icon">☷</span><strong>Parla con gli allenatori</strong><small>Apri i canali di confronto tematici.</small></button>
   <button class="quick-card" data-go="pro"><span class="q-icon">★</span><strong>Impara dai professionisti</strong><small>Apri le risorse di club e federazioni.</small></button>
  </div>
+ <section class="pc-source-library-banner" aria-label="Aggiornamenti PROCOACH">
+  <div class="pc-source-banner-mark">✓</div>
+  <div class="pc-source-banner-content">
+   <div class="pc-source-banner-kicker">CATALOGO TECNICO · FONTI UFFICIALI</div>
+   <h3>Schede federali in sola lettura. Lavagnette libere da personalizzare.</h3>
+   <p>Esercizi di FTC, ASF/SFV, FIGC e FIFA Training Centre. I dettagli originali restano fissi; puoi aggiungere o cancellare simboli, disegnare frecce oppure partire da una lavagnetta vuota.</p>
+   <div class="pc-source-banner-tags"><span>FTC · Ticino</span><span>ASF/SFV · Svizzera</span><span>FIGC · SGS</span><span>FIFA Training Centre</span></div>
+  </div>
+  <button class="btn primary" type="button" data-go="library">Apri il catalogo →</button>
+ </section>
  <div class="section-head"><div><h2>In evidenza</h2><p>Una selezione di contenuti per cominciare.</p></div><button class="link-button" data-go="library">Tutti gli esercizi →</button></div>
  <div class="exercise-grid" id="homeExercises"></div>
  <p class="footer-note">Versione dimostrativa: i profili, i preferiti e le discussioni sono salvati solo nel browser. La chat non è ancora condivisa in tempo reale tra utenti.</p>
