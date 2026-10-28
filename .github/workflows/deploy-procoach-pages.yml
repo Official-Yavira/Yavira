@@ -28,6 +28,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v6
 
+      - name: Validate inline JavaScript
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          html = Path("procoach/index.html").read_text(encoding="utf-8")
+          scripts = re.findall(r"<script(?:\\s[^>]*)?>(.*?)</script>", html, re.I | re.S)
+          if not scripts:
+              raise SystemExit("No inline JavaScript found")
+          for i, script in enumerate(scripts):
+              Path(f"/tmp/procoach-inline-{i}.js").write_text(script, encoding="utf-8")
+          print(f"Extracted {len(scripts)} inline script block(s)")
+          PY
+          for file in /tmp/procoach-inline-*.js; do
+            node --check "$file"
+          done
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
         with:
