@@ -34,7 +34,7 @@ jobs:
           import re
           from pathlib import Path
           html = Path("procoach/index.html").read_text(encoding="utf-8")
-          scripts = re.findall(r"<script(?:\\s[^>]*)?>(.*?)</script>", html, re.I | re.S)
+          scripts = re.findall(r"<script(?:\s[^>]*)?>(.*?)</script>", html, re.I | re.S)
           if not scripts:
               raise SystemExit("No inline JavaScript found")
           for i, script in enumerate(scripts):
