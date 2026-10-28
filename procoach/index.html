@@ -346,7 +346,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    '<div class="modal-detail"><strong>Svolgimento</strong><ol class="pc-step-list">'+steps+'</ol></div>'+
    (e.variant?'<div class="modal-detail"><strong>Variante</strong><p style="margin:6px 0 0">'+esc(e.variant)+'</p></div>':'')+
    sourceBlock(e)+
-   '<div class="modal-actions">'+(custom?'<button type="button" class="btn outline pc-delete-exercise" data-delete-custom="'+esc(e.id)+'">Elimina esercizio</button>':'')+'<button class="btn outline" data-modal-close>Chiudi</button><button class="btn primary" data-plan-from="'+esc(e.id||e.title)+'">Usa nella seduta</button></div>';
+   '<div class="modal-actions">'+(custom?'<button type="button" class="btn outline" data-edit-custom="'+esc(e.id)+'">Modifica esercizio</button><button type="button" class="btn outline pc-delete-exercise" data-delete-custom="'+esc(e.id)+'">Elimina esercizio</button>':'')+'<button class="btn outline" data-modal-close>Chiudi</button><button class="btn primary" data-plan-from="'+esc(e.id||e.title)+'">Usa nella seduta</button></div>';
   openModal(e.title,html,'SCHEDA ESERCIZIO');
  }
  window.openExercise=openDetailedExercise;
@@ -390,8 +390,8 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   bindBoardEditor();
   document.querySelectorAll('[data-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.boardTool===boardTool)});
  }
- function createExerciseModal(initialMode,initialPlan){
-  boardState=freshBoard('Possesso');boardTool='player';boardHistory=[];arrowStart=null;
+ function createExerciseModal(initialMode,initialPlan,initialExercise){
+  boardState=initialExercise?safeBoard(initialExercise.board||freshBoard(initialExercise.type)):freshBoard('Possesso');boardTool='player';boardHistory=[];arrowStart=null;
   const body='<div class="pc-create-mode-switch" role="group" aria-label="Scegli cosa creare"><button type="button" class="pc-create-mode active" data-create-mode="exercise" aria-pressed="true">⚽ Esercizio singolo</button><button type="button" class="pc-create-mode" data-create-mode="session" aria-pressed="false">▦ Sessione completa</button></div>'+
    '<div id="pcExerciseMode">'+
    '<p class="pc-creator-intro">Compila i dettagli che un altro allenatore dovrebbe conoscere per riproporre l’esercizio. La lavagnetta è modificabile: puoi aggiungere e spostare giocatori, avversari, pallone e coni, oppure tracciare le frecce.</p>'+
@@ -435,9 +435,10 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    <div id="pcSessionPreview" class="pc-session-preview"></div>
    <p class="pc-exercise-tip">Ogni fase ha campi modificabili e una lavagnetta dedicata. Puoi cambiare fase, aggiungere simboli, spostare giocatori e tracciare movimenti con le frecce.</p>
    </div>`;
-  openModal('Crea esercizio o sessione',body,'NUOVO CONTENUTO');
+  openModal(initialExercise?'Modifica esercizio':'Crea esercizio o sessione',body,initialExercise?'MODIFICA ESERCIZIO':'NUOVO CONTENUTO');
   $('modalBackdrop').querySelector('.modal').classList.add('pc-wide');
   const modeButtons=Array.from(document.querySelectorAll('[data-create-mode]'));
+  if(initialExercise){const modeSwitch=document.querySelector('.pc-create-mode-switch');if(modeSwitch)modeSwitch.style.display='none'}
   function setCreateMode(mode){
    $('pcExerciseMode').style.display=mode==='exercise'?'block':'none';
    $('pcSessionMode').style.display=mode==='session'?'block':'none';
@@ -448,6 +449,12 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   modeButtons.forEach(function(b){b.addEventListener('click',function(){setCreateMode(b.dataset.createMode)})});
   setCreateMode(initialMode==='session'?'session':'exercise');
   renderBoardEditor();
+  if(initialExercise){
+   const editFields={pcExTitle:'title',pcExType:'type',pcExLevel:'level',pcExPlayers:'players',pcExSpace:'space',pcExEquipment:'equipment',pcExObjective:'objective',pcExSetup:'setup',pcExCoaching:'coaching',pcExProgression:'progression',pcExVariant:'variant',pcExSourceName:'sourceName',pcExSourceUrl:'sourceUrl'};
+   Object.keys(editFields).forEach(function(id){const el=$(id),key=editFields[id];if(el&&initialExercise[key]!=null)el.value=initialExercise[key]});
+   $('pcExDuration').value=String(parseInt(initialExercise.duration,10)||12);
+   $('pcExSteps').value=Array.isArray(initialExercise.steps)?initialExercise.steps.join('\n'):'';
+  }
   document.querySelectorAll('[data-board-tool]').forEach(function(b){b.addEventListener('click',function(){setBoardTool(b.dataset.boardTool)})});
   $('pcBoardUndo').addEventListener('click',function(){if(!boardHistory.length){toast('Nessuna azione da annullare');return}boardState=JSON.parse(boardHistory.pop());arrowStart=null;renderBoardEditor()});
   $('pcBoardReset').addEventListener('click',function(){if(confirm('Ripristinare la lavagnetta iniziale?')){saveBoardSnapshot();boardState=freshBoard($('pcExType').value);renderBoardEditor()}});
@@ -546,13 +553,15 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    const sourceUrl=$('pcExSourceUrl').value.trim();
    if(!title||!objective||!setup||lines.length===0){toast('Completa nome, obiettivo, organizzazione e svolgimento');return}
    if(sourceUrl&&!validHttpUrl(sourceUrl)){toast('Il link di riferimento deve iniziare con http:// o https://');return}
-   const ex={id:'custom-'+Date.now().toString(36),title:title,type:type,duration:duration+' min',level:level,icon:type==='Portieri'?'🧤':type==='Pressing'?'↗':type==='Transizioni'?'⚡':type==='Tecnica'?'⚽':'◈',summary:objective,objective:objective,category:level,players:$('pcExPlayers').value.trim(),space:$('pcExSpace').value.trim(),equipment:$('pcExEquipment').value.trim(),setup:setup,steps:lines,coaching:$('pcExCoaching').value.trim(),progression:$('pcExProgression').value.trim(),variant:$('pcExVariant').value.trim(),sourceName:$('pcExSourceName').value.trim(),sourceUrl:sourceUrl,sourceNote:sourceUrl?'Riferimento aggiunto dall’autore della scheda. Consulta sempre la fonte originale.':'Nessun riferimento esterno inserito.',board:safeBoard(boardState),custom:true,createdAt:new Date().toISOString()};
+   const ex={id:initialExercise?initialExercise.id:'custom-'+Date.now().toString(36),title:title,type:type,duration:duration+' min',level:level,icon:type==='Portieri'?'🧤':type==='Pressing'?'↗':type==='Transizioni'?'⚡':type==='Tecnica'?'⚽':'◈',summary:objective,objective:objective,category:level,players:$('pcExPlayers').value.trim(),space:$('pcExSpace').value.trim(),equipment:$('pcExEquipment').value.trim(),setup:setup,steps:lines,coaching:$('pcExCoaching').value.trim(),progression:$('pcExProgression').value.trim(),variant:$('pcExVariant').value.trim(),sourceName:$('pcExSourceName').value.trim(),sourceUrl:sourceUrl,sourceNote:sourceUrl?'Riferimento aggiunto dall’autore della scheda. Consulta sempre la fonte originale.':'Nessun riferimento esterno inserito.',board:safeBoard(boardState),custom:true,createdAt:initialExercise&&initialExercise.createdAt?initialExercise.createdAt:new Date().toISOString(),updatedAt:initialExercise?new Date().toISOString():null};
+   if(initialExercise){customExercises=customExercises.filter(function(item){return item.id!==initialExercise.id});exercises=exercises.filter(function(item){return item.id!==initialExercise.id})}
    customExercises.push(ex);exercises.push(ex);storeCustom();
    activeFilter='Tutti';document.querySelectorAll('#exerciseFilters .filter').forEach(function(b){b.classList.toggle('active',b.dataset.filter==='Tutti')});
-   renderLibrary();renderExerciseLists();showPage('library');closeModal();toast('Esercizio salvato nella tua libreria');
+   renderLibrary();renderExerciseLists();showPage('library');closeModal();toast(initialExercise?'Esercizio aggiornato nella tua libreria':'Esercizio salvato nella tua libreria');
   });
  }
  document.getElementById('createExerciseBtn')?.addEventListener('click',createExerciseModal);
+ document.addEventListener('click',function(e){const b=e.target.closest('[data-edit-custom]');if(!b)return;const ex=lookupExercise(b.dataset.editCustom);if(ex&&ex.custom)createExerciseModal('exercise',null,ex)});
  document.getElementById('createExerciseHomeBtn')?.addEventListener('click',function(){createExerciseModal('exercise')});
  document.getElementById('homeCreateSessionBtn')?.addEventListener('click',function(){createExerciseModal('session')});
  document.getElementById('homePlanQuickBtn')?.addEventListener('click',function(){createExerciseModal('session')});
