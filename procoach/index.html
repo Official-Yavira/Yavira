@@ -418,7 +418,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    '</form>'+
    '<div class="pc-exercise-tip">Riferimenti e diritti: se inserisci materiali di altri autori, aggiungi il collegamento alla fonte e verifica sempre permessi e licenze. Evita di caricare dati personali dei giocatori minorenni.</div>'+
    '</div>'+
-   <div id="pcSessionMode" style="display:none">
+   `<div id="pcSessionMode" style="display:none">
    <p class="pc-creator-intro">Imposta categoria e durata, poi personalizza ogni fase della seduta. Puoi descrivere obiettivi, organizzazione, svolgimento e correzioni e disegnare una lavagnetta separata per ogni blocco.</p>
    <form id="pcSessionForm" class="pc-form-grid">
    <div class="field full"><label for="pcSessionTitle">Nome della sessione *</label><input id="pcSessionTitle" maxlength="120" required placeholder="Es. U15 · Uscita dal pressing e transizioni"></div>
@@ -434,7 +434,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    </form>
    <div id="pcSessionPreview" class="pc-session-preview"></div>
    <p class="pc-exercise-tip">Ogni fase ha campi modificabili e una lavagnetta dedicata. Puoi cambiare fase, aggiungere simboli, spostare giocatori e tracciare movimenti con le frecce.</p>
-   </div>
+   </div>`;
   openModal('Crea esercizio o sessione',body,'NUOVO CONTENUTO');
   $('modalBackdrop').querySelector('.modal').classList.add('pc-wide');
   const modeButtons=Array.from(document.querySelectorAll('[data-create-mode]'));
