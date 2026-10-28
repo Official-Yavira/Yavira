@@ -418,10 +418,18 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   });
   $('libraryExercises').innerHTML=visible.length?visible.map(exerciseCard).join(''):'<div class="empty" style="grid-column:1/-1">Nessun esercizio trovato. Prova un altro termine o filtro.</div>';
  }
+ window.renderLibrary=renderLibrary;
  function lookupDetailed(key){
-  return exercises.find(function(e){return e.id===key})||exercises.find(function(e){return e.title===key})||gkExercises.find(function(e){return ('gk-'+e.title.replace(/\W/g,'-'))===key});
+  return exercises.find(function(e){return e.id===key})||exercises.find(function(e){return e.title===key})||gkExercises.find(function(e){return ('gk-'+e.title.replace(/\W/g,'-'))===key})||gkExercises.find(function(e){return e.title===key});
  }
  window.lookupExercise=lookupDetailed;
+ function renderGoalkeepers(){
+  const f=document.querySelector('#gkFilters .filter.active')?.dataset.gk||'Tutti';
+  let list=gkExercises.filter(function(e){return f==='Tutti'||e.type===f});
+  if(f==='Tutti')list=list.concat(customExercises.filter(function(e){return e.type==='Portieri'}));
+  $('goalkeeperExercises').innerHTML=list.length?list.map(function(e){return exerciseCard(Object.assign({},e,{id:e.id||'gk-'+e.title.replace(/\\W/g,'-')}))}).join(''):'<div class="empty" style="grid-column:1/-1">Nessun esercizio per questo filtro.</div>';
+ }
+ window.renderGoalkeepers=renderGoalkeepers;
  document.addEventListener('click',function(e){
   const del=e.target.closest('[data-delete-custom]');
   if(!del)return;
@@ -434,7 +442,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  // Replace the details dialog so every sheet includes method, tactical sketch and references.
  function openExercise(e){
   const steps=(e.steps||[]).map(function(s){return '<li>'+esc(s)+'</li>'}).join('');
-  const board=safeBoard(e.board||freshBoard(e.type));
+  const board=safeBoard(e.board||freshBoard(['Base','Tuffo','Piedi','Gara'].includes(e.type)?'Portieri':e.type));
   const custom=!!e.custom;
   const html='<p>'+esc(e.summary||'Esercizio tecnico')+'</p>'+
    '<div class="resource-meta"><span class="pill">'+esc(e.type)+'</span><span class="pill">'+esc(e.duration)+'</span><span class="pill">'+esc(e.level||'Tutti i livelli')+'</span></div>'+
