@@ -60,6 +60,12 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-delete-exercise{margin-right:auto;color:#9c3535!important;border-color:#eed7d7!important}
 @media(max-width:700px){.library-heading{display:block}.library-heading #createExerciseBtn{margin:6px 0 15px}.pc-form-grid,.pc-detail-grid{grid-template-columns:1fr}.pc-form-grid .full{grid-column:auto}.pc-board-heading{display:block}.pc-board-heading .pc-board-tools{margin-top:10px}.pc-wide{max-height:92vh!important}.pc-tactic-board{max-height:280px}}
 
+
+.pc-reference-preview{margin:12px 0 2px;border:1px solid #e2e9e3;border-radius:10px;overflow:hidden;background:#fff}
+.pc-reference-preview img{display:block;width:100%;max-height:260px;object-fit:contain;background:#f5f7f5}
+.pc-reference-preview figcaption{padding:7px 10px;color:#718078;font-size:10px}
+@media(max-width:700px){#createExerciseHomeBtn{margin-top:7px}.pc-reference-preview img{max-height:210px}}
+
 </style>
 </head>
 <body>
@@ -87,7 +93,7 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 <section class="page active" id="page-home">
  <div class="hero"><div class="hero-copy"><div class="eyebrow">IL TUO STAFF TECNICO, IN UN UNICO POSTO</div><h1>Allenare meglio.<br><span>Un'idea alla volta.</span></h1><p>Esercizi, sedute, principi di gioco e confronto con altri allenatori. Organizza le tue idee e portale in campo con semplicità.</p><div class="hero-actions"><button class="btn primary" data-go="planner">＋ Crea una seduta</button><button class="btn ghost" data-go="library">Esplora esercizi ↗</button></div></div></div>
  <div class="metrics"><div class="metric"><div class="metric-ico">▤</div><div><strong>6</strong><small>Esercizi pronti da esplorare</small></div></div><div class="metric"><div class="metric-ico">🧤</div><div><strong>6</strong><small>Proposte specifiche per portieri</small></div></div><div class="metric"><div class="metric-ico">◉</div><div><strong id="savedCount">0</strong><small>Sedute salvate in questo browser</small></div></div></div>
- <div class="section-head"><div><h2>Da dove vuoi iniziare?</h2><p>Le funzioni principali, senza passaggi inutili.</p></div></div>
+ <div class="section-head"><div><h2>Da dove vuoi iniziare?</h2><p>Le funzioni principali, senza passaggi inutili.</p></div><button class="btn primary" id="createExerciseHomeBtn" type="button">＋ Crea esercizio con lavagnetta</button></div>
  <div class="quick-grid">
   <button class="quick-card" data-go="library"><span class="q-icon">⚽</span><strong>Trova un esercizio</strong><small>Filtra per obiettivo, categoria e ruolo.</small></button>
   <button class="quick-card" data-go="planner"><span class="q-icon">▦</span><strong>Prepara una seduta</strong><small>Organizza i blocchi e salva il piano.</small></button>
@@ -295,10 +301,15 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  function detailItem(label,value){return '<div class="pc-detail-item"><strong>'+esc(label)+'</strong><span>'+esc(value||'Da definire in base al gruppo')+'</span></div>'}
  function validHttpUrl(value){try{const u=new URL(value);return u.protocol==='https:'||u.protocol==='http:'}catch(e){return false}}
  function sourceBlock(e){
-  let links='';
-  if(e.sourceUrl&&validHttpUrl(e.sourceUrl))links+='<a href="'+esc(e.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+esc(e.sourceName||'Apri il riferimento')+' ↗</a>';
+  let links='',preview='';
+  if(e.sourceUrl&&validHttpUrl(e.sourceUrl)){
+   links+='<a href="'+esc(e.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+esc(e.sourceName||'Apri il riferimento')+' ↗</a>';
+   if(/(?:\.(?:png|jpe?g|gif|webp|svg)(?:[?#]|$)|images\.unsplash\.com\/)/i.test(e.sourceUrl)){
+    preview='<figure class="pc-reference-preview"><img src="'+esc(e.sourceUrl)+'" alt="Immagine di riferimento per '+esc(e.title)+'" loading="lazy"><figcaption>Immagine di riferimento collegata alla scheda · fonte esterna</figcaption></figure>';
+   }
+  }
   if(!e.sourceUrl){links+='<a href="https://www.fifatrainingcentre.com/en/" target="_blank" rel="noopener noreferrer">Approfondimenti FIFA ↗</a><a href="https://www.uefa.com/development/coaches/" target="_blank" rel="noopener noreferrer">Formazione UEFA ↗</a>'}
-  return '<div class="modal-detail"><strong>Riferimenti</strong><p style="margin:6px 0 0">'+esc(e.sourceNote||(e.custom?'Riferimento inserito dall’allenatore. Verifica sempre che il materiale sia adatto alla tua categoria e rispetta le licenze originali.':'Questa è una scheda dimostrativa PROCOACH. I collegamenti sono approfondimenti esterni, non necessariamente la fonte diretta dell’esercizio.'))+'</p><div class="pc-source-links">'+links+'</div></div>';
+  return '<div class="modal-detail"><strong>Riferimenti</strong><p style="margin:6px 0 0">'+esc(e.sourceNote||(e.custom?'Riferimento inserito dall’allenatore. Verifica sempre che il materiale sia adatto alla tua categoria e rispetta le licenze originali.':'Questa è una scheda dimostrativa PROCOACH. I collegamenti sono approfondimenti esterni, non necessariamente la fonte diretta dell’esercizio.'))+'</p>'+preview+'<div class="pc-source-links">'+links+'</div></div>';
  }
  function openDetailedExercise(e){
   const steps=(e.steps||[]).map(function(s){return '<li>'+esc(s)+'</li>'}).join('');
@@ -403,6 +414,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   });
  }
  document.getElementById('createExerciseBtn')?.addEventListener('click',createExerciseModal);
+ document.getElementById('createExerciseHomeBtn')?.addEventListener('click',createExerciseModal);
  // Modal sizing is reset when closing any dialog after the wider exercise creator.
  const originalClose=closeModal;
  window.closeModal=function(){document.querySelector('#modalBackdrop .modal')?.classList.remove('pc-wide');originalClose()};
