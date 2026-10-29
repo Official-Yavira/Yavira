@@ -106,6 +106,16 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-reference-preview figcaption{padding:7px 10px;color:#718078;font-size:10px}
 @media(max-width:700px){#createExerciseHomeBtn{margin-top:7px}.pc-reference-preview img{max-height:210px}}
 
+.pc-board-tools,.pc-session-board-tools{display:flex;flex-wrap:wrap;align-items:flex-start;gap:10px;margin:12px 0}
+.pc-board-tool-group{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:8px;border:1px solid #e1e8e2;border-radius:11px;background:#fafcfb;min-width:0}
+.pc-board-group-label{flex:0 0 100%;display:block;padding:0 4px 2px;font-size:9px;font-weight:900;letter-spacing:.12em;color:#75847a}
+.pc-board-actions{background:#f6f8f6}
+.pc-board-tools .pc-board-tool.active,[data-session-board-tool].active,[data-official-board-tool].active{background:#e3f4e7!important;border-color:#5ba876!important;color:#176b3a!important;box-shadow:0 0 0 1px #d6ebdc}
+.pc-tactic-board{touch-action:none!important;user-select:none;-webkit-user-select:none}
+.pc-arrow-hit{pointer-events:all;touch-action:none}
+.pc-arrow-hit line:first-child{stroke-linecap:round;pointer-events:stroke}
+.pc-board-slot,.pc-session-board-slot{touch-action:none}
+@media(max-width:700px){.pc-board-tools,.pc-session-board-tools{display:grid;grid-template-columns:1fr;gap:8px}.pc-board-tool-group{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.pc-board-group-label{grid-column:1/-1}.pc-board-tool-group button{width:100%;min-height:38px;padding:8px 7px;font-size:11px}.pc-board-tool-group button[data-board-tool="select"],.pc-board-tool-group button[data-session-board-tool="select"],.pc-board-tool-group button[data-official-board-tool="select"]{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -290,7 +300,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  const existingIds=new Set(exercises.map(function(e){return e.id}));
  customExercises=customExercises.filter(function(e){return e&&e.id&&e.title&&!existingIds.has(e.id)});
  customExercises.forEach(function(e){exercises.push(e)});
- let boardState=null, boardTool='player', boardHistory=[], arrowStart=null, dragToken=null;
+ let boardState=null, boardTool='select', boardHistory=[], arrowStart=null, dragToken=null, dragArrow=null;
 
  function freshBoard(type){
   const t=String(type||'').toLowerCase();
@@ -316,7 +326,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  function safeBoard(b){return b&&Array.isArray(b.tokens)&&Array.isArray(b.arrows)?{tokens:b.tokens.filter(function(t){return t&&Number.isFinite(t.x)&&Number.isFinite(t.y)&&['player','opponent','ball','cone'].includes(t.kind)}).map(function(t){return {x:Math.max(12,Math.min(588,t.x)),y:Math.max(12,Math.min(348,t.y)),kind:t.kind}}),arrows:b.arrows.filter(function(a){return a&&['x1','y1','x2','y2'].every(function(k){return Number.isFinite(a[k])})}).map(function(a){return {x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2}})}:freshBoard('Possesso')}
  function boardSvg(board,editable){
   const b=safeBoard(board);
-  const arrows=b.arrows.map(function(a,i){return (editable?'<g data-arrow-index="'+i+'" class="pc-arrow-hit" style="cursor:pointer" aria-label="Freccia '+(i+1)+'"><line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="transparent" stroke-width="24" stroke-linecap="round" pointer-events="stroke"/><line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-width="4.5" stroke-linecap="round" marker-end="url(#pcArrowHead)" pointer-events="none"/></g>':'<line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-width="3.5" stroke-linecap="round" marker-end="url(#pcArrowHead)"/>')}).join('');
+  const arrows=b.arrows.map(function(a,i){return (editable?'<g data-arrow-index="'+i+'" class="pc-arrow-hit" style="cursor:pointer" aria-label="Freccia '+(i+1)+'"><line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-opacity=".01" stroke-width="40" stroke-linecap="round" pointer-events="stroke"/><line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-width="4.5" stroke-linecap="round" marker-end="url(#pcArrowHead)" pointer-events="none"/></g>':'<line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-width="3.5" stroke-linecap="round" marker-end="url(#pcArrowHead)"/>')}).join('');
   const tokens=b.tokens.map(function(t,i){
    if(t.kind==='ball')return '<g transform="translate('+t.x+' '+t.y+')" '+(editable?'data-token-index="'+i+'" style="cursor:grab"':'')+'><circle r="9" fill="#fff" stroke="#28382c" stroke-width="1.8"/><path d="M-3 -3 L2 -4 L5 1 L1 5 L-4 2 Z" fill="#26332b"/></g>';
    if(t.kind==='cone')return '<g transform="translate('+t.x+' '+t.y+')" '+(editable?'data-token-index="'+i+'" style="cursor:grab"':'')+'><path d="M0 -11 L10 9 L-10 9 Z" fill="#ed8b39" stroke="#9c591d" stroke-width="1.5"/></g>';
@@ -370,17 +380,20 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   slot.innerHTML=boardSvg(boardState,true);
   const svg=slot.querySelector('svg');
   svg.addEventListener('pointerdown',function(e){
-   const g=e.target.closest('[data-token-index]');if(!g||boardTool==='erase')return;
-   saveBoardSnapshot();dragToken=Number(g.dataset.tokenIndex);svg.setPointerCapture(e.pointerId);e.preventDefault();
+   const g=e.target.closest('[data-token-index]');
+   if(g&&boardTool!=='erase'&&boardTool!=='arrow'){saveBoardSnapshot();dragToken=Number(g.dataset.tokenIndex);dragArrow=null;svg.setPointerCapture(e.pointerId);e.preventDefault();return}
+   const ag=e.target.closest('[data-arrow-index]');
+   if(ag&&boardTool!=='erase'&&boardTool!=='arrow'){const ix=Number(ag.dataset.arrowIndex),p=boardPoint(svg,e),a=boardState.arrows[ix];if(!a)return;saveBoardSnapshot();dragArrow={index:ix,start:p,original:{...a}};dragToken=null;svg.setPointerCapture(e.pointerId);e.preventDefault()}
   });
   svg.addEventListener('pointermove',function(e){
+   if(dragArrow!==null){const p=boardPoint(svg,e),dx=p.x-dragArrow.start.x,dy=p.y-dragArrow.start.y,a=boardState.arrows[dragArrow.index];if(!a)return;a.x1=Math.max(12,Math.min(588,dragArrow.original.x1+dx));a.y1=Math.max(12,Math.min(348,dragArrow.original.y1+dy));a.x2=Math.max(12,Math.min(588,dragArrow.original.x2+dx));a.y2=Math.max(12,Math.min(348,dragArrow.original.y2+dy));return}
    if(dragToken===null)return;
    const p=boardPoint(svg,e);const item=boardState.tokens[dragToken];if(!item)return;
    item.x=p.x;item.y=p.y;
    const g=svg.querySelector('[data-token-index="'+dragToken+'"]');if(g)g.setAttribute('transform','translate('+p.x+' '+p.y+')');
   });
-  svg.addEventListener('pointerup',function(e){if(dragToken!==null){dragToken=null;renderBoardEditor()}});
-  svg.addEventListener('pointercancel',function(){dragToken=null;renderBoardEditor()});
+  svg.addEventListener('pointerup',function(e){if(dragToken!==null||dragArrow!==null){dragToken=null;dragArrow=null;renderBoardEditor()}});
+  svg.addEventListener('pointercancel',function(){dragToken=null;dragArrow=null;renderBoardEditor()});
   svg.addEventListener('click',function(e){
    if(e.target.closest('[data-token-index]')&&boardTool!=='erase')return;
    const clickedArrow=e.target.closest('[data-arrow-index]');
@@ -398,6 +411,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
     if(arrowIndex>=0){saveBoardSnapshot();boardState.arrows.splice(arrowIndex,1);renderBoardEditor()}else toast('Avvicina il cursore a un giocatore, pallone, cono o freccia da eliminare');
     return;
    }
+   if(boardTool==='select'){toast('Seleziona un elemento per spostarlo; scegli uno strumento per aggiungerne uno.');return}
    saveBoardSnapshot();boardState.tokens.push({x:p.x,y:p.y,kind:boardTool});renderBoardEditor();
   });
  }
@@ -406,7 +420,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   document.querySelectorAll('[data-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.boardTool===boardTool)});
  }
  function createExerciseModal(initialMode,initialPlan,initialExercise){
-  boardState=initialExercise?safeBoard(initialExercise.board||freshBoard(initialExercise.type)):freshBoard('Possesso');boardTool='player';boardHistory=[];arrowStart=null;
+  boardState=initialExercise?safeBoard(initialExercise.board||freshBoard(initialExercise.type)):freshBoard('Possesso');boardTool='select';boardHistory=[];arrowStart=null;dragToken=null;dragArrow=null;
   const body='<div class="pc-create-mode-switch" role="group" aria-label="Scegli cosa creare"><button type="button" class="pc-create-mode active" data-create-mode="exercise" aria-pressed="true">⚽ Esercizio singolo</button><button type="button" class="pc-create-mode" data-create-mode="session" aria-pressed="false">▦ Sessione completa</button></div>'+
    '<div id="pcExerciseMode">'+
    '<p class="pc-creator-intro">Compila i dettagli che un altro allenatore dovrebbe conoscere per riproporre l’esercizio. La lavagnetta è modificabile: puoi aggiungere e spostare giocatori, avversari, pallone e coni, oppure tracciare le frecce.</p>'+
@@ -427,7 +441,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    '<div class="field"><label for="pcExSourceName">Nome della fonte / riferimento</label><input id="pcExSourceName" maxlength="120" placeholder="Es. FIFA Training Centre, libro, allenatore"></div>'+
    '<div class="field"><label for="pcExSourceUrl">Link a video, immagine o articolo</label><input id="pcExSourceUrl" type="url" maxlength="500" placeholder="https://..."></div>'+
    '<div class="field full"><div class="pc-section-label">Lavagnetta tattica</div><div class="pc-board-panel"><div class="pc-board-heading"><div><strong>Disegna l’esercizio</strong><small>Seleziona uno strumento. Trascina i simboli già presenti per spostarli. Per una freccia, clicca prima il punto di partenza e poi quello d’arrivo.</small></div></div>'+
-   '<div class="pc-board-tools"><button type="button" class="pc-board-tool active" data-board-tool="player">＋ Giocatore</button><button type="button" class="pc-board-tool" data-board-tool="opponent">＋ Avversario</button><button type="button" class="pc-board-tool" data-board-tool="ball">⚽ Pallone</button><button type="button" class="pc-board-tool" data-board-tool="cone">▲ Cono</button><button type="button" class="pc-board-tool" data-board-tool="arrow">↗ Freccia</button><button type="button" class="pc-board-tool" data-board-tool="erase">⌫ Cancella</button><button type="button" class="pc-board-tool" id="pcBoardUndo">Annulla</button><button type="button" class="pc-board-tool" id="pcBoardBlank">＋ Da zero</button><button type="button" class="pc-board-tool" id="pcBoardReset">Ripristina schema</button><button type="button" class="pc-board-tool" id="pcBoardExport">Scarica SVG</button></div>'+
+   '<div class="pc-board-tools"><div class="pc-board-tool-group"><span class="pc-board-group-label">STRUMENTI</span><button type="button" class="pc-board-tool active" data-board-tool="select">↖ Seleziona / sposta</button><button type="button" class="pc-board-tool" data-board-tool="player">＋ Giocatore</button><button type="button" class="pc-board-tool" data-board-tool="opponent">＋ Avversario</button><button type="button" class="pc-board-tool" data-board-tool="ball">⚽ Pallone</button><button type="button" class="pc-board-tool" data-board-tool="cone">▲ Cono</button><button type="button" class="pc-board-tool" data-board-tool="arrow">↗ Freccia</button><button type="button" class="pc-board-tool" data-board-tool="erase">⌫ Cancella</button></div><div class="pc-board-tool-group pc-board-actions"><span class="pc-board-group-label">AZIONI</span><button type="button" class="pc-board-tool" id="pcBoardUndo">↶ Annulla</button><button type="button" class="pc-board-tool" id="pcBoardBlank">＋ Da zero</button><button type="button" class="pc-board-tool" id="pcBoardReset">Ripristina schema</button><button type="button" class="pc-board-tool" id="pcBoardExport">Scarica SVG</button></div></div>'+
    '<div class="pc-board-slot" id="pcBoardSlot"></div><p class="pc-board-hint">Il disegno è uno schema schematico in 2D e verrà salvato insieme alla scheda, solo in questo browser.</p></div></div>'+
    '<div class="field full"><button class="btn primary" type="submit">Salva esercizio nella mia libreria</button></div>'+
    '</form>'+
@@ -477,7 +491,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   $('pcBoardExport').addEventListener('click',function(){const svg=boardSvg(boardState,false).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ');const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='lavagnetta-procoach.svg';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);toast('Lavagnetta scaricata in formato SVG')});
   $('pcExType').addEventListener('change',function(){if(!boardState||boardState.tokens.length===0)boardState=freshBoard(this.value)});
 
-  let sessionDraftBlocks=[],sessionActiveBoardIndex=0,sessionBoardTool='player',sessionBoardHistory=[],sessionArrowStart=null,sessionDragToken=null,sessionEditingId=initialPlan&&initialPlan.id?initialPlan.id:null;
+  let sessionDraftBlocks=[],sessionActiveBoardIndex=0,sessionBoardTool='select',sessionBoardHistory=[],sessionArrowStart=null,sessionDragToken=null,sessionDragArrow=null,sessionEditingId=initialPlan&&initialPlan.id?initialPlan.id:null;
   function makeDefaultSessionBlocks(duration,goal){
    let specs;
    if(duration===60)specs=[['Attivazione e tecnica dinamica',10],['Possesso orientato',15],['Gioco a tema',25],['Defaticamento e feedback',10]];
@@ -506,7 +520,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    preview.innerHTML='<div class="section-head"><div><h2>Fasi della sessione</h2><p>'+esc(team)+' · '+esc(goal)+' · '+esc(players)+' giocatori · '+allMinutes+' min su '+duration+' min previsti</p></div><button class="btn primary small" type="button" id="pcSaveSession">'+(sessionEditingId?'Aggiorna sessione':'Salva sessione')+'</button></div>'+
     '<div class="pc-session-details">Tema: '+esc(sessionField('pcSessionTitle'))+' · Spazio: '+esc(sessionField('pcSessionSpace')||'da definire')+' · Materiali: '+esc(sessionField('pcSessionEquipment')||'da definire')+'</div>'+
     '<div class="resource-grid">'+sessionDraftBlocks.map(function(b,i){return '<article class="resource-card pc-session-block"><span class="resource-type">FASE '+(i+1)+' · '+Math.max(1,Number(b.minutes)||1)+' MIN</span><div class="pc-form-grid"><div class="field full"><label for="pcBlockTitle'+i+'">Nome della fase</label><input id="pcBlockTitle'+i+'" data-block-index="'+i+'" data-block-field="title" maxlength="120" value="'+esc(b.title)+'"></div><div class="field"><label for="pcBlockMinutes'+i+'">Durata (minuti)</label><input id="pcBlockMinutes'+i+'" type="number" min="1" max="120" data-block-index="'+i+'" data-block-field="minutes" value="'+esc(b.minutes)+'"></div><div class="field"><label for="pcBlockMaterials'+i+'">Materiale</label><input id="pcBlockMaterials'+i+'" data-block-index="'+i+'" data-block-field="equipment" maxlength="220" value="'+esc(b.equipment||'')+'"></div><div class="field full"><label for="pcBlockObjective'+i+'">Obiettivo della fase</label><textarea id="pcBlockObjective'+i+'" data-block-index="'+i+'" data-block-field="objective" maxlength="700">'+esc(b.objective||'')+'</textarea></div><div class="field full"><label for="pcBlockOrg'+i+'">Organizzazione e regole</label><textarea id="pcBlockOrg'+i+'" data-block-index="'+i+'" data-block-field="organization" maxlength="1000">'+esc(b.organization||'')+'</textarea></div><div class="field full"><label for="pcBlockInstructions'+i+'">Svolgimento / progressione</label><textarea id="pcBlockInstructions'+i+'" data-block-index="'+i+'" data-block-field="instructions" maxlength="1200">'+esc(b.instructions||'')+'</textarea></div><div class="field full"><label for="pcBlockCoaching'+i+'">Punti chiave e correzioni</label><textarea id="pcBlockCoaching'+i+'" data-block-index="'+i+'" data-block-field="coaching" maxlength="900">'+esc(b.coaching||'')+'</textarea></div></div><button type="button" class="btn outline small" data-session-board-index="'+i+'">✎ Modifica lavagnetta della fase '+(i+1)+'</button></article>'}).join('')+'</div>'+
-    '<div class="pc-session-board"><div class="pc-board-heading"><div><strong id="pcSessionBoardTitle">Lavagnetta della fase</strong><small>Seleziona uno strumento. Trascina i simboli per spostarli; per una freccia seleziona il punto di partenza e poi quello di arrivo.</small></div></div><div id="pcSessionBoardTabs" class="pc-session-board-tabs">'+sessionDraftBlocks.map(function(b,i){return '<button type="button" data-session-board-index="'+i+'" class="'+(i===sessionActiveBoardIndex?'active':'')+'">Fase '+(i+1)+' · '+esc(b.title)+'</button>'}).join('')+'</div><div class="pc-session-board-tools"><button type="button" data-session-board-tool="player" class="active">＋ Giocatore</button><button type="button" data-session-board-tool="opponent">＋ Avversario</button><button type="button" data-session-board-tool="ball">⚽ Pallone</button><button type="button" data-session-board-tool="cone">▲ Cono</button><button type="button" data-session-board-tool="arrow">↗ Freccia</button><button type="button" data-session-board-tool="erase">⌫ Cancella</button><button type="button" id="pcSessionBoardUndo">Annulla</button><button type="button" id="pcSessionBoardBlank">＋ Da zero</button><button type="button" id="pcSessionBoardReset">Ripristina schema</button><button type="button" id="pcSessionBoardExport">Scarica SVG</button></div><div id="pcSessionBoardSlot" class="pc-session-board-slot"></div><p class="pc-board-hint">La lavagnetta viene conservata separatamente per ogni fase della sessione.</p></div>';
+    '<div class="pc-session-board"><div class="pc-board-heading"><div><strong id="pcSessionBoardTitle">Lavagnetta della fase</strong><small>Seleziona uno strumento. Trascina i simboli per spostarli; per una freccia seleziona il punto di partenza e poi quello di arrivo.</small></div></div><div id="pcSessionBoardTabs" class="pc-session-board-tabs">'+sessionDraftBlocks.map(function(b,i){return '<button type="button" data-session-board-index="'+i+'" class="'+(i===sessionActiveBoardIndex?'active':'')+'">Fase '+(i+1)+' · '+esc(b.title)+'</button>'}).join('')+'</div><div class="pc-session-board-tools"><div class="pc-board-tool-group"><span class="pc-board-group-label">STRUMENTI</span><button type="button" data-session-board-tool="select" class="active">↖ Seleziona / sposta</button><button type="button" data-session-board-tool="player">＋ Giocatore</button><button type="button" data-session-board-tool="opponent">＋ Avversario</button><button type="button" data-session-board-tool="ball">⚽ Pallone</button><button type="button" data-session-board-tool="cone">▲ Cono</button><button type="button" data-session-board-tool="arrow">↗ Freccia</button><button type="button" data-session-board-tool="erase">⌫ Cancella</button></div><div class="pc-board-tool-group pc-board-actions"><span class="pc-board-group-label">AZIONI</span><button type="button" id="pcSessionBoardUndo">↶ Annulla</button><button type="button" id="pcSessionBoardBlank">＋ Da zero</button><button type="button" id="pcSessionBoardReset">Ripristina schema</button><button type="button" id="pcSessionBoardExport">Scarica SVG</button></div></div><div id="pcSessionBoardSlot" class="pc-session-board-slot"></div><p class="pc-board-hint">La lavagnetta viene conservata separatamente per ogni fase della sessione.</p></div>';
    preview.querySelectorAll('[data-block-field]').forEach(function(el){el.addEventListener('input',function(){const ix=Number(el.dataset.blockIndex);if(sessionDraftBlocks[ix])sessionDraftBlocks[ix][el.dataset.blockField]=el.dataset.blockField==='minutes'?Math.max(1,Number(el.value)||1):el.value;if(el.dataset.blockField==='title'){const tab=preview.querySelector('[data-session-board-index="'+ix+'"]');if(tab)tab.textContent='Fase '+(ix+1)+' · '+el.value;if(ix===sessionActiveBoardIndex)$('pcSessionBoardTitle').textContent='Lavagnetta · '+el.value}})});
    preview.querySelectorAll('[data-session-board-index]').forEach(function(btn){btn.addEventListener('click',function(){syncSessionBlockInputs();sessionActiveBoardIndex=Number(btn.dataset.sessionBoardIndex);sessionArrowStart=null;renderSessionPreview();renderSessionBoard()})});
    $('pcSaveSession').addEventListener('click',saveSessionDraft);
@@ -521,10 +535,18 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    const title=$('pcSessionBoardTitle');if(title)title.textContent='Lavagnetta · '+(sessionDraftBlocks[sessionActiveBoardIndex].title||('Fase '+(sessionActiveBoardIndex+1)));
    document.querySelectorAll('[data-session-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.sessionBoardTool===sessionBoardTool)});
    const svg=slot.querySelector('svg');if(!svg)return;
-   svg.addEventListener('pointerdown',function(e){const g=e.target.closest('[data-token-index]');if(!g||sessionBoardTool==='erase')return;saveSessionBoardSnapshot();sessionDragToken=Number(g.dataset.tokenIndex);svg.setPointerCapture(e.pointerId);e.preventDefault()});
-   svg.addEventListener('pointermove',function(e){if(sessionDragToken===null)return;const p=sessionBoardPoint(svg,e),item=sessionBoard().tokens[sessionDragToken];if(!item)return;item.x=p.x;item.y=p.y;const g=svg.querySelector('[data-token-index="'+sessionDragToken+'"]');if(g)g.setAttribute('transform','translate('+p.x+' '+p.y+')')});
-   svg.addEventListener('pointerup',function(){if(sessionDragToken!==null){sessionDragToken=null;renderSessionBoard()}});
-   svg.addEventListener('pointercancel',function(){sessionDragToken=null;renderSessionBoard()});
+   svg.addEventListener('pointerdown',function(e){
+    const g=e.target.closest('[data-token-index]');
+    if(g&&sessionBoardTool!=='erase'&&sessionBoardTool!=='arrow'){saveSessionBoardSnapshot();sessionDragToken=Number(g.dataset.tokenIndex);sessionDragArrow=null;svg.setPointerCapture(e.pointerId);e.preventDefault();return}
+    const ag=e.target.closest('[data-arrow-index]');
+    if(ag&&sessionBoardTool!=='erase'&&sessionBoardTool!=='arrow'){const ix=Number(ag.dataset.arrowIndex),p=sessionBoardPoint(svg,e),a=sessionBoard().arrows[ix];if(!a)return;saveSessionBoardSnapshot();sessionDragArrow={index:ix,start:p,original:{...a}};sessionDragToken=null;svg.setPointerCapture(e.pointerId);e.preventDefault()}
+   });
+   svg.addEventListener('pointermove',function(e){
+    if(sessionDragArrow!==null){const p=sessionBoardPoint(svg,e),dx=p.x-sessionDragArrow.start.x,dy=p.y-sessionDragArrow.start.y,a=sessionBoard().arrows[sessionDragArrow.index];if(!a)return;a.x1=Math.max(12,Math.min(588,sessionDragArrow.original.x1+dx));a.y1=Math.max(12,Math.min(348,sessionDragArrow.original.y1+dy));a.x2=Math.max(12,Math.min(588,sessionDragArrow.original.x2+dx));a.y2=Math.max(12,Math.min(348,sessionDragArrow.original.y2+dy));return}
+    if(sessionDragToken===null)return;const p=sessionBoardPoint(svg,e),item=sessionBoard().tokens[sessionDragToken];if(!item)return;item.x=p.x;item.y=p.y;const g=svg.querySelector('[data-token-index="'+sessionDragToken+'"]');if(g)g.setAttribute('transform','translate('+p.x+' '+p.y+')')
+   });
+   svg.addEventListener('pointerup',function(){if(sessionDragToken!==null||sessionDragArrow!==null){sessionDragToken=null;sessionDragArrow=null;renderSessionBoard()}});
+   svg.addEventListener('pointercancel',function(){sessionDragToken=null;sessionDragArrow=null;renderSessionBoard()});
    svg.addEventListener('click',function(e){
     if(e.target.closest('[data-token-index]')&&sessionBoardTool!=='erase')return;
     const clickedArrow=e.target.closest('[data-arrow-index]');
@@ -532,6 +554,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
     const p=sessionBoardPoint(svg,e),board=sessionBoard();
     if(sessionBoardTool==='arrow'){if(!sessionArrowStart){sessionArrowStart=p;toast('Ora clicca sul punto di arrivo della freccia');return}saveSessionBoardSnapshot();board.arrows.push({x1:sessionArrowStart.x,y1:sessionArrowStart.y,x2:p.x,y2:p.y});sessionArrowStart=null;renderSessionBoard();return}
     if(sessionBoardTool==='erase'){let nearest=-1,dist=26;board.tokens.forEach(function(t,i){const d=Math.hypot(t.x-p.x,t.y-p.y);if(d<dist){dist=d;nearest=i}});if(nearest>=0){saveSessionBoardSnapshot();board.tokens.splice(nearest,1);renderSessionBoard();return}let arrowIndex=-1,arrowDist=14;board.arrows.forEach(function(a,i){const d=pointSegmentDistance(p,a);if(d<arrowDist){arrowDist=d;arrowIndex=i}});if(arrowIndex>=0){saveSessionBoardSnapshot();board.arrows.splice(arrowIndex,1);renderSessionBoard()}else toast('Avvicina il cursore a un simbolo o a una freccia da eliminare');return}
+    if(sessionBoardTool==='select'){toast('Seleziona un elemento per spostarlo; scegli uno strumento per aggiungerne uno.');return}
     saveSessionBoardSnapshot();board.tokens.push({x:p.x,y:p.y,kind:sessionBoardTool});renderSessionBoard();
    });
   }
@@ -554,7 +577,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    e.preventDefault();
    const duration=Number($('pcPlanDuration').value),goal=sessionField('pcPlanGoal');
    sessionDraftBlocks=makeDefaultSessionBlocks(duration,goal);
-   sessionActiveBoardIndex=0;sessionBoardTool='player';sessionBoardHistory=[];sessionArrowStart=null;renderSessionPreview();
+   sessionActiveBoardIndex=0;sessionBoardTool='select';sessionBoardHistory=[];sessionArrowStart=null;sessionDragToken=null;sessionDragArrow=null;renderSessionPreview();
   });
   if(initialPlan){
    $('pcSessionTitle').value=initialPlan.title||((initialPlan.team||'')+' · '+(initialPlan.goal||'Sessione'));
@@ -640,10 +663,10 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  function openTacticalBoardEditor(ex){
   const originalBoard=safeBoard(ex.board||freshBoard(['Base','Tuffo','Piedi','Gara'].includes(ex.type)?'Portieri':ex.type));
   const saved=read('procoachExerciseBoardsV1',{});
-  let draft=safeBoard(saved[ex.id]||originalBoard),tool='player',history=[],arrowStartPoint=null,dragging=null;
+  let draft=safeBoard(saved[ex.id]||originalBoard),tool='select',history=[],arrowStartPoint=null,dragging=null,draggingArrow=null;
   const body='<p class="pc-creator-intro">Modifica solo la lavagnetta: la scheda tecnica ufficiale resta invariata e in sola lettura. Puoi iniziare dallo schema illustrativo oppure scegliere “Da zero”.</p>'+
    '<div class="pc-board-panel"><div class="pc-board-heading"><div><strong>'+esc(ex.title)+'</strong><small>Trascina i simboli per spostarli. Con “Cancella” elimina il simbolo o la freccia più vicina al punto cliccato.</small></div></div>'+
-   '<div class="pc-board-tools"><button type="button" class="pc-board-tool active" data-official-board-tool="player">＋ Giocatore</button><button type="button" class="pc-board-tool" data-official-board-tool="opponent">＋ Avversario</button><button type="button" class="pc-board-tool" data-official-board-tool="ball">⚽ Pallone</button><button type="button" class="pc-board-tool" data-official-board-tool="cone">▲ Cono</button><button type="button" class="pc-board-tool" data-official-board-tool="arrow">↗ Freccia</button><button type="button" class="pc-board-tool" data-official-board-tool="erase">⌫ Cancella</button><button type="button" class="pc-board-tool" data-official-board-action="undo">Annulla</button><button type="button" class="pc-board-tool" data-official-board-action="blank">＋ Da zero</button><button type="button" class="pc-board-tool" data-official-board-action="reset">Ripristina schema</button><button type="button" class="pc-board-tool" data-official-board-action="export">Scarica SVG</button></div>'+
+   '<div class="pc-board-tools"><div class="pc-board-tool-group"><span class="pc-board-group-label">STRUMENTI</span><button type="button" class="pc-board-tool active" data-official-board-tool="select">↖ Seleziona / sposta</button><button type="button" class="pc-board-tool" data-official-board-tool="player">＋ Giocatore</button><button type="button" class="pc-board-tool" data-official-board-tool="opponent">＋ Avversario</button><button type="button" class="pc-board-tool" data-official-board-tool="ball">⚽ Pallone</button><button type="button" class="pc-board-tool" data-official-board-tool="cone">▲ Cono</button><button type="button" class="pc-board-tool" data-official-board-tool="arrow">↗ Freccia</button><button type="button" class="pc-board-tool" data-official-board-tool="erase">⌫ Cancella</button></div><div class="pc-board-tool-group pc-board-actions"><span class="pc-board-group-label">AZIONI</span><button type="button" class="pc-board-tool" data-official-board-action="undo">↶ Annulla</button><button type="button" class="pc-board-tool" data-official-board-action="blank">＋ Da zero</button><button type="button" class="pc-board-tool" data-official-board-action="reset">Ripristina schema</button><button type="button" class="pc-board-tool" data-official-board-action="export">Scarica SVG</button></div></div>'+
    '<div class="pc-board-slot" id="pcOfficialBoardSlot"></div><p class="pc-board-hint">La lavagnetta personalizzata viene salvata solo in questo browser, collegata a questa scheda; non modifica i dettagli ufficiali né il diagramma di origine.</p>'+
    '<div class="modal-actions"><button type="button" class="btn outline" data-modal-close>Annulla</button><button type="button" class="btn primary" data-official-board-action="save">Salva lavagnetta</button></div></div>';
   openModal('Personalizza lavagnetta',body,'DIAGRAMMA PERSONALE · TESTO ORIGINALE IN SOLA LETTURA');
@@ -654,10 +677,18 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    slot.innerHTML=boardSvg(draft,true);
    document.querySelectorAll('[data-official-board-tool]').forEach(function(b){b.classList.toggle('active',b.dataset.officialBoardTool===tool)});
    const svg=slot.querySelector('svg');if(!svg)return;
-   svg.addEventListener('pointerdown',function(e){const g=e.target.closest('[data-token-index]');if(!g||tool==='erase')return;snapshot();dragging=Number(g.dataset.tokenIndex);svg.setPointerCapture(e.pointerId);e.preventDefault()});
-   svg.addEventListener('pointermove',function(e){if(dragging===null)return;const p=boardPoint(svg,e),t=draft.tokens[dragging];if(!t)return;t.x=p.x;t.y=p.y;const g=svg.querySelector('[data-token-index="'+dragging+'"]');if(g)g.setAttribute('transform','translate('+p.x+' '+p.y+')')});
-   svg.addEventListener('pointerup',function(){if(dragging!==null){dragging=null;render()}});
-   svg.addEventListener('pointercancel',function(){dragging=null;render()});
+   svg.addEventListener('pointerdown',function(e){
+    const g=e.target.closest('[data-token-index]');
+    if(g&&tool!=='erase'&&tool!=='arrow'){snapshot();dragging=Number(g.dataset.tokenIndex);draggingArrow=null;svg.setPointerCapture(e.pointerId);e.preventDefault();return}
+    const ag=e.target.closest('[data-arrow-index]');
+    if(ag&&tool!=='erase'&&tool!=='arrow'){const ix=Number(ag.dataset.arrowIndex),p=boardPoint(svg,e),a=draft.arrows[ix];if(!a)return;snapshot();draggingArrow={index:ix,start:p,original:{...a}};dragging=null;svg.setPointerCapture(e.pointerId);e.preventDefault()}
+   });
+   svg.addEventListener('pointermove',function(e){
+    if(draggingArrow!==null){const p=boardPoint(svg,e),dx=p.x-draggingArrow.start.x,dy=p.y-draggingArrow.start.y,a=draft.arrows[draggingArrow.index];if(!a)return;a.x1=Math.max(12,Math.min(588,draggingArrow.original.x1+dx));a.y1=Math.max(12,Math.min(348,draggingArrow.original.y1+dy));a.x2=Math.max(12,Math.min(588,draggingArrow.original.x2+dx));a.y2=Math.max(12,Math.min(348,draggingArrow.original.y2+dy));return}
+    if(dragging===null)return;const p=boardPoint(svg,e),t=draft.tokens[dragging];if(!t)return;t.x=p.x;t.y=p.y;const g=svg.querySelector('[data-token-index="'+dragging+'"]');if(g)g.setAttribute('transform','translate('+p.x+' '+p.y+')')
+   });
+   svg.addEventListener('pointerup',function(){if(dragging!==null||draggingArrow!==null){dragging=null;draggingArrow=null;render()}});
+   svg.addEventListener('pointercancel',function(){dragging=null;draggingArrow=null;render()});
    svg.addEventListener('click',function(e){
     if(e.target.closest('[data-token-index]')&&tool!=='erase')return;
     const clickedArrow=e.target.closest('[data-arrow-index]');
@@ -671,6 +702,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
      if(arrowIndex>=0){snapshot();draft.arrows.splice(arrowIndex,1);render()}else toast('Nessun elemento vicino: prova a cliccare più vicino al simbolo o alla freccia');
      return;
     }
+    if(tool==='select'){toast('Seleziona un elemento per spostarlo; scegli uno strumento per aggiungerne uno.');return}
     snapshot();draft.tokens.push({x:p.x,y:p.y,kind:tool});render();
    });
   }
