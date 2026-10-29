@@ -491,10 +491,10 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    <div class="field"><label for="pcSessionEquipment">Materiale a disposizione</label><input id="pcSessionEquipment" maxlength="220" placeholder="Palloni, cinesini, porte, casacche..."></div>
    <div class="field full"><label for="pcSessionPrinciples">Principi di gioco da allenare</label><textarea id="pcSessionPrinciples" maxlength="900" placeholder="Es. ampiezza, sostegno, terzo uomo, riaggressione immediata..."></textarea></div>
    <div class="field full"><label for="pcSessionCoachNotes">Indicazioni per lo staff</label><textarea id="pcSessionCoachNotes" maxlength="900" placeholder="Messaggi chiave, intensità, rotazioni, carichi o adattamenti per la categoria..."></textarea></div>
-   <div class="field full"><button class="btn primary" type="submit">Genera e personalizza le fasi →</button></div>
+   <div class="field full"><button class="btn primary" type="submit">Genera seduta con esercizi ufficiali →</button></div>
    </form>
    <div id="pcSessionPreview" class="pc-session-preview"></div>
-   <p class="pc-exercise-tip">Ogni fase è precompilata con esercizi documentati da fonti ufficiali. Le alternative sono guidate e includono organizzazione, svolgimento, punti chiave e collegamento alla scheda originale.</p>
+   <p class="pc-exercise-tip">La seduta è una proposta guidata: ogni fase contiene un esercizio documentato, un obiettivo, organizzazione, svolgimento, punti chiave e il collegamento alla fonte originale. Puoi cambiare l’attività solo con alternative verificate.</p>
    </div>`;
   openModal(initialExercise?'Modifica esercizio':'Crea esercizio o sessione',body,initialExercise?'MODIFICA ESERCIZIO':'NUOVO CONTENUTO');
   $('modalBackdrop').querySelector('.modal').classList.add('pc-wide');
