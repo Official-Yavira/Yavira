@@ -297,6 +297,17 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  const STORE='procoachCustomExercisesV1';
  let customExercises=read(STORE,[]);
  if(!Array.isArray(customExercises)) customExercises=[];
+
+ const sessionOfficialExtras=[
+  {id:'fifa-warmup-6v2',title:'Riscaldamento: possesso 6v2',type:'Possesso',duration:'10–12 min',level:'FIFA Training Centre · 12–15',icon:'⚽',summary:'Riscaldamento con palla per attivare percezione, smarcamento e qualità del passaggio, usando la superiorità numerica.',objective:'Preparare il gruppo attraverso possesso e decisioni rapide; regolare il carico aumentando gradualmente la difficoltà.',category:'Attivazione · adattare all’età',players:'La fonte propone due gruppi 6v2; i portieri lavorano separatamente su presa e rilancio.',space:'Due aree di possesso dimensionate in relazione al numero di giocatori.',equipment:'Palloni, casacche e cinesini.',setup:'Dividere i giocatori in tre gruppi: due gruppi lavorano in 6v2, mentre i portieri eseguono attività di lancio e presa.',steps:['Avviare il possesso 6v2 con passaggi liberi e richiesta di movimento per offrire linee di passaggio.','Per facilitare, consentire inizialmente di passare con le mani e utilizzare un solo difendente.','Per aumentare la difficoltà, introdurre il limite di due tocchi, poi un tocco, oppure un terzo difendente.','Mantenere brevi blocchi e pause sufficienti per correggere orientamento del corpo e qualità tecnica.'],coaching:'Prepararsi prima di ricevere, aprire il corpo, creare linee di passaggio e scegliere il momento per accelerare o conservare il possesso.',progression:'Da gioco libero a due tocchi e poi a un tocco; aumentare i difendenti solo se la qualità del possesso lo consente.',sourceName:'FIFA Training Centre · Space and transitioning in possession games',sourceUrl:'https://www.fifatrainingcentre.com/en/practice/grassroots/12-to-15/space-and-transitioning.php',sourceNote:'Sintesi della proposta FIFA per il riscaldamento 6v2. Regole, dimensioni e carico vanno adattati al gruppo; il diagramma PROCOACH è illustrativo.',official:true,sourceShort:'FIFA',board:{tokens:[{x:105,y:90,kind:'player'},{x:250,y:75,kind:'player'},{x:430,y:90,kind:'player'},{x:115,y:260,kind:'player'},{x:280,y:275,kind:'player'},{x:465,y:255,kind:'player'},{x:240,y:175,kind:'opponent'},{x:355,y:185,kind:'opponent'},{x:125,y:110,kind:'ball'}],arrows:[{x1:120,y1:95,x2:230,y2:80},{x1:270,y1:82,x2:410,y2:96},{x1:430,y1:105,x2:365,y2:165},{x1:270,y1:270,x2:145,y2:255}]}},
+  {id:'fifa-counterpress-rondo-3v1',title:'Rondo 3v1: riaggressione immediata',type:'Pressing',duration:'10–12 min',level:'FIFA Training Centre · proposta tecnica',icon:'↗',summary:'Rondo in spazio ridotto che allena reazione rapida, pressione sul portatore e anticipo delle linee di passaggio.',objective:'Rendere immediata la reazione difensiva e migliorare la capacità di riconquistare palla appena dopo l’avvio dell’azione.',category:'Pressing e transizione difensiva',players:'Tre giocatori in possesso e un pressatore per rondo; organizzare due aree adiacenti e ruotare le file.',space:'Due quadrati adiacenti da 5 × 5 m; un cono d’attesa a 3 m da ciascun quadrato.',equipment:'Palloni, casacche e cinesini.',setup:'Preparare due quadrati da 5 × 5 m. In ogni quadrato tre giocatori conservano il possesso; gli altri si dispongono in fila dietro un cono posto a 3 m. L’allenatore serve la palla e un giocatore della fila entra per pressare.',steps:['L’allenatore passa a uno dei tre giocatori nel rondo.','I tre giocatori in possesso mantengono il pallone con massimo due tocchi.','Dopo il passaggio dell’allenatore, il primo giocatore in fila scatta nel quadrato e prova a recuperare o intercettare la palla.','Dopo un recupero o quando la palla esce, il pressatore esce e dà il cambio al compagno successivo. Dopo quattro recuperi, scambiare i ruoli.'],coaching:'Pressare immediatamente il portatore, anticipare la direzione del passaggio, ridurre il tempo per il secondo tocco e curare l’intensità senza perdere equilibrio.',progression:'Dalla regola dei due tocchi passare a un tocco per i giocatori in possesso quando il livello lo consente.',sourceName:'FIFA Training Centre · Anne Pochert: Preparing and executing counter-pressing',sourceUrl:'https://www.fifatrainingcentre.com/en/practice/elite-sessions/transition-to-defending/preparing-and-executing-counter-pressing.php',sourceNote:'Esercizio riassunto dalla sessione FIFA di Anne Pochert; la fonte contiene video e dettagli completi. Il diagramma PROCOACH è schematico.',official:true,sourceShort:'FIFA',board:{tokens:[{x:120,y:105,kind:'player'},{x:250,y:95,kind:'player'},{x:170,y:250,kind:'player'},{x:300,y:170,kind:'opponent'},{x:85,y:290,kind:'cone'},{x:170,y:165,kind:'ball'}],arrows:[{x1:125,y1:117,x2:238,y2:106},{x1:245,y1:107,x2:180,y2:230},{x1:275,y1:145,x2:195,y2:160}]}},
+  {id:'fifa-counterpress-4v4-2',title:'4v4 + 2 jolly: riconquista e cambio zona',type:'Pressing',duration:'12–15 min',level:'FIFA Training Centre · proposta tecnica',icon:'↗',summary:'Possesso con superiorità numerica in una zona e transizione immediata verso una zona adiacente dopo la perdita del pallone.',objective:'Allenare il contropressing, il recupero rapido e la capacità di impedire all’avversario di avanzare dopo la riconquista.',category:'Pressing e transizioni',players:'Tre squadre da quattro giocatori e due jolly; ruotare la squadra in attesa.',space:'Campo 20 × 20 m diviso in quattro zone.',equipment:'Palloni, casacche e cinesini.',setup:'Dividere il quadrato di 20 × 20 m in quattro zone. Due squadre da quattro e due jolly iniziano nella stessa zona; la terza squadra aspetta fuori e subentra a rotazione.',steps:['La squadra in possesso cerca di completare dieci passaggi nella zona, utilizzando i due jolly per creare un 6v4.','La squadra difendente prova a recuperare il pallone; chi lo perde deve reagire subito e impedire l’uscita verso una zona adiacente.','Quando il possesso cambia, la palla deve avanzare con un passaggio o una conduzione nella zona vicina, non in diagonale.','Se la squadra che ha perso il pallone lo riconquista immediatamente, il gioco continua nella stessa zona; ruotare regolarmente i gruppi.'],coaching:'Il giocatore più vicino alla palla aggredisce subito il portatore; i compagni chiudono le linee di passaggio e proteggono gli spazi centrali.',progression:'Consentire solo passaggi nella zona successiva o limitare a un tocco il giocatore successivo dopo un controllo a due tocchi.',sourceName:'FIFA Training Centre · Anne Pochert: Preparing and executing counter-pressing',sourceUrl:'https://www.fifatrainingcentre.com/en/practice/elite-sessions/transition-to-defending/preparing-and-executing-counter-pressing.php',sourceNote:'Sintesi della Parte 2 della sessione FIFA di Anne Pochert. Per video, illustrazioni e dettagli completi consultare la fonte originale.',official:true,sourceShort:'FIFA',board:{tokens:[{x:110,y:100,kind:'player'},{x:185,y:85,kind:'player'},{x:105,y:210,kind:'player'},{x:190,y:225,kind:'player'},{x:420,y:100,kind:'opponent'},{x:500,y:90,kind:'opponent'},{x:420,y:220,kind:'opponent'},{x:500,y:215,kind:'opponent'},{x:300,y:115,kind:'player'},{x:300,y:225,kind:'player'},{x:145,y:150,kind:'ball'}],arrows:[{x1:160,y1:110,x2:260,y2:130},{x1:270,y1:145,x2:385,y2:135},{x1:395,y1:155,x2:300,y2:205}]}},
+  {id:'fifa-counterpress-7v7',title:'Gioco 7v7: pressing dopo la perdita',type:'Pressing',duration:'15–20 min',level:'FIFA Training Centre · gioco applicativo',icon:'↗',summary:'Partita a tema per trasferire nel gioco reale i principi di pressione immediata e protezione delle zone centrali.',objective:'Applicare in una situazione rappresentativa le scelte di contropressing, copertura e riorganizzazione dopo la perdita del pallone.',category:'Gioco applicativo · da adattare alla rosa',players:'Due squadre da sette giocatori di movimento e portieri nelle porte previste dalla configurazione originale.',space:'Mezza metà campo secondo la configurazione originale FIFA; adattare al numero disponibile.',equipment:'Porte, palloni, casacche e cinesini.',setup:'La sessione FIFA prevede un’area di circa mezza lunghezza di campo, una porta a un’estremità e due porte all’altra, con portiere in ciascuna porta. Due squadre da sette giocatori iniziano in costruzione contro difesa organizzata.',steps:['La squadra in costruzione avvia dal portiere e cerca di avanzare per segnare nella porta singola.','La squadra difendente prova a recuperare palla e può attaccare una delle due porte nella metà in cui ha riconquistato.','La squadra che recupera può tirare dopo aver superato la linea di riferimento posta a 15 m dalle porte.','Dopo la perdita, la squadra che attaccava deve reagire subito; se riconquista rapidamente può proseguire un secondo attacco prima di ripartire con una nuova azione.'],coaching:'Pressione immediata sul portatore; se non è possibile, chiudere le linee di passaggio, proteggere il centro e mantenere distanze che permettano di reagire alle transizioni.',progression:'Variare le condizioni di costruzione o ridurre il numero di passaggi all’indietro solo quando coerente con il livello.',sourceName:'FIFA Training Centre · Anne Pochert: Preparing and executing counter-pressing',sourceUrl:'https://www.fifatrainingcentre.com/en/practice/elite-sessions/transition-to-defending/preparing-and-executing-counter-pressing.php',sourceNote:'Sintesi della fase finale 7+1 GK contro 7+2 GKs descritta dalla FIFA. Adattare numero di porte e portieri alla rosa, mantenendo il principio tattico.',official:true,sourceShort:'FIFA',board:{tokens:[{x:90,y:85,kind:'player'},{x:155,y:115,kind:'player'},{x:210,y:155,kind:'player'},{x:125,y:220,kind:'player'},{x:235,y:255,kind:'player'},{x:310,y:100,kind:'player'},{x:310,y:260,kind:'player'},{x:420,y:80,kind:'opponent'},{x:490,y:130,kind:'opponent'},{x:425,y:205,kind:'opponent'},{x:500,y:260,kind:'opponent'},{x:370,y:165,kind:'ball'}],arrows:[{x1:330,y1:100,x2:400,y2:90},{x1:380,y1:180,x2:420,y2:200},{x1:400,y1:120,x2:360,y2:155}]}},
+  {id:'fifa-transition-4v4-2-jolly',title:'4v4 + 2 jolly: transizioni attacco-difesa',type:'Transizioni',duration:'12–15 min',level:'FIFA Training Centre · sessione di Adrian Boothroyd',icon:'⚡',summary:'Gioco di possesso in superiorità numerica che richiede reazione immediata quando cambia il possesso e sostegno rapido alla nuova squadra in possesso.',objective:'Allenare la reazione al recupero e alla perdita, la creazione di linee di passaggio e l’utilizzo dello spazio libero dopo il cambio di possesso.',category:'Transizioni · gioco situazionale',players:'4v4 più due jolly, che creano un 6v4 per la squadra in possesso.',space:'Campo ridotto suddiviso in zone; adattare l’area al livello e al numero di giocatori.',equipment:'Palloni, casacche e cinesini.',setup:'Preparare l’area di gioco e dividere i giocatori in due squadre da quattro più due jolly. La squadra in possesso utilizza i jolly come sostegno per creare una superiorità numerica.',steps:['Iniziare il possesso in una zona delimitata e chiedere ai giocatori di offrire più linee di passaggio.','Quando la palla viene persa, il gruppo deve reagire immediatamente per recuperarla o impedire la progressione avversaria.','Quando si riconquista, i compagni si allargano e offrono rapidamente opzioni in avanti e di sostegno.','Ruotare i jolly e adattare spazio e vincoli per mantenere decisioni realistiche e ritmo elevato.'],coaching:'Scansione prima della ricezione, velocità di reazione al cambio di possesso, supporto al portatore e gestione dello spazio libero.',progression:'Aumentare la complessità limitando i tocchi o introducendo zone di destinazione, soltanto dopo aver consolidato i principi.',sourceName:'FIFA Training Centre · Adrian Boothroyd: Attacking and defensive transitions',sourceUrl:'https://www.fifatrainingcentre.com/en/practice/elite-sessions/transition-to-attacking/transitions.php',sourceNote:'Sintesi della proposta 4v4+2 della sessione FIFA sulle transizioni. La fonte originale contiene le esercitazioni e la progressione completa.',official:true,sourceShort:'FIFA',board:{tokens:[{x:110,y:105,kind:'player'},{x:200,y:95,kind:'player'},{x:120,y:225,kind:'player'},{x:220,y:230,kind:'player'},{x:410,y:105,kind:'opponent'},{x:490,y:95,kind:'opponent'},{x:410,y:230,kind:'opponent'},{x:500,y:220,kind:'opponent'},{x:300,y:90,kind:'player'},{x:300,y:240,kind:'player'},{x:230,y:160,kind:'ball'}],arrows:[{x1:245,y1:155,x2:345,y2:115},{x1:360,y1:130,x2:390,y2:205},{x1:280,y1:230,x2:240,y2:175}]}}
+ ];
+ const knownSessionIds=new Set(exercises.map(function(e){return e.id}));
+ sessionOfficialExtras.forEach(function(e){if(!knownSessionIds.has(e.id)){exercises.push(e);knownSessionIds.add(e.id)}});
+
  const existingIds=new Set(exercises.map(function(e){return e.id}));
  customExercises=customExercises.filter(function(e){return e&&e.id&&e.title&&!existingIds.has(e.id)});
  customExercises.forEach(function(e){exercises.push(e)});
@@ -462,7 +473,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    <div class="field full"><button class="btn primary" type="submit">Genera e personalizza le fasi →</button></div>
    </form>
    <div id="pcSessionPreview" class="pc-session-preview"></div>
-   <p class="pc-exercise-tip">Ogni fase ha campi modificabili e una lavagnetta dedicata. Puoi cambiare fase, aggiungere simboli, spostare giocatori e tracciare movimenti con le frecce.</p>
+   <p class="pc-exercise-tip">Ogni fase è precompilata con esercizi documentati da fonti ufficiali. Le alternative sono guidate e includono organizzazione, svolgimento, punti chiave e collegamento alla scheda originale.</p>
    </div>`;
   openModal(initialExercise?'Modifica esercizio':'Crea esercizio o sessione',body,initialExercise?'MODIFICA ESERCIZIO':'NUOVO CONTENUTO');
   $('modalBackdrop').querySelector('.modal').classList.add('pc-wide');
@@ -492,23 +503,101 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   $('pcExType').addEventListener('change',function(){if(!boardState||boardState.tokens.length===0)boardState=freshBoard(this.value)});
 
   let sessionDraftBlocks=[],sessionActiveBoardIndex=0,sessionBoardTool='select',sessionBoardHistory=[],sessionArrowStart=null,sessionDragToken=null,sessionDragArrow=null,sessionEditingId=initialPlan&&initialPlan.id?initialPlan.id:null;
+  function sessionExerciseCatalog(){
+   const all=exercises.concat(Array.isArray(gkExercises)?gkExercises:[]);
+   const seen=new Set();
+   return all.filter(function(e){if(!e||!e.id||!e.official||!e.sourceUrl||seen.has(e.id))return false;seen.add(e.id);return true});
+  }
+  function getSessionExercise(id){
+   return sessionExerciseCatalog().find(function(e){return String(e.id)===String(id)})||null;
+  }
+  function sessionGoalKey(goal){
+   const g=String(goal||'').toLocaleLowerCase('it');
+   if(g.includes('portier'))return 'goalkeeper';
+   if(g.includes('press'))return 'pressing';
+   if(g.includes('trans'))return 'transition';
+   if(g.includes('final'))return 'finishing';
+   if(g.includes('tecnica'))return 'technical';
+   return 'possession';
+  }
+  function sessionExerciseChoices(index,goal){
+   const key=sessionGoalKey(goal);
+   const stages=[
+    {
+     goalkeeper:['fifa-gk-low-save','fifa-gk-build-up'],
+     pressing:['fifa-counterpress-rondo-3v1','fifa-warmup-6v2','asf-pass-sequence','fifa-receive-1v1'],
+     transition:['fifa-warmup-6v2','asf-pass-sequence','ftc-3v0-3v3','fifa-transition-4v4-2-jolly'],
+     finishing:['asf-pass-sequence','fifa-receive-1v1','figc-4v4-activation','ftc-3v0-3v3'],
+     technical:['asf-pass-sequence','fifa-warmup-6v2','fifa-receive-1v1','figc-4v4-mini-zone'],
+     possession:['fifa-warmup-6v2','asf-pass-sequence','figc-3v3-jolly','fifa-3v3-2-neutrals']
+    },
+    {
+     goalkeeper:['fifa-gk-build-up','fifa-gk-low-save'],
+     pressing:['fifa-counterpress-rondo-3v1','fifa-receive-1v1','fifa-counterpress-4v4-2','ftc-3v0-3v3'],
+     transition:['ftc-3v0-3v3','fifa-transition-4v4-2-jolly','figc-ssg-variabili','figc-3v3-jolly'],
+     finishing:['fifa-receive-1v1','figc-4v4-activation','ftc-3v0-3v3','figc-4v4-mini-zone'],
+     technical:['asf-pass-sequence','fifa-receive-1v1','figc-4v4-mini-zone','ftc-3v0-3v3'],
+     possession:['asf-pass-sequence','figc-3v3-jolly','fifa-3v3-2-neutrals','fifa-6v6-zones']
+    },
+    {
+     goalkeeper:['fifa-gk-build-up','fifa-gk-low-save'],
+     pressing:['fifa-counterpress-4v4-2','fifa-counterpress-rondo-3v1','fifa-transition-4v4-2-jolly','ftc-3v0-3v3'],
+     transition:['fifa-transition-4v4-2-jolly','figc-ssg-variabili','ftc-3v0-3v3','fifa-6v6-zones'],
+     finishing:['figc-4v4-activation','fifa-receive-1v1','ftc-3v0-3v3','figc-ssg-variabili'],
+     technical:['figc-4v4-mini-zone','ftc-3v0-3v3','fifa-receive-1v1','figc-3v3-jolly'],
+     possession:['figc-3v3-jolly','fifa-3v3-2-neutrals','asf-4v4-2jolly','fifa-6v6-zones']
+    },
+    {
+     goalkeeper:['fifa-gk-build-up','fifa-gk-low-save'],
+     pressing:['fifa-counterpress-7v7','fifa-counterpress-4v4-2','fifa-transition-4v4-2-jolly','figc-ssg-variabili'],
+     transition:['figc-ssg-variabili','fifa-transition-4v4-2-jolly','fifa-6v6-zones','asf-4v4-2jolly'],
+     finishing:['figc-ssg-variabili','figc-4v4-activation','fifa-transition-4v4-2-jolly','asf-4v4-2jolly'],
+     technical:['ftc-3v0-3v3','figc-4v4-mini-zone','figc-3v3-jolly','fifa-6v6-zones'],
+     possession:['asf-4v4-2jolly','fifa-6v6-zones','fifa-3v3-2-neutrals','figc-ssg-variabili']
+    }
+   ];
+   const group=stages[Math.max(0,Math.min(stages.length-1,index))]||stages[3];
+   const ids=group[key]||group.possession;
+   const catalog=sessionExerciseCatalog();
+   const result=ids.map(function(id){return catalog.find(function(e){return e.id===id})}).filter(Boolean);
+   return result.length?result:catalog.filter(function(e){return key==='goalkeeper'?e.type==='Portieri':e.type!=='Portieri'}).slice(0,5);
+  }
+  function defaultSessionExerciseIds(goal){
+   const key=sessionGoalKey(goal);
+   const preferred={
+    goalkeeper:['fifa-gk-low-save','fifa-gk-build-up','fifa-gk-build-up','fifa-gk-build-up'],
+    pressing:['fifa-counterpress-rondo-3v1','fifa-receive-1v1','fifa-counterpress-4v4-2','fifa-counterpress-7v7'],
+    transition:['fifa-warmup-6v2','ftc-3v0-3v3','fifa-transition-4v4-2-jolly','figc-ssg-variabili'],
+    finishing:['asf-pass-sequence','fifa-receive-1v1','figc-4v4-activation','figc-ssg-variabili'],
+    technical:['asf-pass-sequence','fifa-receive-1v1','figc-4v4-mini-zone','ftc-3v0-3v3'],
+    possession:['fifa-warmup-6v2','asf-pass-sequence','figc-3v3-jolly','fifa-6v6-zones']
+   };
+   return preferred[key]||preferred.possession;
+  }
+  function sessionBlockFromExercise(ex,index,minutes,phaseLabel){
+   const fallback=sessionExerciseCatalog().find(function(e){return e.type!=='Portieri'})||sessionExerciseCatalog()[0];
+   ex=ex||fallback;
+   if(!ex)return {phaseLabel:phaseLabel||'Esercitazione',exerciseId:'',title:'Esercizio non disponibile',minutes:Math.max(1,Number(minutes)||10),objective:'',organization:'',instructions:'',coaching:'',equipment:'',sourceName:'',sourceUrl:'',steps:[],board:{tokens:[],arrows:[]}};
+   return {phaseLabel:phaseLabel||'Fase '+(index+1),exerciseId:ex.id,title:ex.title,minutes:Math.max(1,Number(minutes)||10),objective:ex.objective||ex.summary||'',organization:ex.setup||'Consultare la scheda della fonte.',instructions:(ex.steps||[]).join('\n'),steps:Array.isArray(ex.steps)?ex.steps.slice():[],coaching:ex.coaching||'',equipment:ex.equipment||'Consultare la scheda originale.',players:ex.players||'',space:ex.space||'',category:ex.category||ex.level||'',summary:ex.summary||ex.objective||'',sourceName:ex.sourceName||'Fonte ufficiale',sourceUrl:ex.sourceUrl||'',sourceShort:ex.sourceShort||'',official:true,board:safeBoard(ex.board||freshBoard(ex.type))};
+  }
   function makeDefaultSessionBlocks(duration,goal){
    let specs;
-   if(duration===60)specs=[['Attivazione e tecnica dinamica',10],['Possesso orientato',15],['Gioco a tema',25],['Defaticamento e feedback',10]];
-   else if(duration===90)specs=[['Attivazione con palla',15],['Tecnica situazionale',20],['Gioco a tema',30],['Partita condizionata',20],['Defaticamento e feedback',5]];
-   else if(duration===105)specs=[['Attivazione con palla',15],['Tecnica situazionale',20],['Gioco a tema',30],['Situazione di partita',30],['Defaticamento e feedback',10]];
-   else specs=[['Attivazione con palla',12],['Tecnica situazionale',18],['Gioco a tema',25],['Partita condizionata',15],['Defaticamento e feedback',5]];
+   if(duration===60)specs=[['Attivazione con palla',10],['Sviluppo tecnico',15],['Esercitazione centrale',25],['Gioco applicativo',10]];
+   else if(duration===90)specs=[['Attivazione con palla',15],['Sviluppo tecnico',20],['Esercitazione centrale',30],['Gioco applicativo',25]];
+   else if(duration===105)specs=[['Attivazione con palla',15],['Sviluppo tecnico',20],['Esercitazione centrale',35],['Gioco applicativo',35]];
+   else specs=[['Attivazione con palla',12],['Sviluppo tecnico',18],['Esercitazione centrale',25],['Gioco applicativo',20]];
+   const preferred=defaultSessionExerciseIds(goal);
    return specs.map(function(spec,i){
-    const isWarm=i===0,isCool=i===specs.length-1,isGame=/gioco|partita|situazione/i.test(spec[0]);
-    const objective=isWarm?'Preparare il gruppo con palla, coordinazione e mobilità.':isCool?'Ridurre gradualmente l’intensità e verificare gli apprendimenti.': 'Allenare '+goal.toLowerCase()+' in situazione progressiva.';
-    return {title:spec[0],minutes:spec[1],objective:objective,organization:isWarm?'Giocatori distribuiti nello spazio, una palla a testa o a coppie; progressione da semplice a dinamico.':isCool?'Giocatori in cerchio, recupero attivo e confronto guidato.':isGame?'Definire campo, squadre, direzione di gioco e regole condizionanti. Ruotare i gruppi e riprendere rapidamente il gioco.':'Gruppi ridotti, distanze coerenti con la categoria e ripetizioni brevi; aumentare gradualmente complessità e opposizione.',instructions:isWarm?'Guidare con dimostrazione breve; osservare qualità del gesto e mobilità.':isCool?'Chiedere ai giocatori quale principio hanno applicato e cosa migliorare.': 'Osservare postura, tempi di scelta e collaborazione in relazione a '+goal.toLowerCase()+'.',coaching:isCool?'Respiro, idratazione e feedback positivi con un punto da migliorare.':'Orientamento del corpo, scansione prima di ricevere, tempi di supporto e qualità della prima scelta.',equipment:'Palloni, cinesini e casacche',board:freshBoard(goal)};
+    const choices=sessionExerciseChoices(i,goal);
+    const preferredExercise=choices.find(function(e){return e.id===preferred[i]})||choices[0];
+    return sessionBlockFromExercise(preferredExercise,i,spec[1],spec[0]);
    });
   }
   function sessionField(id){const el=$(id);return el?el.value.trim():''}
   function syncSessionBlockInputs(){
-   document.querySelectorAll('#pcSessionPreview [data-block-field]').forEach(function(el){
-    const ix=Number(el.dataset.blockIndex),key=el.dataset.blockField;
-    if(sessionDraftBlocks[ix])sessionDraftBlocks[ix][key]=key==='minutes'?Math.max(1,Number(el.value)||1):el.value;
+   document.querySelectorAll('#pcSessionPreview [data-block-field="minutes"]').forEach(function(el){
+    const ix=Number(el.dataset.blockIndex);
+    if(sessionDraftBlocks[ix])sessionDraftBlocks[ix].minutes=Math.max(1,Number(el.value)||1);
    });
   }
   function renderSessionPreview(){
@@ -517,14 +606,52 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    if(!sessionDraftBlocks.length){preview.innerHTML='';return}
    const allMinutes=sessionDraftBlocks.reduce(function(sum,b){return sum+Math.max(1,Number(b.minutes)||1)},0);
    const goal=sessionField('pcPlanGoal'),team=sessionField('pcPlanTeam'),players=sessionField('pcPlanPlayers'),duration=Number($('pcPlanDuration').value);
-   preview.innerHTML='<div class="section-head"><div><h2>Fasi della sessione</h2><p>'+esc(team)+' · '+esc(goal)+' · '+esc(players)+' giocatori · '+allMinutes+' min su '+duration+' min previsti</p></div><button class="btn primary small" type="button" id="pcSaveSession">'+(sessionEditingId?'Aggiorna sessione':'Salva sessione')+'</button></div>'+
-    '<div class="pc-session-details">Tema: '+esc(sessionField('pcSessionTitle'))+' · Spazio: '+esc(sessionField('pcSessionSpace')||'da definire')+' · Materiali: '+esc(sessionField('pcSessionEquipment')||'da definire')+'</div>'+
-    '<div class="resource-grid">'+sessionDraftBlocks.map(function(b,i){return '<article class="resource-card pc-session-block"><span class="resource-type">FASE '+(i+1)+' · '+Math.max(1,Number(b.minutes)||1)+' MIN</span><div class="pc-form-grid"><div class="field full"><label for="pcBlockTitle'+i+'">Nome della fase</label><input id="pcBlockTitle'+i+'" data-block-index="'+i+'" data-block-field="title" maxlength="120" value="'+esc(b.title)+'"></div><div class="field"><label for="pcBlockMinutes'+i+'">Durata (minuti)</label><input id="pcBlockMinutes'+i+'" type="number" min="1" max="120" data-block-index="'+i+'" data-block-field="minutes" value="'+esc(b.minutes)+'"></div><div class="field"><label for="pcBlockMaterials'+i+'">Materiale</label><input id="pcBlockMaterials'+i+'" data-block-index="'+i+'" data-block-field="equipment" maxlength="220" value="'+esc(b.equipment||'')+'"></div><div class="field full"><label for="pcBlockObjective'+i+'">Obiettivo della fase</label><textarea id="pcBlockObjective'+i+'" data-block-index="'+i+'" data-block-field="objective" maxlength="700">'+esc(b.objective||'')+'</textarea></div><div class="field full"><label for="pcBlockOrg'+i+'">Organizzazione e regole</label><textarea id="pcBlockOrg'+i+'" data-block-index="'+i+'" data-block-field="organization" maxlength="1000">'+esc(b.organization||'')+'</textarea></div><div class="field full"><label for="pcBlockInstructions'+i+'">Svolgimento / progressione</label><textarea id="pcBlockInstructions'+i+'" data-block-index="'+i+'" data-block-field="instructions" maxlength="1200">'+esc(b.instructions||'')+'</textarea></div><div class="field full"><label for="pcBlockCoaching'+i+'">Punti chiave e correzioni</label><textarea id="pcBlockCoaching'+i+'" data-block-index="'+i+'" data-block-field="coaching" maxlength="900">'+esc(b.coaching||'')+'</textarea></div></div><button type="button" class="btn outline small" data-session-board-index="'+i+'">✎ Modifica lavagnetta della fase '+(i+1)+'</button></article>'}).join('')+'</div>'+
-    '<div class="pc-session-board"><div class="pc-board-heading"><div><strong id="pcSessionBoardTitle">Lavagnetta della fase</strong><small>Seleziona uno strumento. Trascina i simboli per spostarli; per una freccia seleziona il punto di partenza e poi quello di arrivo.</small></div></div><div id="pcSessionBoardTabs" class="pc-session-board-tabs">'+sessionDraftBlocks.map(function(b,i){return '<button type="button" data-session-board-index="'+i+'" class="'+(i===sessionActiveBoardIndex?'active':'')+'">Fase '+(i+1)+' · '+esc(b.title)+'</button>'}).join('')+'</div><div class="pc-session-board-tools"><div class="pc-board-tool-group"><span class="pc-board-group-label">STRUMENTI</span><button type="button" data-session-board-tool="select" class="active">↖ Seleziona / sposta</button><button type="button" data-session-board-tool="player">＋ Giocatore</button><button type="button" data-session-board-tool="opponent">＋ Avversario</button><button type="button" data-session-board-tool="ball">⚽ Pallone</button><button type="button" data-session-board-tool="cone">▲ Cono</button><button type="button" data-session-board-tool="arrow">↗ Freccia</button><button type="button" data-session-board-tool="erase">⌫ Cancella</button></div><div class="pc-board-tool-group pc-board-actions"><span class="pc-board-group-label">AZIONI</span><button type="button" id="pcSessionBoardUndo">↶ Annulla</button><button type="button" id="pcSessionBoardBlank">＋ Da zero</button><button type="button" id="pcSessionBoardReset">Ripristina schema</button><button type="button" id="pcSessionBoardExport">Scarica SVG</button></div></div><div id="pcSessionBoardSlot" class="pc-session-board-slot"></div><p class="pc-board-hint">La lavagnetta viene conservata separatamente per ogni fase della sessione.</p></div>';
-   preview.querySelectorAll('[data-block-field]').forEach(function(el){el.addEventListener('input',function(){const ix=Number(el.dataset.blockIndex);if(sessionDraftBlocks[ix])sessionDraftBlocks[ix][el.dataset.blockField]=el.dataset.blockField==='minutes'?Math.max(1,Number(el.value)||1):el.value;if(el.dataset.blockField==='title'){const tab=preview.querySelector('[data-session-board-index="'+ix+'"]');if(tab)tab.textContent='Fase '+(ix+1)+' · '+el.value;if(ix===sessionActiveBoardIndex)$('pcSessionBoardTitle').textContent='Lavagnetta · '+el.value}})});
-   preview.querySelectorAll('[data-session-board-index]').forEach(function(btn){btn.addEventListener('click',function(){syncSessionBlockInputs();sessionActiveBoardIndex=Number(btn.dataset.sessionBoardIndex);sessionArrowStart=null;renderSessionPreview();renderSessionBoard()})});
+   const phases=sessionDraftBlocks.map(function(b,i){
+    const options=sessionExerciseChoices(i,goal);
+    if(!options.some(function(e){return e.id===b.exerciseId})){
+     const preferred=defaultSessionExerciseIds(goal)[i];
+     const ex=options.find(function(e){return e.id===preferred})||options[0];
+     if(ex)sessionDraftBlocks[i]=b=sessionBlockFromExercise(ex,i,b.minutes,b.phaseLabel);
+    }
+    const stepList=(b.steps||[]).map(function(step){return '<li>'+esc(step)+'</li>'}).join('');
+    const selectOptions=options.map(function(ex){return '<option value="'+esc(ex.id)+'"'+(ex.id===b.exerciseId?' selected':'')+'>'+esc(ex.title)+' · '+esc(ex.sourceShort||ex.sourceName||'Fonte documentata')+'</option>'}).join('');
+    const sourceLink=b.sourceUrl?'<div class="pc-session-source"><span class="pc-session-source-label">FONTE VERIFICATA</span><a href="'+esc(b.sourceUrl)+'" target="_blank" rel="noopener noreferrer">'+esc(b.sourceName||'Apri la scheda originale')+' ↗</a></div>':'<p class="pc-board-hint">Fonte da consultare nella scheda originale.</p>';
+    const facts='<div class="pc-session-ex-facts">'+
+      '<div><strong>Giocatori</strong><span>'+esc(b.players||'Vedi fonte')+'</span></div>'+
+      '<div><strong>Spazio</strong><span>'+esc(b.space||'Adattare alla categoria')+'</span></div>'+
+      '<div><strong>Materiale</strong><span>'+esc(b.equipment||'Vedi fonte')+'</span></div></div>';
+    return '<article class="resource-card pc-session-block">'+
+      '<span class="resource-type">FASE '+(i+1)+' · '+esc(b.phaseLabel||('Fase '+(i+1)))+'</span>'+
+      '<h3>'+esc(b.title)+'</h3>'+
+      '<div class="field pc-session-select-field"><label for="pcBlockExercise'+i+'">Esercizio consigliato · solo fonti ufficiali</label><select id="pcBlockExercise'+i+'" data-session-exercise-index="'+i+'">'+selectOptions+'</select></div>'+
+      '<p class="pc-session-objective">'+esc(b.objective||b.summary)+'</p>'+
+      facts+
+      '<div class="modal-detail pc-session-org"><strong>Organizzazione</strong><p>'+esc(b.organization||'Consultare la fonte originale.')+'</p></div>'+
+      '<div class="modal-detail pc-session-steps"><strong>Svolgimento</strong><ol class="pc-step-list">'+stepList+'</ol></div>'+
+      '<div class="modal-detail pc-session-coaching"><strong>Punti chiave dell’allenatore</strong><p>'+esc(b.coaching||'Seguire i punti chiave della fonte originale.')+'</p></div>'+
+      sourceLink+
+      '<div class="pc-session-ex-board">'+boardSvg(safeBoard(b.board),false)+'<small>Schema illustrativo PROCOACH: per il diagramma originale, guarda la fonte collegata.</small></div>'+
+      '<div class="field pc-session-minutes"><label for="pcBlockMinutes'+i+'">Durata prevista (minuti)</label><input id="pcBlockMinutes'+i+'" type="number" min="1" max="120" data-block-index="'+i+'" data-block-field="minutes" value="'+esc(b.minutes)+'"></div>'+
+      '</article>';
+   }).join('');
+   preview.innerHTML='<div class="section-head"><div><h2>Fasi della sessione</h2><p>'+esc(team)+' · '+esc(goal)+' · '+esc(players)+' giocatori · <strong>'+allMinutes+' min</strong> su '+duration+' min previsti</p></div><button class="btn primary small" type="button" id="pcSaveSession">'+(sessionEditingId?'Aggiorna sessione':'Salva sessione')+'</button></div>'+
+    '<div class="pc-session-details">Tema: '+esc(sessionField('pcSessionTitle'))+' · Spazio: '+esc(sessionField('pcSessionSpace')||'da adattare alla proposta ufficiale')+' · Materiali: '+esc(sessionField('pcSessionEquipment')||'come indicato nelle schede').trim()+'</div>'+
+    '<div class="pc-session-source-note">PROPOSTA GUIDATA · Le attività sono precompilate da schede FIFA, FIGC, ASF/SFV o FTC. Puoi cambiare esercizio solo scegliendo tra le alternative documentate per quella fase. Obiettivo, organizzazione, svolgimento e punti chiave derivano dalla scheda collegata. Adatta sempre carico, spazio e complessità alla categoria.</div>'+
+    '<div class="resource-grid pc-session-sourced-grid">'+phases+'</div>';
+   preview.querySelectorAll('[data-session-exercise-index]').forEach(function(el){
+    el.addEventListener('change',function(){
+     syncSessionBlockInputs();
+     const ix=Number(el.dataset.sessionExerciseIndex),old=sessionDraftBlocks[ix],ex=getSessionExercise(el.value);
+     if(!old||!ex)return;
+     sessionDraftBlocks[ix]=sessionBlockFromExercise(ex,ix,old.minutes,old.phaseLabel);
+     renderSessionPreview();
+    });
+   });
+   preview.querySelectorAll('[data-block-field="minutes"]').forEach(function(el){
+    el.addEventListener('input',function(){const ix=Number(el.dataset.blockIndex);if(sessionDraftBlocks[ix])sessionDraftBlocks[ix].minutes=Math.max(1,Number(el.value)||1)});
+    el.addEventListener('change',function(){syncSessionBlockInputs();renderSessionPreview()});
+   });
    $('pcSaveSession').addEventListener('click',saveSessionDraft);
-   renderSessionBoard();
   }
   function sessionBoard(){if(!sessionDraftBlocks[sessionActiveBoardIndex])return freshBoard('Possesso');sessionDraftBlocks[sessionActiveBoardIndex].board=safeBoard(sessionDraftBlocks[sessionActiveBoardIndex].board);return sessionDraftBlocks[sessionActiveBoardIndex].board}
   function saveSessionBoardSnapshot(){sessionBoardHistory.push({index:sessionActiveBoardIndex,board:JSON.parse(JSON.stringify(sessionBoard()))});if(sessionBoardHistory.length>40)sessionBoardHistory.shift()}
@@ -583,9 +710,17 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    $('pcSessionTitle').value=initialPlan.title||((initialPlan.team||'')+' · '+(initialPlan.goal||'Sessione'));
    ['pcPlanTeam','pcPlanGoal','pcPlanDuration','pcPlanPlayers'].forEach(function(id){const el=$(id),key={'pcPlanTeam':'team','pcPlanGoal':'goal','pcPlanDuration':'duration','pcPlanPlayers':'players'}[id];if(initialPlan[key]!=null&&Array.from(el.options).some(function(o){return o.value===String(initialPlan[key])||o.text===String(initialPlan[key])}))el.value=String(initialPlan[key])});
    $('pcSessionSpace').value=initialPlan.space||'';$('pcSessionEquipment').value=initialPlan.equipment||'';$('pcSessionPrinciples').value=initialPlan.principles||'';$('pcSessionCoachNotes').value=initialPlan.coachNotes||'';
-   sessionDraftBlocks=(initialPlan.blocks||[]).map(function(b,i){if(Array.isArray(b)){return {title:b[0],minutes:b[1],objective:'',organization:'',instructions:'',coaching:'',equipment:initialPlan.equipment||'',board:freshBoard(initialPlan.goal)}}return {...b,board:safeBoard(b.board||freshBoard(initialPlan.goal))}});
-   if(!sessionDraftBlocks.length)sessionDraftBlocks=makeDefaultSessionBlocks(Number(initialPlan.duration)||75,initialPlan.goal||'Possesso e smarcamento');
-   sessionActiveBoardIndex=0;renderSessionPreview();
+   const phaseGoal=sessionField('pcPlanGoal')||initialPlan.goal||'Possesso e smarcamento';
+   const generatedDefaults=makeDefaultSessionBlocks(Number(initialPlan.duration)||75,phaseGoal);
+   const previousBlocks=Array.isArray(initialPlan.blocks)?initialPlan.blocks:[];
+   sessionDraftBlocks=generatedDefaults.map(function(fallback,i){
+    const old=previousBlocks[i],minutes=Math.max(1,Number(Array.isArray(old)?old[1]:old&&old.minutes)||fallback.minutes);
+    const allowed=sessionExerciseChoices(i,phaseGoal);
+    const oldId=old&&!Array.isArray(old)?old.exerciseId:null;
+    const exercise=allowed.find(function(ex){return ex.id===oldId})||allowed.find(function(ex){return ex.id===fallback.exerciseId})||allowed[0];
+    return sessionBlockFromExercise(exercise,i,minutes,fallback.phaseLabel);
+   });
+   sessionActiveBoardIndex=0;sessionBoardTool='select';sessionBoardHistory=[];renderSessionPreview();
   }
   $('pcExerciseForm').addEventListener('submit',function(e){
    e.preventDefault();
