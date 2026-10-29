@@ -98,6 +98,9 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-source-banner-tags{display:flex;flex-wrap:wrap;gap:6px}
 .pc-source-banner-tags span{padding:5px 8px;border-radius:20px;background:#e9f4eb;color:#356747;font-size:10px;font-weight:800}
 @media(max-width:760px){.pc-source-library-banner{align-items:flex-start;flex-wrap:wrap;padding:14px}.pc-source-banner-content{flex:1 1 calc(100% - 60px)}.pc-source-library-banner>.btn{margin-left:58px}.pc-source-banner-content h3{font-size:14px}}
+.pc-tactic-board .pc-arrow-hit{cursor:pointer;pointer-events:all}
+.pc-tactic-board .pc-arrow-hit:hover line:last-child{stroke:#cf5e1d;stroke-width:6}
+.pc-board-tool[data-board-tool="erase"].active,.pc-session-board-tools [data-session-board-tool="erase"].active,.pc-board-tool[data-official-board-tool="erase"].active{background:#fff0eb!important;border-color:#e9a082!important;color:#a63e1d!important}
 .pc-reference-preview{margin:12px 0 2px;border:1px solid #e2e9e3;border-radius:10px;overflow:hidden;background:#fff}
 .pc-reference-preview img{display:block;width:100%;max-height:260px;object-fit:contain;background:#f5f7f5}
 .pc-reference-preview figcaption{padding:7px 10px;color:#718078;font-size:10px}
@@ -313,7 +316,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  function safeBoard(b){return b&&Array.isArray(b.tokens)&&Array.isArray(b.arrows)?{tokens:b.tokens.filter(function(t){return t&&Number.isFinite(t.x)&&Number.isFinite(t.y)&&['player','opponent','ball','cone'].includes(t.kind)}).map(function(t){return {x:Math.max(12,Math.min(588,t.x)),y:Math.max(12,Math.min(348,t.y)),kind:t.kind}}),arrows:b.arrows.filter(function(a){return a&&['x1','y1','x2','y2'].every(function(k){return Number.isFinite(a[k])})}).map(function(a){return {x1:a.x1,y1:a.y1,x2:a.x2,y2:a.y2}})}:freshBoard('Possesso')}
  function boardSvg(board,editable){
   const b=safeBoard(board);
-  const arrows=b.arrows.map(function(a){return '<line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-width="3.5" stroke-linecap="round" marker-end="url(#pcArrowHead)" />'}).join('');
+  const arrows=b.arrows.map(function(a,i){return (editable?'<g data-arrow-index="'+i+'" class="pc-arrow-hit" style="cursor:pointer" aria-label="Freccia '+(i+1)+'"><line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="transparent" stroke-width="24" stroke-linecap="round" pointer-events="stroke"/><line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-width="4.5" stroke-linecap="round" marker-end="url(#pcArrowHead)" pointer-events="none"/></g>':'<line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-width="3.5" stroke-linecap="round" marker-end="url(#pcArrowHead)"/>')}).join('');
   const tokens=b.tokens.map(function(t,i){
    if(t.kind==='ball')return '<g transform="translate('+t.x+' '+t.y+')" '+(editable?'data-token-index="'+i+'" style="cursor:grab"':'')+'><circle r="9" fill="#fff" stroke="#28382c" stroke-width="1.8"/><path d="M-3 -3 L2 -4 L5 1 L1 5 L-4 2 Z" fill="#26332b"/></g>';
    if(t.kind==='cone')return '<g transform="translate('+t.x+' '+t.y+')" '+(editable?'data-token-index="'+i+'" style="cursor:grab"':'')+'><path d="M0 -11 L10 9 L-10 9 Z" fill="#ed8b39" stroke="#9c591d" stroke-width="1.5"/></g>';
@@ -380,6 +383,8 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   svg.addEventListener('pointercancel',function(){dragToken=null;renderBoardEditor()});
   svg.addEventListener('click',function(e){
    if(e.target.closest('[data-token-index]')&&boardTool!=='erase')return;
+   const clickedArrow=e.target.closest('[data-arrow-index]');
+   if(clickedArrow){if(boardTool==='erase'){const ix=Number(clickedArrow.dataset.arrowIndex);if(Number.isInteger(ix)&&ix>=0&&ix<boardState.arrows.length){saveBoardSnapshot();boardState.arrows.splice(ix,1);arrowStart=null;renderBoardEditor();toast('Freccia eliminata')}return}return}
    const p=boardPoint(svg,e);
    if(boardTool==='arrow'){
     if(!arrowStart){arrowStart=p;toast('Ora clicca sul punto di arrivo della freccia');return}
@@ -522,6 +527,8 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    svg.addEventListener('pointercancel',function(){sessionDragToken=null;renderSessionBoard()});
    svg.addEventListener('click',function(e){
     if(e.target.closest('[data-token-index]')&&sessionBoardTool!=='erase')return;
+    const clickedArrow=e.target.closest('[data-arrow-index]');
+    if(clickedArrow){if(sessionBoardTool==='erase'){const ix=Number(clickedArrow.dataset.arrowIndex);if(Number.isInteger(ix)&&ix>=0&&ix<sessionBoard().arrows.length){saveSessionBoardSnapshot();sessionBoard().arrows.splice(ix,1);sessionArrowStart=null;renderSessionBoard();toast('Freccia eliminata')}return}return}
     const p=sessionBoardPoint(svg,e),board=sessionBoard();
     if(sessionBoardTool==='arrow'){if(!sessionArrowStart){sessionArrowStart=p;toast('Ora clicca sul punto di arrivo della freccia');return}saveSessionBoardSnapshot();board.arrows.push({x1:sessionArrowStart.x,y1:sessionArrowStart.y,x2:p.x,y2:p.y});sessionArrowStart=null;renderSessionBoard();return}
     if(sessionBoardTool==='erase'){let nearest=-1,dist=26;board.tokens.forEach(function(t,i){const d=Math.hypot(t.x-p.x,t.y-p.y);if(d<dist){dist=d;nearest=i}});if(nearest>=0){saveSessionBoardSnapshot();board.tokens.splice(nearest,1);renderSessionBoard();return}let arrowIndex=-1,arrowDist=14;board.arrows.forEach(function(a,i){const d=pointSegmentDistance(p,a);if(d<arrowDist){arrowDist=d;arrowIndex=i}});if(arrowIndex>=0){saveSessionBoardSnapshot();board.arrows.splice(arrowIndex,1);renderSessionBoard()}else toast('Avvicina il cursore a un simbolo o a una freccia da eliminare');return}
@@ -653,6 +660,8 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    svg.addEventListener('pointercancel',function(){dragging=null;render()});
    svg.addEventListener('click',function(e){
     if(e.target.closest('[data-token-index]')&&tool!=='erase')return;
+    const clickedArrow=e.target.closest('[data-arrow-index]');
+    if(clickedArrow){if(tool==='erase'){const ix=Number(clickedArrow.dataset.arrowIndex);if(Number.isInteger(ix)&&ix>=0&&ix<draft.arrows.length){snapshot();draft.arrows.splice(ix,1);arrowStartPoint=null;render();toast('Freccia eliminata')}return}return}
     const p=boardPoint(svg,e);
     if(tool==='arrow'){if(!arrowStartPoint){arrowStartPoint=p;toast('Ora scegli il punto di arrivo della freccia');return}snapshot();draft.arrows.push({x1:arrowStartPoint.x,y1:arrowStartPoint.y,x2:p.x,y2:p.y});arrowStartPoint=null;render();return}
     if(tool==='erase'){
