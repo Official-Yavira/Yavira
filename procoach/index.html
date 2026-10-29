@@ -381,9 +381,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   const svg=slot.querySelector('svg');
   svg.addEventListener('pointerdown',function(e){
    const g=e.target.closest('[data-token-index]');
-   if(g&&boardTool!=='erase'&&boardTool!=='arrow'){saveBoardSnapshot();dragToken=Number(g.dataset.tokenIndex);dragArrow=null;svg.setPointerCapture(e.pointerId);e.preventDefault();return}
+   if(g&&boardTool==='select'){saveBoardSnapshot();dragToken=Number(g.dataset.tokenIndex);dragArrow=null;svg.setPointerCapture(e.pointerId);e.preventDefault();return}
    const ag=e.target.closest('[data-arrow-index]');
-   if(ag&&boardTool!=='erase'&&boardTool!=='arrow'){const ix=Number(ag.dataset.arrowIndex),p=boardPoint(svg,e),a=boardState.arrows[ix];if(!a)return;saveBoardSnapshot();dragArrow={index:ix,start:p,original:{...a}};dragToken=null;svg.setPointerCapture(e.pointerId);e.preventDefault()}
+   if(ag&&boardTool==='select'){const ix=Number(ag.dataset.arrowIndex),p=boardPoint(svg,e),a=boardState.arrows[ix];if(!a)return;saveBoardSnapshot();dragArrow={index:ix,start:p,original:{...a}};dragToken=null;svg.setPointerCapture(e.pointerId);e.preventDefault()}
   });
   svg.addEventListener('pointermove',function(e){
    if(dragArrow!==null){const p=boardPoint(svg,e),dx=p.x-dragArrow.start.x,dy=p.y-dragArrow.start.y,a=boardState.arrows[dragArrow.index];if(!a)return;a.x1=Math.max(12,Math.min(588,dragArrow.original.x1+dx));a.y1=Math.max(12,Math.min(348,dragArrow.original.y1+dy));a.x2=Math.max(12,Math.min(588,dragArrow.original.x2+dx));a.y2=Math.max(12,Math.min(348,dragArrow.original.y2+dy));return}
@@ -395,9 +395,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   svg.addEventListener('pointerup',function(e){if(dragToken!==null||dragArrow!==null){dragToken=null;dragArrow=null;renderBoardEditor()}});
   svg.addEventListener('pointercancel',function(){dragToken=null;dragArrow=null;renderBoardEditor()});
   svg.addEventListener('click',function(e){
-   if(e.target.closest('[data-token-index]')&&boardTool!=='erase')return;
+   if(e.target.closest('[data-token-index]')&&boardTool==='select')return;
    const clickedArrow=e.target.closest('[data-arrow-index]');
-   if(clickedArrow){if(boardTool==='erase'){const ix=Number(clickedArrow.dataset.arrowIndex);if(Number.isInteger(ix)&&ix>=0&&ix<boardState.arrows.length){saveBoardSnapshot();boardState.arrows.splice(ix,1);arrowStart=null;renderBoardEditor();toast('Freccia eliminata')}return}return}
+   if(clickedArrow&&(boardTool==='erase'||boardTool==='select')){if(boardTool==='erase'){const ix=Number(clickedArrow.dataset.arrowIndex);if(Number.isInteger(ix)&&ix>=0&&ix<boardState.arrows.length){saveBoardSnapshot();boardState.arrows.splice(ix,1);arrowStart=null;renderBoardEditor();toast('Freccia eliminata')}return}return}
    const p=boardPoint(svg,e);
    if(boardTool==='arrow'){
     if(!arrowStart){arrowStart=p;toast('Ora clicca sul punto di arrivo della freccia');return}
@@ -537,9 +537,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    const svg=slot.querySelector('svg');if(!svg)return;
    svg.addEventListener('pointerdown',function(e){
     const g=e.target.closest('[data-token-index]');
-    if(g&&sessionBoardTool!=='erase'&&sessionBoardTool!=='arrow'){saveSessionBoardSnapshot();sessionDragToken=Number(g.dataset.tokenIndex);sessionDragArrow=null;svg.setPointerCapture(e.pointerId);e.preventDefault();return}
+    if(g&&sessionBoardTool==='select'){saveSessionBoardSnapshot();sessionDragToken=Number(g.dataset.tokenIndex);sessionDragArrow=null;svg.setPointerCapture(e.pointerId);e.preventDefault();return}
     const ag=e.target.closest('[data-arrow-index]');
-    if(ag&&sessionBoardTool!=='erase'&&sessionBoardTool!=='arrow'){const ix=Number(ag.dataset.arrowIndex),p=sessionBoardPoint(svg,e),a=sessionBoard().arrows[ix];if(!a)return;saveSessionBoardSnapshot();sessionDragArrow={index:ix,start:p,original:{...a}};sessionDragToken=null;svg.setPointerCapture(e.pointerId);e.preventDefault()}
+    if(ag&&sessionBoardTool==='select'){const ix=Number(ag.dataset.arrowIndex),p=sessionBoardPoint(svg,e),a=sessionBoard().arrows[ix];if(!a)return;saveSessionBoardSnapshot();sessionDragArrow={index:ix,start:p,original:{...a}};sessionDragToken=null;svg.setPointerCapture(e.pointerId);e.preventDefault()}
    });
    svg.addEventListener('pointermove',function(e){
     if(sessionDragArrow!==null){const p=sessionBoardPoint(svg,e),dx=p.x-sessionDragArrow.start.x,dy=p.y-sessionDragArrow.start.y,a=sessionBoard().arrows[sessionDragArrow.index];if(!a)return;a.x1=Math.max(12,Math.min(588,sessionDragArrow.original.x1+dx));a.y1=Math.max(12,Math.min(348,sessionDragArrow.original.y1+dy));a.x2=Math.max(12,Math.min(588,sessionDragArrow.original.x2+dx));a.y2=Math.max(12,Math.min(348,sessionDragArrow.original.y2+dy));return}
@@ -548,9 +548,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    svg.addEventListener('pointerup',function(){if(sessionDragToken!==null||sessionDragArrow!==null){sessionDragToken=null;sessionDragArrow=null;renderSessionBoard()}});
    svg.addEventListener('pointercancel',function(){sessionDragToken=null;sessionDragArrow=null;renderSessionBoard()});
    svg.addEventListener('click',function(e){
-    if(e.target.closest('[data-token-index]')&&sessionBoardTool!=='erase')return;
+    if(e.target.closest('[data-token-index]')&&sessionBoardTool==='select')return;
     const clickedArrow=e.target.closest('[data-arrow-index]');
-    if(clickedArrow){if(sessionBoardTool==='erase'){const ix=Number(clickedArrow.dataset.arrowIndex);if(Number.isInteger(ix)&&ix>=0&&ix<sessionBoard().arrows.length){saveSessionBoardSnapshot();sessionBoard().arrows.splice(ix,1);sessionArrowStart=null;renderSessionBoard();toast('Freccia eliminata')}return}return}
+    if(clickedArrow&&(sessionBoardTool==='erase'||sessionBoardTool==='select')){if(sessionBoardTool==='erase'){const ix=Number(clickedArrow.dataset.arrowIndex);if(Number.isInteger(ix)&&ix>=0&&ix<sessionBoard().arrows.length){saveSessionBoardSnapshot();sessionBoard().arrows.splice(ix,1);sessionArrowStart=null;renderSessionBoard();toast('Freccia eliminata')}return}return}
     const p=sessionBoardPoint(svg,e),board=sessionBoard();
     if(sessionBoardTool==='arrow'){if(!sessionArrowStart){sessionArrowStart=p;toast('Ora clicca sul punto di arrivo della freccia');return}saveSessionBoardSnapshot();board.arrows.push({x1:sessionArrowStart.x,y1:sessionArrowStart.y,x2:p.x,y2:p.y});sessionArrowStart=null;renderSessionBoard();return}
     if(sessionBoardTool==='erase'){let nearest=-1,dist=26;board.tokens.forEach(function(t,i){const d=Math.hypot(t.x-p.x,t.y-p.y);if(d<dist){dist=d;nearest=i}});if(nearest>=0){saveSessionBoardSnapshot();board.tokens.splice(nearest,1);renderSessionBoard();return}let arrowIndex=-1,arrowDist=14;board.arrows.forEach(function(a,i){const d=pointSegmentDistance(p,a);if(d<arrowDist){arrowDist=d;arrowIndex=i}});if(arrowIndex>=0){saveSessionBoardSnapshot();board.arrows.splice(arrowIndex,1);renderSessionBoard()}else toast('Avvicina il cursore a un simbolo o a una freccia da eliminare');return}
@@ -679,9 +679,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    const svg=slot.querySelector('svg');if(!svg)return;
    svg.addEventListener('pointerdown',function(e){
     const g=e.target.closest('[data-token-index]');
-    if(g&&tool!=='erase'&&tool!=='arrow'){snapshot();dragging=Number(g.dataset.tokenIndex);draggingArrow=null;svg.setPointerCapture(e.pointerId);e.preventDefault();return}
+    if(g&&tool==='select'){snapshot();dragging=Number(g.dataset.tokenIndex);draggingArrow=null;svg.setPointerCapture(e.pointerId);e.preventDefault();return}
     const ag=e.target.closest('[data-arrow-index]');
-    if(ag&&tool!=='erase'&&tool!=='arrow'){const ix=Number(ag.dataset.arrowIndex),p=boardPoint(svg,e),a=draft.arrows[ix];if(!a)return;snapshot();draggingArrow={index:ix,start:p,original:{...a}};dragging=null;svg.setPointerCapture(e.pointerId);e.preventDefault()}
+    if(ag&&tool==='select'){const ix=Number(ag.dataset.arrowIndex),p=boardPoint(svg,e),a=draft.arrows[ix];if(!a)return;snapshot();draggingArrow={index:ix,start:p,original:{...a}};dragging=null;svg.setPointerCapture(e.pointerId);e.preventDefault()}
    });
    svg.addEventListener('pointermove',function(e){
     if(draggingArrow!==null){const p=boardPoint(svg,e),dx=p.x-draggingArrow.start.x,dy=p.y-draggingArrow.start.y,a=draft.arrows[draggingArrow.index];if(!a)return;a.x1=Math.max(12,Math.min(588,draggingArrow.original.x1+dx));a.y1=Math.max(12,Math.min(348,draggingArrow.original.y1+dy));a.x2=Math.max(12,Math.min(588,draggingArrow.original.x2+dx));a.y2=Math.max(12,Math.min(348,draggingArrow.original.y2+dy));return}
@@ -690,9 +690,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    svg.addEventListener('pointerup',function(){if(dragging!==null||draggingArrow!==null){dragging=null;draggingArrow=null;render()}});
    svg.addEventListener('pointercancel',function(){dragging=null;draggingArrow=null;render()});
    svg.addEventListener('click',function(e){
-    if(e.target.closest('[data-token-index]')&&tool!=='erase')return;
+    if(e.target.closest('[data-token-index]')&&tool==='select')return;
     const clickedArrow=e.target.closest('[data-arrow-index]');
-    if(clickedArrow){if(tool==='erase'){const ix=Number(clickedArrow.dataset.arrowIndex);if(Number.isInteger(ix)&&ix>=0&&ix<draft.arrows.length){snapshot();draft.arrows.splice(ix,1);arrowStartPoint=null;render();toast('Freccia eliminata')}return}return}
+    if(clickedArrow&&(tool==='erase'||tool==='select')){if(tool==='erase'){const ix=Number(clickedArrow.dataset.arrowIndex);if(Number.isInteger(ix)&&ix>=0&&ix<draft.arrows.length){snapshot();draft.arrows.splice(ix,1);arrowStartPoint=null;render();toast('Freccia eliminata')}return}return}
     const p=boardPoint(svg,e);
     if(tool==='arrow'){if(!arrowStartPoint){arrowStartPoint=p;toast('Ora scegli il punto di arrivo della freccia');return}snapshot();draft.arrows.push({x1:arrowStartPoint.x,y1:arrowStartPoint.y,x2:p.x,y2:p.y});arrowStartPoint=null;render();return}
     if(tool==='erase'){
