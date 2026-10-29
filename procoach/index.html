@@ -137,6 +137,40 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-arrow-hit line:first-child{stroke-linecap:round;pointer-events:stroke}
 .pc-board-slot,.pc-session-board-slot{touch-action:none}
 @media(max-width:700px){.pc-board-tools,.pc-session-board-tools{display:grid;grid-template-columns:1fr;gap:8px}.pc-board-tool-group{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.pc-board-group-label{grid-column:1/-1}.pc-board-tool-group button{width:100%;min-height:38px;padding:8px 7px;font-size:11px}.pc-board-tool-group button[data-board-tool="select"],.pc-board-tool-group button[data-session-board-tool="select"],.pc-board-tool-group button[data-official-board-tool="select"]{grid-column:1/-1}}
+
+/* Standalone free tactical board */
+.pc-free-board-layout{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:16px;align-items:start;margin-top:18px}
+.pc-free-board-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px;min-width:0}
+.pc-free-board-title{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.pc-free-board-title strong{display:block;font-size:14px}
+.pc-free-board-title small{display:block;font-size:11px;line-height:1.5;color:var(--muted);margin-top:4px}
+.pc-free-board-badge{flex-shrink:0;border-radius:999px;padding:6px 9px;background:#eaf5ed;color:#176b3a;font-size:9px;font-weight:900;letter-spacing:.06em}
+.pc-free-board-slot{width:100%;overflow:hidden;border:1px solid #cfded0;border-radius:11px;background:#e8f2e7;touch-action:none}
+.pc-free-board-slot svg{display:block;width:100%;height:auto;touch-action:none;user-select:none;-webkit-user-select:none}
+.pc-free-board-footer{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:#7a877e;font-size:10px;line-height:1.5;margin-top:10px}
+.pc-free-board-sidebar{display:grid;gap:12px;min-width:0}
+.pc-free-board-group-title{font-size:10px;font-weight:900;letter-spacing:.12em;color:#718078;margin-bottom:8px}
+.pc-free-board-instructions{font-size:11px;line-height:1.6;color:var(--muted);margin:0 0 12px}
+.pc-free-board-tools{display:grid;grid-template-columns:1fr;gap:6px}
+.pc-free-tool{display:flex;align-items:center;gap:10px;text-align:left;width:100%;min-width:0;border:1px solid #dfe7e0;border-radius:10px;background:#fff;color:#3d5043;padding:10px;cursor:pointer}
+.pc-free-tool>span:first-child{width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center;background:#f0f5f1;border-radius:8px;font-weight:900;font-size:15px}
+.pc-free-tool>span:last-child{min-width:0}
+.pc-free-tool strong{display:block;font-size:11px}
+.pc-free-tool small{display:block;color:#7a877e;font-size:9px;line-height:1.4;margin-top:2px}
+.pc-free-tool.active{border-color:#63ac7b;background:#edf8ef;box-shadow:0 0 0 1px #d3ebd9}
+.pc-free-tool.active>span:first-child{background:#d7efdd;color:#176b3a}
+.pc-free-tool-erase.active{border-color:#e4a28a;background:#fff2ed}
+.pc-free-icon-player,.pc-free-icon-opponent{border-radius:50%!important;color:#fff!important}
+.pc-free-icon-player{background:#27834b!important}.pc-free-icon-opponent{background:#c64c4c!important}
+.pc-free-icon-cone{background:#fff0dc!important;color:#b56220!important}
+.pc-free-board-actions{display:grid;gap:8px}
+.pc-free-board-actions .btn{width:100%;justify-content:center;min-height:39px}
+.pc-free-board-note{font-size:10px;line-height:1.65;color:#7b887e;margin:12px 0 0}
+.pc-free-board-slot .pc-free-token{cursor:grab}
+.pc-free-board-slot .pc-free-token:active{cursor:grabbing}
+@media(max-width:1050px){.pc-free-board-layout{grid-template-columns:minmax(0,1fr) 260px}}
+@media(max-width:760px){.pc-free-board-layout{grid-template-columns:1fr}.pc-free-board-sidebar{grid-template-columns:1fr}.pc-free-board-title{display:block}.pc-free-board-badge{display:inline-block;margin-top:8px}.pc-free-board-tools{grid-template-columns:repeat(2,minmax(0,1fr))}.pc-free-tool{padding:9px 7px;gap:7px}.pc-free-tool>span:first-child{width:28px;height:28px;flex-basis:28px}.pc-free-tool strong{font-size:10px}.pc-free-tool small{font-size:8px}.pc-free-tool:first-child{grid-column:1/-1}}
+
 </style>
 </head>
 <body>
@@ -147,6 +181,7 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  <button class="nav active" data-page="home" aria-label="Home"><span class="icon">⌂</span><span>Panoramica</span></button>
  <button class="nav" data-page="library" aria-label="Esercizi"><span class="icon">▤</span><span>Libreria esercizi</span></button>
  <button class="nav" data-page="planner" aria-label="Pianifica seduta"><span class="icon">▦</span><span>Pianifica seduta</span></button>
+ <button class="nav" data-page="board" aria-label="Lavagnetta libera"><span class="icon">↗</span><span>Lavagnetta libera</span></button>
  <button class="nav" data-page="goalkeepers" aria-label="Area portieri"><span class="icon">🧤</span><span>Area portieri</span></button>
  <div class="nav-label">Community & risorse</div>
  <button class="nav" data-page="community" aria-label="Community"><span class="icon">☷</span><span>Community</span></button>
@@ -251,6 +286,44 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  <div class="profile-card"><div class="profile-id"><div class="profile-large-avatar" id="profileAvatar">AC</div><div><strong id="profileDisplayName">Allenatore PROCOACH</strong><small>Profilo locale provvisorio</small></div></div>
  <form id="profileForm" class="form-grid"><div class="field"><label for="firstName">Nome</label><input id="firstName" maxlength="60" autocomplete="given-name" required placeholder="Il tuo nome"></div><div class="field"><label for="lastName">Cognome</label><input id="lastName" maxlength="60" autocomplete="family-name" required placeholder="Il tuo cognome"></div><div class="field full"><button class="btn primary" type="submit">Salva profilo</button><span id="profileStatus" class="subtext" role="status"></span></div></form>
  <div class="profile-note">Non ci sono ancora account o sincronizzazione online. Il nome non è visibile agli altri allenatori finché non verrà collegato un backend condiviso.</div></div>
+</section>
+
+<section class="page" id="page-board">
+ <div class="library-heading">
+  <div><div class="eyebrow">STRUMENTO TATTICO</div><h1 class="page-title">Lavagnetta libera</h1><p class="subtext">Disegna la tua idea da zero. Aggiungi giocatori, avversari, pallone, coni e frecce; trascina gli elementi per organizzare lo schema.</p></div>
+ </div>
+ <div class="pc-free-board-layout">
+  <div class="pc-free-board-card">
+   <div class="pc-free-board-title"><div><strong>Campo tattico</strong><small id="pcFreeBoardStatus" aria-live="polite">Seleziona uno strumento e clicca sul campo.</small></div><span class="pc-free-board-badge">LAVAGNETTA PERSONALE</span></div>
+   <div id="pcFreeBoardSlot" class="pc-free-board-slot"></div>
+   <div class="pc-free-board-footer"><span>La lavagnetta viene salvata in questo browser.</span><span id="pcFreeBoardCount">0 elementi · 0 frecce</span></div>
+  </div>
+  <aside class="pc-free-board-sidebar">
+   <div class="pc-free-board-card">
+    <div class="pc-free-board-group-title">STRUMENTI</div>
+    <p class="pc-free-board-instructions">Scegli cosa fare, poi clicca sul campo. Per una freccia clicca il punto di partenza e poi quello d’arrivo.</p>
+    <div class="pc-free-board-tools" role="group" aria-label="Strumenti lavagnetta">
+     <button type="button" class="pc-free-tool active" data-free-tool="select"><span>↖</span><span><strong>Seleziona / sposta</strong><small>Sposta simboli e frecce</small></span></button>
+     <button type="button" class="pc-free-tool" data-free-tool="player"><span class="pc-free-icon pc-free-icon-player">P</span><span><strong>Giocatore</strong><small>Squadra in possesso</small></span></button>
+     <button type="button" class="pc-free-tool" data-free-tool="opponent"><span class="pc-free-icon pc-free-icon-opponent">A</span><span><strong>Avversario</strong><small>Squadra difendente</small></span></button>
+     <button type="button" class="pc-free-tool" data-free-tool="ball"><span>⚽</span><span><strong>Pallone</strong><small>Aggiungi una palla</small></span></button>
+     <button type="button" class="pc-free-tool" data-free-tool="cone"><span class="pc-free-icon pc-free-icon-cone">▲</span><span><strong>Cono</strong><small>Segna spazio o percorso</small></span></button>
+     <button type="button" class="pc-free-tool" data-free-tool="arrow"><span>↗</span><span><strong>Freccia / movimento</strong><small>Partenza, poi arrivo</small></span></button>
+     <button type="button" class="pc-free-tool pc-free-tool-erase" data-free-tool="erase"><span>⌫</span><span><strong>Cancella</strong><small>Clicca vicino all’elemento</small></span></button>
+    </div>
+   </div>
+   <div class="pc-free-board-card">
+    <div class="pc-free-board-group-title">AZIONI</div>
+    <div class="pc-free-board-actions">
+     <button type="button" class="btn outline" id="pcFreeBoardUndo">↶ Annulla ultima azione</button>
+     <button type="button" class="btn outline" id="pcFreeBoardClear">Svuota lavagnetta</button>
+     <button type="button" class="btn outline" id="pcFreeBoardDownload">⇩ Scarica SVG</button>
+     <button type="button" class="btn primary" id="pcFreeBoardSave">Salva lavagnetta</button>
+    </div>
+    <p class="pc-free-board-note">Il disegno resta privato in questo browser. Il download SVG permette di inserirlo nei tuoi documenti o stamparlo.</p>
+   </div>
+  </aside>
+ </div>
 </section>
 </div>
 </main>
@@ -880,5 +953,121 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
 })();
 
 </script>
+
+<script>
+(function initFreeTacticalBoard(){
+ const slot=document.getElementById('pcFreeBoardSlot');
+ if(!slot)return;
+ const status=document.getElementById('pcFreeBoardStatus');
+ const count=document.getElementById('pcFreeBoardCount');
+ const KEY='procoachFreeTacticalBoardV1';
+ let board=loadBoard(),tool='select',arrowStart=null,drag=null,history=[];
+ function emptyBoard(){return {tokens:[],arrows:[]}}
+ function safeBoard(value){
+  if(!value||!Array.isArray(value.tokens)||!Array.isArray(value.arrows))return emptyBoard();
+  return {tokens:value.tokens.filter(t=>t&&['player','opponent','ball','cone'].includes(t.kind)&&Number.isFinite(t.x)&&Number.isFinite(t.y)).map(t=>({kind:t.kind,x:clamp(t.x,12,588),y:clamp(t.y,12,348)})),arrows:value.arrows.filter(a=>a&&['x1','y1','x2','y2'].every(k=>Number.isFinite(a[k]))).map(a=>({x1:clamp(a.x1,12,588),y1:clamp(a.y1,12,348),x2:clamp(a.x2,12,588),y2:clamp(a.y2,12,348)}))};
+ }
+ function clamp(v,min,max){return Math.max(min,Math.min(max,v))}
+ function loadBoard(){try{return safeBoard(JSON.parse(localStorage.getItem(KEY)||'null'))}catch(e){return emptyBoard()}}
+ function saveLocal(showMessage){
+  try{localStorage.setItem(KEY,JSON.stringify(board));if(showMessage)setStatus('Lavagnetta salvata in questo browser.');return true}
+  catch(e){if(showMessage)setStatus('Salvataggio non disponibile: scarica il disegno in SVG.');return false}
+ }
+ function setStatus(text){status.textContent=text}
+ function snapshot(){history.push(JSON.stringify(board));if(history.length>60)history.shift()}
+ function boardPoint(svg,event){
+  const r=svg.getBoundingClientRect();
+  return {x:clamp((event.clientX-r.left)*600/r.width,12,588),y:clamp((event.clientY-r.top)*360/r.height,12,348)};
+ }
+ function segmentDistance(p,a){
+  const dx=a.x2-a.x1,dy=a.y2-a.y1,l=dx*dx+dy*dy;
+  const t=l?clamp(((p.x-a.x1)*dx+(p.y-a.y1)*dy)/l,0,1):0;
+  return Math.hypot(p.x-(a.x1+t*dx),p.y-(a.y1+t*dy));
+ }
+ function svgMarkup(){
+  const arrows=board.arrows.map((a,i)=>'<g data-free-arrow="'+i+'" style="cursor:pointer"><line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="transparent" stroke-width="28" stroke-linecap="round" pointer-events="stroke"/><line x1="'+a.x1+'" y1="'+a.y1+'" x2="'+a.x2+'" y2="'+a.y2+'" stroke="#f07a32" stroke-width="4.5" stroke-linecap="round" marker-end="url(#freeArrowHead)" pointer-events="none"/></g>').join('');
+  const tokens=board.tokens.map((t,i)=>{
+   if(t.kind==='ball')return '<g class="pc-free-token" data-free-token="'+i+'" transform="translate('+t.x+' '+t.y+')"><circle r="9" fill="#fff" stroke="#26352b" stroke-width="1.8"/><path d="M-3 -3 L2 -4 L5 1 L1 5 L-4 2 Z" fill="#26352b"/></g>';
+   if(t.kind==='cone')return '<g class="pc-free-token" data-free-token="'+i+'" transform="translate('+t.x+' '+t.y+')"><path d="M0 -11 L10 9 L-10 9 Z" fill="#ed8b39" stroke="#9c591d" stroke-width="1.5"/></g>';
+   const isPlayer=t.kind==='player',label=isPlayer?'P':'A';
+   const n=board.tokens.slice(0,i+1).filter(x=>x.kind===t.kind).length;
+   return '<g class="pc-free-token" data-free-token="'+i+'" transform="translate('+t.x+' '+t.y+')"><circle r="13" fill="'+(isPlayer?'#27834b':'#c64c4c')+'" stroke="#fff" stroke-width="2"/><text y="4" text-anchor="middle" font-size="10" font-weight="800" fill="#fff">'+label+n+'</text></g>';
+  }).join('');
+  return '<svg id="pcFreeBoardSvg" viewBox="0 0 600 360" role="img" aria-label="Lavagnetta tattica libera"><defs><marker id="freeArrowHead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3 z" fill="#f07a32"/></marker><pattern id="freePitchGrid" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#d4e4d3" stroke-width=".8"/></pattern></defs>'+
+  '<rect x="7" y="7" width="586" height="346" rx="8" fill="#edf6e9" stroke="#99b99b" stroke-width="2"/><rect x="7" y="7" width="586" height="346" rx="8" fill="url(#freePitchGrid)"/>'+
+  '<g fill="none" stroke="#9abd9c" stroke-width="1.7"><rect x="20" y="20" width="560" height="320"/><line x1="300" y1="20" x2="300" y2="340"/><circle cx="300" cy="180" r="47"/><circle cx="300" cy="180" r="2.5" fill="#9abd9c"/><rect x="20" y="105" width="80" height="150"/><rect x="20" y="137" width="35" height="86"/><rect x="500" y="105" width="80" height="150"/><rect x="545" y="137" width="35" height="86"/></g>'+arrows+tokens+'</svg>';
+ }
+ function render(){
+  slot.innerHTML=svgMarkup();
+  document.querySelectorAll('[data-free-tool]').forEach(b=>b.classList.toggle('active',b.dataset.freeTool===tool));
+  count.textContent=board.tokens.length+' elementi · '+board.arrows.length+' frecce';
+  const svg=slot.querySelector('svg');
+  svg.addEventListener('pointerdown',e=>{
+   const el=e.target.closest('[data-free-token]');
+   const arrow=e.target.closest('[data-free-arrow]');
+   if(tool==='select'&&el){
+    snapshot();drag={type:'token',index:Number(el.dataset.freeToken),start:boardPoint(svg,e),origin:{...board.tokens[Number(el.dataset.freeToken)]}};
+    svg.setPointerCapture(e.pointerId);e.preventDefault();return;
+   }
+   if(tool==='select'&&arrow){
+    const ix=Number(arrow.dataset.freeArrow),a=board.arrows[ix];if(!a)return;
+    snapshot();drag={type:'arrow',index:ix,start:boardPoint(svg,e),origin:{...a}};
+    svg.setPointerCapture(e.pointerId);e.preventDefault();
+   }
+  });
+  svg.addEventListener('pointermove',e=>{
+   if(!drag)return;
+   const p=boardPoint(svg,e),dx=p.x-drag.start.x,dy=p.y-drag.start.y;
+   if(drag.type==='token'){const t=board.tokens[drag.index];if(t){t.x=clamp(drag.origin.x+dx,12,588);t.y=clamp(drag.origin.y+dy,12,348);const el=svg.querySelector('[data-free-token="'+drag.index+'"]');if(el)el.setAttribute('transform','translate('+t.x+' '+t.y+')')}}
+   else{const a=board.arrows[drag.index];if(a){a.x1=clamp(drag.origin.x1+dx,12,588);a.y1=clamp(drag.origin.y1+dy,12,348);a.x2=clamp(drag.origin.x2+dx,12,588);a.y2=clamp(drag.origin.y2+dy,12,348)}}
+  });
+  svg.addEventListener('pointerup',()=>{if(drag){drag=null;render();saveLocal(false)}});
+  svg.addEventListener('pointercancel',()=>{if(drag){drag=null;render()}});
+  svg.addEventListener('click',e=>{
+   if(drag)return;
+   const p=boardPoint(svg,e),tokenEl=e.target.closest('[data-free-token]'),arrowEl=e.target.closest('[data-free-arrow]');
+   if(tool==='select'){
+    if(tokenEl||arrowEl)return;
+    setStatus('Scegli uno strumento per aggiungere o cancellare elementi.');return;
+   }
+   if(tool==='arrow'){
+    if(!arrowStart){arrowStart=p;setStatus('Punto di partenza impostato: clicca sul punto di arrivo.');return}
+    snapshot();board.arrows.push({x1:arrowStart.x,y1:arrowStart.y,x2:p.x,y2:p.y});arrowStart=null;render();saveLocal(false);setStatus('Freccia aggiunta.');return;
+   }
+   if(tool==='erase'){
+    let ti=-1,td=30;board.tokens.forEach((t,i)=>{const d=Math.hypot(t.x-p.x,t.y-p.y);if(d<td){td=d;ti=i}});
+    if(ti>=0){snapshot();board.tokens.splice(ti,1);render();saveLocal(false);setStatus('Elemento cancellato.');return}
+    let ai=-1,ad=18;board.arrows.forEach((a,i)=>{const d=segmentDistance(p,a);if(d<ad){ad=d;ai=i}});
+    if(ai>=0){snapshot();board.arrows.splice(ai,1);render();saveLocal(false);setStatus('Freccia cancellata.');return}
+    setStatus('Nessun elemento abbastanza vicino: clicca più vicino al simbolo o alla freccia.');return;
+   }
+   snapshot();board.tokens.push({x:p.x,y:p.y,kind:tool});render();saveLocal(false);
+   const labels={player:'Giocatore aggiunto.',opponent:'Avversario aggiunto.',ball:'Pallone aggiunto.',cone:'Cono aggiunto.'};setStatus(labels[tool]||'Elemento aggiunto.');
+  });
+ }
+ document.querySelectorAll('[data-free-tool]').forEach(b=>b.addEventListener('click',()=>{
+  tool=b.dataset.freeTool;arrowStart=null;
+  const tips={select:'Trascina un giocatore, avversario, cono, pallone o freccia per spostarlo.',player:'Clicca sul campo dove vuoi aggiungere un giocatore.',opponent:'Clicca sul campo dove vuoi aggiungere un avversario.',ball:'Clicca sul campo dove vuoi posizionare il pallone.',cone:'Clicca sul campo dove vuoi mettere un cono.',arrow:'Clicca il punto di partenza e poi quello di arrivo.',erase:'Clicca vicino al simbolo o alla freccia da eliminare.'};
+  setStatus(tips[tool]||'Scegli uno strumento.');render();
+ }));
+ document.getElementById('pcFreeBoardUndo').addEventListener('click',()=>{
+  if(!history.length){setStatus('Non ci sono azioni da annullare.');return}
+  try{board=safeBoard(JSON.parse(history.pop()));arrowStart=null;render();saveLocal(false);setStatus('Ultima azione annullata.')}catch(e){setStatus('Impossibile annullare questa azione.')}
+ });
+ document.getElementById('pcFreeBoardClear').addEventListener('click',()=>{
+  if(!board.tokens.length&&!board.arrows.length){setStatus('La lavagnetta è già vuota.');return}
+  snapshot();board=emptyBoard();arrowStart=null;render();saveLocal(false);setStatus('Lavagnetta svuotata. Ora aggiungi gli elementi che ti servono.');
+ });
+ document.getElementById('pcFreeBoardSave').addEventListener('click',()=>{saveLocal(true);render()});
+ document.getElementById('pcFreeBoardDownload').addEventListener('click',()=>{
+  const svg=svgMarkup().replace('<svg id="pcFreeBoardSvg"','<svg xmlns="http://www.w3.org/2000/svg" id="pcFreeBoardSvg"');
+  const blob=new Blob([svg],{type:'image/svg+xml;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download='procoach-lavagnetta-libera.svg';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);setStatus('Disegno scaricato in formato SVG.');
+ });
+ render();
+ if(board.tokens.length||board.arrows.length)setStatus('Lavagnetta ripristinata dal salvataggio precedente.');
+})();
+</script>
+
 </body>
 </html>
