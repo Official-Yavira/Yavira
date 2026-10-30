@@ -1141,7 +1141,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    customBoardStore[ex.id]=safeBoard(ex.board);
    write('procoachExerciseBoardsV1',customBoardStore);
    activeFilter='Tutti';document.querySelectorAll('#exerciseFilters .filter').forEach(function(b){b.classList.toggle('active',b.dataset.filter==='Tutti')});
-   renderLibrary();renderExerciseLists();showPage('library');closeModal();toast(initialExercise?'Esercizio aggiornato nella tua libreria':'Esercizio salvato nella tua libreria');
+   const savedBoardOverrides=read('procoachExerciseBoardsV1',{});
+   delete savedBoardOverrides[ex.id];write('procoachExerciseBoardsV1',savedBoardOverrides);
+   showPersonalExercises();renderGoalkeepers();updateMetrics();showPage('library');closeModal();toast(initialExercise?'Esercizio aggiornato nella tua libreria':'Esercizio salvato nella tua libreria');
   });
  }
 
@@ -1238,6 +1240,11 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   });
  });
  window.renderLibrary=renderLibrary;
+ function showPersonalExercises(){
+  libraryScope='personal';
+  document.querySelectorAll('[data-library-scope]').forEach(function(button){const active=button.dataset.libraryScope==='personal';button.classList.toggle('active',active);button.setAttribute('aria-pressed',active?'true':'false')});
+  renderLibrary();
+ }
  function lookupDetailed(key){
   return exercises.find(function(e){return e.id===key})||exercises.find(function(e){return e.title===key})||gkExercises.find(function(e){return ('gk-'+e.title.replace(/\W/g,'-'))===key})||gkExercises.find(function(e){return e.title===key});
  }
@@ -1254,9 +1261,16 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   if(!del)return;
   const id=del.dataset.deleteCustom;
   if(!confirm('Eliminare questo esercizio dalla libreria locale?'))return;
+  const previous=customExercises.slice(),previousExercises=exercises.slice();
   customExercises=customExercises.filter(function(x){return x.id!==id});
   exercises.splice(0,exercises.length,...exercises.filter(function(x){return x.id!==id}));
-  storeCustom();renderLibrary();renderExerciseLists();closeModal();toast('Esercizio eliminato');
+  if(!storeCustom()){
+   customExercises=previous;exercises.splice(0,exercises.length,...previousExercises);
+   toast('Eliminazione non riuscita: la memoria del browser non è disponibile.');return;
+  }
+  const savedBoards=read('procoachExerciseBoardsV1',{});
+  delete savedBoards[id];write('procoachExerciseBoardsV1',savedBoards);
+  showPersonalExercises();renderGoalkeepers();updateMetrics();closeModal();toast('Esercizio eliminato');
  });
  // Replace the details dialog so every sheet includes method, tactical sketch and references.
  function openExercise(e){
@@ -1301,7 +1315,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
     customExercises=previous;exercises.splice(0,exercises.length,...previousExercises);
     toast('Duplicazione non riuscita: memoria del browser piena o non disponibile.');return;
    }
-   renderLibrary();renderExerciseLists();showPage('library');closeModal();toast('Copia dell’esercizio creata.');
+   showPersonalExercises();renderGoalkeepers();updateMetrics();showPage('library');closeModal();toast('Copia dell’esercizio creata.');
    return;
   }
  });
