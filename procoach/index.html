@@ -207,11 +207,87 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  .pc-contact-card{padding:21px}
 }
 
+
+/* Mobile navigation and touch-friendly layouts */
+.mobile-menu-toggle{display:none;width:42px;height:42px;border:1px solid var(--line);border-radius:11px;background:#fff;color:#284333;font-size:20px;line-height:1;align-items:center;justify-content:center}
+.pc-mobile-nav-backdrop{display:none}
+@media(max-width:560px){
+ .mobile-menu-toggle{display:flex;flex:0 0 42px}
+ .topbar{align-items:center;gap:8px}
+ .top-actions{gap:7px;order:1}
+ .top-actions .icon-button{width:42px;height:42px}
+ .searchbox{order:2;flex:1 1 100%;width:100%;max-width:none}
+ .searchbox input{min-height:42px;font-size:13px}
+ .sidebar{
+  inset:0 auto 0 0;width:min(86vw,300px);height:100vh;height:100dvh;
+  padding:18px 12px 14px;display:flex;flex-direction:column;align-items:stretch;
+  overflow-x:hidden;overflow-y:auto;justify-content:flex-start;
+  transform:translateX(-105%);visibility:hidden;pointer-events:none;
+  transition:transform .22s ease,visibility .22s ease;z-index:30;
+  box-shadow:10px 0 35px #08190d35
+ }
+ .app.pc-mobile-menu-open .sidebar{transform:translateX(0);visibility:visible;pointer-events:auto}
+ .sidebar .brand{display:flex!important;justify-content:flex-start;padding:2px 8px 20px;flex:0 0 auto}
+ .sidebar .brand>div:last-child{display:block}
+ .sidebar .brand strong{font-size:19px}
+ .sidebar .brand small{display:block}
+ .sidebar .nav-label{display:block!important;padding:13px 11px 6px;flex:0 0 auto}
+ .sidebar .nav{
+  display:flex;flex:0 0 auto;width:100%;height:auto;min-height:44px;
+  justify-content:flex-start;align-items:center;padding:10px 12px;margin:2px 0;
+  border-radius:9px
+ }
+ .sidebar .nav span:not(.icon){display:inline;font-size:12px}
+ .sidebar .nav .icon{width:20px;flex:0 0 20px;font-size:16px}
+ .sidebar .nav:hover:after{display:none}
+ .sidebar .side-bottom{display:block!important;margin-top:auto;padding:16px 10px 4px;flex:0 0 auto}
+ .pc-mobile-nav-backdrop{display:none;position:fixed;inset:0;z-index:29;border:0;border-radius:0;background:#07170db8;backdrop-filter:blur(2px)}
+ .app.pc-mobile-menu-open .pc-mobile-nav-backdrop{display:block}
+ body.pc-mobile-nav-lock{overflow:hidden}
+ main{margin-left:0;padding-bottom:0;min-width:0;width:100%}
+ .content{width:100%;max-width:100%;min-width:0}
+ .page{min-width:0}
+ .quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .exercise-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .exercise-top{height:82px;font-size:36px}
+ .exercise-body{padding:10px;gap:7px}
+ .exercise-body h3{font-size:12px;line-height:1.4}
+ .exercise-body p{font-size:10px}
+ .exercise-body .card-actions{display:grid;grid-template-columns:1fr;gap:6px}
+ .exercise-body .card-actions .btn{width:100%;min-height:40px;justify-content:center;padding:8px 7px;font-size:10px}
+ .resource-grid{grid-template-columns:1fr}
+ .toolbar{gap:6px}
+ .filter{min-height:38px;padding:8px 11px}
+ .btn,.icon-button,.profile-button{min-height:42px}
+ .field input,.field textarea,.field select{font-size:16px;min-height:44px}
+ .field textarea{min-height:110px}
+ .modal-backdrop{align-items:flex-end;padding:0}
+ .modal{width:100%;max-width:none;max-height:92dvh;border-radius:18px 18px 0 0}
+ .modal-head{position:sticky;top:0;background:#fff;z-index:2}
+ .pc-free-board-layout{min-width:0}
+ .pc-free-board-slot{overflow:hidden}
+ .pc-free-board-tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .pc-free-tool{min-height:52px}
+ .pc-free-board-actions .btn{min-height:44px}
+}
+@media(max-width:380px){
+ .content{padding-left:10px;padding-right:10px}
+ .quick-grid{grid-template-columns:1fr}
+ .exercise-grid{grid-template-columns:1fr}
+ .exercise-top{height:96px}
+ .exercise-body .card-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .topbar{padding-left:10px;padding-right:10px}
+ .profile-button{padding-right:8px}
+}
+@media(prefers-reduced-motion:reduce){
+ .sidebar{transition:none!important}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
-<aside class="sidebar" aria-label="Navigazione principale">
+<aside class="sidebar" id="mobileNav" aria-label="Navigazione principale">
  <a href="#" class="brand" aria-label="PROCOACH Home" onclick="showPage('home');return false"><div class="brand-mark">⚽</div><div><strong>PRO<span>COACH</span></strong><small>IL TUO SPAZIO TECNICO</small></div></a>
  <div class="nav-label">Workspace</div>
  <button class="nav active" data-page="home" aria-label="Home"><span class="icon">⌂</span><span>Panoramica</span></button>
@@ -234,10 +310,11 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  <button class="nav" data-page="cookies" aria-label="Cookie policy"><span class="icon">◌</span><span>Cookie policy</span></button>
  <div class="side-bottom">PROCOACH · PRE-LANCIO<br>Le idee migliori si condividono.</div>
 </aside>
+<button type="button" class="pc-mobile-nav-backdrop" id="mobileNavBackdrop" aria-label="Chiudi menu"></button>
 <main>
 <header class="topbar">
  <div class="searchbox"><span>⌕</span><input id="globalSearch" type="search" placeholder="Cerca esercizi, temi, categorie..." aria-label="Cerca in PROCOACH"></div>
- <div class="top-actions"><button class="icon-button" id="newQuestionBtn" aria-label="Nuova discussione" title="Nuova discussione">＋</button><button class="profile-button" id="topProfile"><span class="avatar" id="topAvatar">AC</span><span class="profile-name" id="topName">Allenatore</span>⌄</button></div>
+ <div class="top-actions"><button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Apri menu" aria-controls="mobileNav" aria-expanded="false">☰</button><button class="icon-button" id="newQuestionBtn" aria-label="Nuova discussione" title="Nuova discussione">＋</button><button class="profile-button" id="topProfile"><span class="avatar" id="topAvatar">AC</span><span class="profile-name" id="topName">Allenatore</span>⌄</button></div>
 </header>
 <div class="content">
 <section class="page active" id="page-home">
@@ -518,9 +595,27 @@ function toast(text){$('toast').textContent=text;$('toast').classList.add('show'
 function profile(){return read('procoachTemporaryProfileV1',{firstName:'',lastName:''})}
 function initials(p){return ((p.firstName||'A').trim()[0]||'A').toUpperCase()+((p.lastName||'C').trim()[0]||'C').toUpperCase()}
 function updateProfileUI(){const p=profile(),name=((p.firstName||'')+' '+(p.lastName||'')).trim()||'Allenatore';$('topName').textContent=name;$('topAvatar').textContent=initials(p);$('profileAvatar').textContent=initials(p);$('profileDisplayName').textContent=name;$('firstName').value=p.firstName||'';$('lastName').value=p.lastName||''}
-function showPage(id){activePage=id;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));document.querySelectorAll('.nav[data-page]').forEach(n=>n.classList.toggle('active',n.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='community')renderChat();if(id==='planner')renderPlans()}
+
+function setMobileNav(open){
+ const app=document.querySelector('.app');
+ const toggle=document.getElementById('mobileMenuToggle');
+ if(!app||!toggle)return;
+ const active=!!open;
+ app.classList.toggle('pc-mobile-menu-open',active);
+ document.body.classList.toggle('pc-mobile-nav-lock',active);
+ toggle.setAttribute('aria-expanded',String(active));
+ toggle.setAttribute('aria-label',active?'Chiudi menu':'Apri menu');
+}
+
+function showPage(id){setMobileNav(false);activePage=id;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));document.querySelectorAll('.nav[data-page]').forEach(n=>n.classList.toggle('active',n.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='community')renderChat();if(id==='planner')renderPlans()}
 window.showPage=showPage;
 document.querySelectorAll('.nav[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+const mobileMenuToggle=document.getElementById('mobileMenuToggle');
+const mobileNavBackdrop=document.getElementById('mobileNavBackdrop');
+mobileMenuToggle?.addEventListener('click',()=>setMobileNav(!document.querySelector('.app')?.classList.contains('pc-mobile-menu-open')));
+mobileNavBackdrop?.addEventListener('click',()=>setMobileNav(false));
+document.addEventListener('keydown',event=>{if(event.key==='Escape')setMobileNav(false)});
+window.addEventListener('resize',()=>{if(window.innerWidth>560)setMobileNav(false)});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.go)));
 function exerciseCard(e){return '<article class="exercise-card" data-exercise="'+esc(e.id||e.title)+'"><div class="exercise-top">'+esc(e.icon)+'</div><div class="exercise-body"><div class="resource-meta"><span class="pill">'+esc(e.type)+'</span><span class="pill">'+esc(e.duration)+'</span>'+(e.official?'<span class="pill pc-source-badge">Fonte ufficiale · '+esc(e.sourceShort||'Federazione')+'</span>':'')+'</div><h3>'+esc(e.title)+'</h3><p>'+esc(e.summary)+'</p><div class="card-actions"><button class="btn outline small" data-detail="'+esc(e.id||e.title)+'">Apri scheda</button><button class="btn outline small" data-save-ex="'+esc(e.id||e.title)+'" aria-label="Salva preferito">♡ Salva</button></div></div></article>'}
 function renderExerciseLists(){const featured=exercises.slice(0,3);$('homeExercises').innerHTML=featured.map(exerciseCard).join('');renderLibrary();renderGoalkeepers()}
