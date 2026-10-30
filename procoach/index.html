@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#14291d">
+<meta name="description" content="PROCOACH: esercizi, pianificazione delle sedute, lavagnetta tattica e risorse per allenatori di calcio.">
 <title>PROCOACH — Il tuo spazio da allenatore</title>
 <style>
 :root{--green:#27834b;--green-dark:#183d29;--green-pale:#e9f5ec;--ink:#1a261e;--muted:#748078;--line:#e5eae6;--bg:#f6f8f6;--white:#fff;--shadow:0 16px 48px #14291d18}
@@ -171,6 +172,41 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 @media(max-width:1050px){.pc-free-board-layout{grid-template-columns:minmax(0,1fr) 260px}}
 @media(max-width:760px){.pc-free-board-layout{grid-template-columns:1fr}.pc-free-board-sidebar{grid-template-columns:1fr}.pc-free-board-title{display:block}.pc-free-board-badge{display:inline-block;margin-top:8px}.pc-free-board-tools{grid-template-columns:repeat(2,minmax(0,1fr))}.pc-free-tool{padding:9px 7px;gap:7px}.pc-free-tool>span:first-child{width:28px;height:28px;flex-basis:28px}.pc-free-tool strong{font-size:10px}.pc-free-tool small{font-size:8px}.pc-free-tool:first-child{grid-column:1/-1}}
 
+
+/* Informazioni, policy e preparazione al lancio */
+.pc-prelaunch-hero{margin:22px 0;padding:30px 32px;border-radius:18px;background:linear-gradient(125deg,#173d29,#245b3c);color:#fff;box-shadow:var(--shadow)}
+.pc-prelaunch-kicker{font-size:10px;letter-spacing:1.5px;font-weight:900;color:#b5e9c3}
+.pc-prelaunch-hero h2{max-width:700px;margin:11px 0;font-size:clamp(24px,3vw,34px);line-height:1.16;letter-spacing:-.7px}
+.pc-prelaunch-hero p{max-width:760px;margin:0;color:#e0ede4;font-size:13px;line-height:1.75}
+.pc-prelaunch-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:20px 0}
+.pc-info-card,.pc-contact-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;box-shadow:0 8px 26px #14291d08}
+.pc-info-card h3{font-size:15px;margin:10px 0 6px;color:var(--ink)}
+.pc-info-card p,.pc-contact-card p{font-size:12px;line-height:1.7;color:var(--muted);margin:0 0 10px}
+.pc-info-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--green-pale);color:var(--green-dark);font-size:20px}
+.pc-source-pill{display:inline-flex;padding:5px 8px;border-radius:6px;background:#edf5ef;color:#245b3c;font-size:9px;font-weight:800;letter-spacing:.4px}
+.pc-prelaunch-note{padding:18px 20px;margin:20px 0;background:#edf5ef;border:1px solid #d6e8da;border-radius:12px}
+.pc-prelaunch-note strong{display:block;font-size:12px;color:#204e31;margin-bottom:6px}
+.pc-prelaunch-note p{margin:0;color:#53645a;font-size:12px;line-height:1.7}
+.pc-warning-note{background:#fff7e9;border-color:#f0dfbd}
+.pc-warning-note strong{color:#845a1e}
+.pc-status-label{display:inline-flex;margin-top:8px;padding:6px 9px;border-radius:7px;background:#fff3df;color:#805a20;font-size:10px;font-weight:800}
+.pc-contact-card{max-width:680px;margin:22px 0;padding:26px}
+.pc-contact-card h2{font-size:19px;margin:14px 0 8px}
+.pc-legal-content{max-width:900px;margin:24px 0;padding:24px 26px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.pc-legal-content h2{font-size:15px;margin:22px 0 7px;color:#203c2b}
+.pc-legal-content h2:first-child{margin-top:0}
+.pc-legal-content p,.pc-legal-content li{font-size:12px;line-height:1.8;color:#56645b}
+.pc-legal-content ul{padding-left:20px}
+.pc-legal-content li{margin:4px 0}
+.pc-ad-slot{margin:24px 0;min-height:90px;border:1px dashed #cad6cd;border-radius:12px;background:#f4f7f4;color:#89958c;align-items:center;justify-content:center;text-align:center;font-size:10px}
+.pc-ad-slot:not([hidden]){display:flex}
+@media(max-width:760px){
+ .pc-prelaunch-hero{padding:23px 20px;border-radius:14px}
+ .pc-prelaunch-grid{grid-template-columns:1fr;gap:10px}
+ .pc-legal-content{padding:19px 17px}
+ .pc-contact-card{padding:21px}
+}
+
 </style>
 </head>
 <body>
@@ -188,7 +224,15 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  <button class="nav" data-page="pro" aria-label="Professionisti"><span class="icon">★</span><span>Dai professionisti</span></button>
  <button class="nav" data-page="swiss" aria-label="Calcio svizzero e Ticino"><span class="icon">🇨🇭</span><span>Svizzera & Ticino</span></button>
  <button class="nav" data-page="profile" aria-label="Profilo"><span class="icon">◉</span><span>Il mio profilo</span></button>
- <div class="side-bottom">PROCOACH · DEMO<br>Le idee migliori si condividono.</div>
+
+ <div class="nav-label">PROCOACH</div>
+ <button class="nav" data-page="about" aria-label="Chi siamo"><span class="icon">ⓘ</span><span>Chi siamo</span></button>
+ <button class="nav" data-page="sources" aria-label="Fonti e metodologia"><span class="icon">▧</span><span>Fonti e metodologia</span></button>
+ <button class="nav" data-page="collaborate" aria-label="Collabora con PROCOACH"><span class="icon">✦</span><span>Collabora con noi</span></button>
+ <button class="nav" data-page="contact" aria-label="Contatti"><span class="icon">✉</span><span>Contatti</span></button>
+ <button class="nav" data-page="privacy" aria-label="Privacy policy"><span class="icon">♧</span><span>Privacy</span></button>
+ <button class="nav" data-page="cookies" aria-label="Cookie policy"><span class="icon">◌</span><span>Cookie policy</span></button>
+ <div class="side-bottom">PROCOACH · PRE-LANCIO<br>Le idee migliori si condividono.</div>
 </aside>
 <main>
 <header class="topbar">
@@ -225,6 +269,8 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  <div class="eyebrow">Libreria tecnica</div><div class="library-heading"><div><h1 class="page-title">Esercizi e idee di campo</h1><p class="subtext">Schede operative, disegni tattici e riferimenti per adattare ogni attività alla tua squadra.</p></div><button class="btn primary" id="createExerciseBtn" type="button">＋ Crea esercizio</button></div>
  <div class="toolbar" id="exerciseFilters"><button class="filter active" data-filter="Tutti">Tutti</button><button class="filter" data-filter="Possesso">Possesso</button><button class="filter" data-filter="Pressing">Pressing</button><button class="filter" data-filter="Transizioni">Transizioni</button><button class="filter" data-filter="Tecnica">Tecnica</button><button class="filter" data-filter="Portieri">Portieri</button></div>
  <div class="exercise-grid" id="libraryExercises"></div>
+
+ <div class="pc-ad-slot" data-ad-slot="library-inline" data-ad-status="inactive" hidden aria-hidden="true"><span>Spazio pubblicitario riservato · non attivo</span></div>
 </section>
 
 <section class="page" id="page-planner">
@@ -267,6 +313,7 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  <article class="resource-card"><span class="resource-type">FIGC · Settore giovanile</span><h3>SGS Library</h3><p>Materiali per il calcio giovanile e proposte da adattare alle diverse fasce d'età.</p><div class="resource-meta"><span class="pill">Giovanili</span><span class="pill">Attività</span></div><a class="link-button" target="_blank" rel="noopener" href="https://www.figc.it/it/giovani/sviluppo-evolution-programme/evolution-programme/evolution-programme/SGS-library">Apri SGS Library ↗</a></article>
  <article class="resource-card"><span class="resource-type">Club · FC Barcelona</span><h3>Principi di gioco Barça</h3><p>Approfondimento del club sui fondamenti tecnici e di gioco posizionale.</p><div class="resource-meta"><span class="pill">Possesso</span><span class="pill">Rondos</span></div><a class="link-button" target="_blank" rel="noopener" href="https://www.fcbarcelona.com/en/club/news/1475196/the-foundations-of-barca-football">Leggi l'approfondimento ↗</a></article>
  </div>
+ <div class="pc-ad-slot" data-ad-slot="professional-resources" data-ad-status="inactive" hidden aria-hidden="true"><span>Spazio pubblicitario riservato · non attivo</span></div>
  <p class="footer-note">PROCOACH non è affiliato alle organizzazioni citate. I contenuti esterni restano di proprietà dei rispettivi autori.</p>
 </section>
 
@@ -325,6 +372,125 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
   </aside>
  </div>
 </section>
+
+
+<section class="page" id="page-about">
+ <div class="eyebrow">Il progetto</div>
+ <h1 class="page-title">Che cos'è PROCOACH</h1>
+ <p class="subtext">Uno spazio digitale pensato per aiutare allenatori e staff a preparare, organizzare e condividere idee di calcio.</p>
+ <div class="pc-prelaunch-hero">
+  <span class="pc-prelaunch-kicker">ALLENARE MEGLIO · UN'IDEA ALLA VOLTA</span>
+  <h2>La metodologia incontra il lavoro quotidiano sul campo.</h2>
+  <p>PROCOACH raccoglie strumenti pratici in un unico ambiente: esercizi, pianificazione delle sedute, lavagnette tattiche e risorse per continuare a formarsi.</p>
+ </div>
+ <div class="pc-prelaunch-grid">
+  <article class="pc-info-card"><span class="pc-info-icon">⚽</span><h3>Progettare</h3><p>Consultare esercitazioni, costruire attività e trasformare un obiettivo tecnico o tattico in una proposta concreta.</p></article>
+  <article class="pc-info-card"><span class="pc-info-icon">▦</span><h3>Organizzare</h3><p>Preparare sedute, conservare le proprie idee e disegnare situazioni di gioco con gli strumenti tattici.</p></article>
+  <article class="pc-info-card"><span class="pc-info-icon">↗</span><h3>Approfondire</h3><p>Raggiungere fonti federali e professionali, verificare i materiali originali e continuare ad aggiornarsi.</p></article>
+ </div>
+ <div class="pc-prelaunch-note"><strong>Stato del progetto</strong><p>PROCOACH è in fase di preparazione al lancio. Alcune funzioni sono dimostrative e i dati personali e di lavoro salvati nell'app rimangono, al momento, nel browser utilizzato. Non sono ancora disponibili account personali o sincronizzazione tra dispositivi.</p></div>
+</section>
+
+<section class="page" id="page-sources">
+ <div class="eyebrow">Trasparenza editoriale</div>
+ <h1 class="page-title">Fonti e metodologia</h1>
+ <p class="subtext">Le fonti originali sono il punto di partenza. PROCOACH vuole aiutare l'allenatore a orientarsi, non sostituire federazioni, formatori o autori.</p>
+ <div class="pc-prelaunch-grid">
+  <article class="pc-info-card"><span class="pc-source-pill">FIFA</span><h3>FIFA Training Centre</h3><p>Sessioni, proposte pratiche e materiali tecnici per differenti fasce d'età e livelli.</p><a class="link-button" href="https://www.fifatrainingcentre.com/en/" target="_blank" rel="noopener">Apri la fonte originale ↗</a></article>
+  <article class="pc-info-card"><span class="pc-source-pill">Svizzera</span><h3>ASF / SFV e FTC</h3><p>Documenti, formazione e riferimenti legati al calcio svizzero e ticinese.</p><a class="link-button" href="https://www.football.ch/" target="_blank" rel="noopener">Apri ASF / SFV ↗</a></article>
+  <article class="pc-info-card"><span class="pc-source-pill">Italia</span><h3>FIGC · Settore Giovanile e Scolastico</h3><p>Materiali e proposte per lo sviluppo del calcio giovanile.</p><a class="link-button" href="https://www.figc.it/it/giovani/" target="_blank" rel="noopener">Apri FIGC SGS ↗</a></article>
+  <article class="pc-info-card"><span class="pc-source-pill">Europa</span><h3>UEFA Coaches</h3><p>Risorse per la formazione continua e lo sviluppo degli allenatori.</p><a class="link-button" href="https://www.uefa.com/development/coaches/" target="_blank" rel="noopener">Apri UEFA ↗</a></article>
+ </div>
+ <div class="pc-legal-content">
+  <h2>Come vengono presentati i contenuti</h2>
+  <ul>
+   <li>Le schede PROCOACH sono sintesi e rielaborazioni operative: per dettagli, contesto e materiali originali consulta sempre il collegamento alla fonte.</li>
+   <li>Le indicazioni vanno adattate all'età, al livello, al numero di giocatori, agli spazi e alle condizioni della squadra.</li>
+   <li>Quando una scheda deriva da una fonte esterna, la provenienza viene indicata. I marchi e i materiali originali appartengono ai rispettivi titolari.</li>
+   <li>PROCOACH è un progetto indipendente e non dichiara affiliazioni o approvazioni da parte delle federazioni e delle organizzazioni citate.</li>
+  </ul>
+  <p>Segnalazioni su riferimenti non più disponibili, attribuzioni o contenuti da correggere potranno essere inviate tramite il canale contatti, che sarà pubblicato prima del lancio.</p>
+ </div>
+</section>
+
+<section class="page" id="page-collaborate">
+ <div class="eyebrow">Partnership e sostenibilità</div>
+ <h1 class="page-title">Collabora con PROCOACH</h1>
+ <p class="subtext">Il progetto vuole crescere insieme alle persone e alle realtà che contribuiscono allo sviluppo del calcio.</p>
+ <div class="pc-prelaunch-grid">
+  <article class="pc-info-card"><span class="pc-info-icon">🏟️</span><h3>Società e scuole calcio</h3><p>Confronto su esigenze reali degli allenatori, sperimentazione di strumenti e proposte formative.</p></article>
+  <article class="pc-info-card"><span class="pc-info-icon">🎓</span><h3>Formatori e allenatori</h3><p>Contributi metodologici, esperienze sul campo e contenuti originali da sviluppare insieme.</p></article>
+  <article class="pc-info-card"><span class="pc-info-icon">👟</span><h3>Partner tecnici</h3><p>Collaborazioni con realtà del settore sportivo, attrezzatura e servizi utili alla comunità calcistica.</p></article>
+ </div>
+ <div class="pc-prelaunch-note"><strong>Spazi pubblicitari predisposti, ma disattivati</strong><p>La piattaforma prevede la possibilità di ospitare in futuro annunci chiaramente riconoscibili e collaborazioni commerciali. Non sono attivi annunci, tracciamenti pubblicitari o script AdSense in questa versione. Gli eventuali partner saranno separati dai contenuti tecnici e non influenzeranno le schede degli esercizi.</p></div>
+ <div class="pc-legal-content">
+  <h2>Principi per le collaborazioni</h2>
+  <ul><li>Trasparenza: contenuti sponsorizzati e annunci saranno sempre identificabili.</li><li>Coerenza: priorità a prodotti e servizi pertinenti al calcio e alla formazione sportiva.</li><li>Rispetto dell'esperienza: nessuna pubblicità nella lavagnetta tattica o durante la pianificazione delle sedute.</li><li>Indipendenza editoriale: una partnership non equivale a un'approvazione tecnica di PROCOACH.</li></ul>
+  <p>Il contatto pubblico per le proposte commerciali è ancora da configurare e verrà aggiunto prima dell'apertura al pubblico.</p>
+ </div>
+</section>
+
+<section class="page" id="page-contact">
+ <div class="eyebrow">Parliamone</div>
+ <h1 class="page-title">Contatti</h1>
+ <p class="subtext">Per segnalazioni, suggerimenti, richieste di collaborazione o problemi tecnici.</p>
+ <div class="pc-contact-card">
+  <div class="pc-info-icon">✉</div>
+  <h2>Un canale ufficiale è in preparazione</h2>
+  <p>Prima del lancio verrà pubblicato un indirizzo e-mail dedicato a PROCOACH, insieme ai riferimenti del soggetto che gestisce il progetto.</p>
+  <span class="pc-status-label">Da completare prima del lancio</span>
+ </div>
+ <div class="pc-legal-content">
+  <h2>Che cosa stiamo preparando</h2>
+  <ul><li>Un indirizzo per assistenza e segnalazioni.</li><li>Un contatto per partnership e proposte commerciali.</li><li>Un riferimento dedicato alle richieste relative alla privacy e ai dati personali.</li></ul>
+  <p>Non inserire dati personali sensibili o informazioni riservate nella chat dimostrativa: in questa fase i messaggi sono salvati localmente nel browser e non costituiscono un canale di assistenza condiviso.</p>
+ </div>
+</section>
+
+<section class="page" id="page-privacy">
+ <div class="eyebrow">Documento pre-lancio · da verificare</div>
+ <h1 class="page-title">Informativa sulla privacy</h1>
+ <p class="subtext">Questa è una bozza descrittiva dello stato attuale di PROCOACH, aggiornata al 30 ottobre 2026. Non è ancora l'informativa definitiva per il lancio pubblico.</p>
+ <div class="pc-prelaunch-note pc-warning-note"><strong>Da completare prima della pubblicazione</strong><p>Occorre indicare l'identità e i recapiti del titolare del trattamento, verificare i fornitori effettivamente utilizzati, definire i tempi di conservazione e validare il testo rispetto alle attività e ai Paesi in cui il servizio sarà offerto.</p></div>
+ <div class="pc-legal-content">
+  <h2>1. Chi gestisce PROCOACH</h2>
+  <p><strong>Titolare del trattamento:</strong> soggetto responsabile della gestione di PROCOACH — dati identificativi e recapiti da inserire prima del lancio. <strong>Contatto privacy:</strong> da configurare.</p>
+  <h2>2. Dati trattati nella versione attuale</h2>
+  <p>Le funzioni attuali memorizzano alcuni dati direttamente nel browser del dispositivo utilizzato, tramite la memoria locale del browser (localStorage). A seconda delle funzioni utilizzate, possono essere salvati:</p>
+  <ul><li>nome e cognome inseriti nel profilo locale;</li><li>preferiti e identificativi degli esercizi salvati;</li><li>sedute pianificate e attività create dall'utente;</li><li>messaggi della community dimostrativa, che non vengono pubblicati su un servizio condiviso;</li><li>schemi e disegni della lavagnetta tattica e delle schede esercizio.</li></ul>
+  <p>Questi dati restano nel browser e non vengono sincronizzati con un account o condivisi automaticamente tra dispositivi. Chi utilizza il dispositivo può cancellarli tramite le impostazioni del browser, tenendo presente che la cancellazione può comportare la perdita di sedute, preferiti e disegni salvati.</p>
+  <h2>3. Dati tecnici di navigazione</h2>
+  <p>Il sito è ospitato tramite GitHub Pages. Il fornitore di hosting può trattare dati tecnici necessari alla distribuzione, sicurezza e gestione delle richieste, secondo le proprie condizioni e informative. Prima del lancio dovranno essere verificati i dettagli del servizio, i relativi log, i tempi di conservazione e gli eventuali trasferimenti di dati.</p>
+  <h2>4. Analisi e pubblicità</h2>
+  <p>In questa versione PROCOACH non integra strumenti propri di analytics, pixel pubblicitari o codice Google AdSense. Gli spazi predisposti per eventuali annunci sono disattivati. Prima di introdurre strumenti di analisi o pubblicità, questa informativa dovrà essere aggiornata e saranno implementate le eventuali misure di informazione e consenso richieste.</p>
+  <h2>5. Link verso siti esterni</h2>
+  <p>PROCOACH contiene collegamenti a siti di federazioni, club e altri soggetti. Quando si apre un sito esterno, il trattamento dei dati è regolato dall'informativa del relativo gestore, non da questa pagina.</p>
+  <h2>6. Diritti e richieste</h2>
+  <p>Le persone interessate potranno esercitare i diritti previsti dalle norme applicabili, rivolgendosi al titolare tramite il contatto privacy, che deve essere pubblicato prima del lancio. I diritti concretamente applicabili e le modalità di gestione delle richieste dovranno essere confermati nella versione definitiva.</p>
+  <h2>7. Modifiche</h2>
+  <p>Questa bozza dovrà essere aggiornata quando saranno introdotti account, servizi online, analytics, strumenti pubblicitari, pagamenti o altri fornitori. La versione definitiva indicherà la data di aggiornamento.</p>
+ </div>
+</section>
+
+<section class="page" id="page-cookies">
+ <div class="eyebrow">Documento pre-lancio · da verificare</div>
+ <h1 class="page-title">Cookie e tecnologie locali</h1>
+ <p class="subtext">Informazioni sul funzionamento attuale e sulle tecnologie che potrebbero essere aggiunte in futuro.</p>
+ <div class="pc-prelaunch-note"><strong>Situazione attuale</strong><p>Il codice applicativo attuale non integra strumenti pubblicitari o analytics e non imposta intenzionalmente cookie propri. Utilizza invece la memoria locale del browser per conservare alcune preferenze e creazioni dell'utente.</p></div>
+ <div class="pc-legal-content">
+  <h2>1. Memoria locale del browser</h2>
+  <p>PROCOACH utilizza localStorage per ricordare, sullo stesso browser e dispositivo, il profilo dimostrativo, i preferiti, le sedute, gli esercizi creati, i messaggi locali e gli schemi tattici. Questa tecnologia è distinta dai cookie: i dati restano nel browser e non vengono inviati automaticamente al server ad ogni richiesta HTTP.</p>
+  <p>È possibile cancellare questi dati dalle impostazioni del browser. La cancellazione può eliminare anche le informazioni salvate nell'applicazione.</p>
+  <h2>2. Cookie di terze parti</h2>
+  <p>I collegamenti a siti esterni possono portare a servizi che utilizzano cookie o tecnologie proprie. Le relative impostazioni e informative sono gestite dai rispettivi siti. Il fornitore di hosting può inoltre applicare proprie tecnologie tecniche secondo la sua documentazione.</p>
+  <h2>3. Possibili strumenti futuri</h2>
+  <p>Se in futuro verranno integrati Google AdSense, analytics, contenuti incorporati, account o altri servizi, la presente pagina sarà aggiornata per descriverli. Prima dell'attivazione saranno valutati gli obblighi di informazione, scelta e consenso applicabili e, dove necessario, sarà integrato un sistema di gestione del consenso adeguato.</p>
+  <h2>4. Stato della pagina</h2>
+  <p>Questa pagina è una descrizione preliminare, non un inventario tecnico-legale certificato. Prima del lancio andranno controllati i cookie e gli archivi locali effettivamente presenti, anche quelli eventualmente introdotti da servizi di terze parti.</p>
+ </div>
+</section>
+
+
 </div>
 </main>
 </div>
