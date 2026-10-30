@@ -329,6 +329,36 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-account-explainer p{font-size:11px;color:#6f7b72;line-height:1.7}
 @media(max-width:780px){.pc-account-grid{grid-template-columns:1fr}}
 
+
+.pc-calendar-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:18px 0 14px;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:11px}
+.pc-calendar-week-nav{display:flex;gap:6px;align-items:center}
+.pc-calendar-toolbar strong{font-size:12px}
+.pc-calendar-metrics{margin:14px 0 18px}
+.pc-calendar-form-card{max-width:none;margin:0 0 18px;padding:18px}
+.pc-calendar-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pc-calendar-form .field{min-width:0}
+.pc-calendar-form .full{grid-column:1/-1}
+.pc-calendar-form input,.pc-calendar-form select{width:100%;min-width:0}
+.pc-calendar-form-actions{display:flex;justify-content:flex-end;gap:8px}
+.pc-calendar-form-hint{font-size:10px;color:var(--muted);margin:8px 0 0}
+.pc-calendar-week-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px}
+.pc-calendar-day{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px;min-width:0;min-height:190px}
+.pc-calendar-day.is-today{border-color:#81b991;box-shadow:inset 0 0 0 1px #81b991}
+.pc-calendar-day-head{display:flex;align-items:flex-start;justify-content:space-between;gap:5px;padding-bottom:8px;border-bottom:1px solid var(--line);margin-bottom:9px}
+.pc-calendar-day-name{font-size:10px;font-weight:850;text-transform:uppercase;color:#415347}
+.pc-calendar-day-date{font-size:10px;color:var(--muted);display:block;margin-top:2px}
+.pc-calendar-day-add{width:24px;height:24px;flex:none;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--green);font-weight:800}
+.pc-calendar-event{border:1px solid #dce9df;background:#f3f8f4;border-radius:8px;padding:8px;margin:0 0 7px;min-width:0}
+.pc-calendar-event time{display:block;font-size:10px;font-weight:850;color:#287447;margin-bottom:4px}
+.pc-calendar-event strong{display:block;font-size:11px;line-height:1.4;overflow-wrap:anywhere}
+.pc-calendar-event small{display:block;font-size:9px;color:#68766c;line-height:1.45;margin-top:4px;overflow-wrap:anywhere}
+.pc-calendar-event-actions{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.pc-calendar-event-actions .btn{font-size:9px;padding:5px 7px}
+.pc-calendar-empty{color:#9aa49c;font-size:10px;line-height:1.5;padding:12px 2px}
+@media(max-width:1050px){.pc-calendar-week-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:680px){.pc-calendar-week-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pc-calendar-day{min-height:140px}.pc-calendar-toolbar{align-items:flex-start;flex-direction:column}.pc-calendar-form{grid-template-columns:1fr}.pc-calendar-form .full{grid-column:auto}.pc-calendar-form-actions{justify-content:stretch}.pc-calendar-form-actions .btn{flex:1}}
+@media(max-width:380px){.pc-calendar-week-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -339,6 +369,7 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  <button class="nav active" data-page="home" aria-label="Home"><span class="icon">⌂</span><span>Panoramica</span></button>
  <button class="nav" data-page="library" aria-label="Esercizi"><span class="icon">▤</span><span>Libreria esercizi</span></button>
  <button class="nav" data-page="planner" aria-label="Pianifica seduta"><span class="icon">▦</span><span>Pianifica seduta</span></button>
+ <button class="nav" data-page="calendar" aria-label="Calendario sedute"><span class="icon">▣</span><span>Calendario sedute</span></button>
  <button class="nav" data-page="archive" aria-label="Il mio archivio"><span class="icon">▣</span><span>Il mio archivio</span></button>
  <button class="nav" data-page="account" aria-label="Account e sincronizzazione"><span class="icon">◎</span><span>Account PROCOACH</span></button>
  <button class="nav" data-page="board" aria-label="Lavagnetta libera"><span class="icon">↗</span><span>Lavagnetta libera</span></button>
@@ -404,7 +435,7 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 </section>
 
 <section class="page" id="page-planner">
- <div class="eyebrow">Pianificazione</div><h1 class="page-title">Le mie sedute</h1><p class="subtext">Crea un nuovo contenuto dalla finestra unica, oppure ritrova qui le sessioni salvate.</p><div style="margin:16px 0 22px"><button class="btn primary" id="createFromPlannerBtn" type="button">＋ Crea esercizio o sessione</button></div>
+ <div class="eyebrow">Pianificazione</div><h1 class="page-title">Le mie sedute</h1><p class="subtext">Crea un nuovo contenuto dalla finestra unica, oppure ritrova qui le sessioni salvate.</p><div style="margin:16px 0 22px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary" id="createFromPlannerBtn" type="button">＋ Crea esercizio o sessione</button><button class="btn outline" type="button" data-go="calendar">Apri calendario →</button></div>
  <div class="profile-card" id="legacyPlannerGenerator" style="max-width:850px;display:none">
   <form id="plannerForm" class="form-grid">
    <div class="field"><label for="planTeam">Categoria</label><select id="planTeam"><option>U9–U11</option><option>U12–U15</option><option>U16–U19</option><option>Dilettanti</option><option>Adulti / agonistica</option><option>Portieri</option></select></div>
@@ -417,6 +448,40 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  </div>
  <div class="section-head"><div><h2>Le mie sedute</h2><p>Piani conservati in questo browser.</p></div><button class="btn outline small" id="clearPlans">Svuota archivio</button></div>
  <div id="savedPlans" class="resource-grid"></div>
+</section>
+
+<section class="page" id="page-calendar">
+ <div class="library-heading">
+  <div><div class="eyebrow">Programmazione settimanale</div><h1 class="page-title">Calendario sedute</h1><p class="subtext">Organizza gli allenamenti della squadra scegliendo le sedute che hai già preparato.</p></div>
+  <button class="btn primary" type="button" id="pcCalendarNew">＋ Programma una seduta</button>
+ </div>
+ <div class="pc-calendar-toolbar">
+  <div class="pc-calendar-week-nav">
+   <button class="btn outline small" type="button" id="pcCalendarPrev" aria-label="Settimana precedente">←</button>
+   <button class="btn outline small" type="button" id="pcCalendarToday">Oggi</button>
+   <button class="btn outline small" type="button" id="pcCalendarNext" aria-label="Settimana successiva">→</button>
+  </div>
+  <strong id="pcCalendarWeekLabel">Settimana</strong>
+ </div>
+ <div class="metrics pc-calendar-metrics">
+  <div class="metric"><div class="metric-ico">▦</div><div><strong id="pcCalendarWeekCount">0</strong><small>Sedute questa settimana</small></div></div>
+  <div class="metric"><div class="metric-ico">◷</div><div><strong id="pcCalendarNextCount">0</strong><small>Prossime sedute</small></div></div>
+  <div class="metric"><div class="metric-ico">⚽</div><div><strong id="pcCalendarPlanCount">0</strong><small>Sedute disponibili</small></div></div>
+ </div>
+ <section class="profile-card pc-calendar-form-card" id="pcCalendarFormCard" hidden>
+  <div class="section-head"><div><h2 id="pcCalendarFormTitle">Programma un allenamento</h2><p>Seleziona una seduta già presente nel tuo archivio.</p></div></div>
+  <form id="pcCalendarForm" class="pc-calendar-form">
+   <div class="field full"><label for="pcCalendarPlan">Seduta da programmare *</label><select id="pcCalendarPlan" required><option value="">Seleziona una seduta…</option></select></div>
+   <div class="field"><label for="pcCalendarDate">Data *</label><input id="pcCalendarDate" type="date" required></div>
+   <div class="field"><label for="pcCalendarTime">Ora *</label><input id="pcCalendarTime" type="time" required value="18:00"></div>
+   <div class="field"><label for="pcCalendarLocation">Campo / luogo</label><input id="pcCalendarLocation" maxlength="100" placeholder="Es. Campo principale"></div>
+   <div class="field"><label for="pcCalendarNote">Nota per lo staff</label><input id="pcCalendarNote" maxlength="180" placeholder="Es. Portare casacche e porticine"></div>
+   <div class="pc-calendar-form-actions full"><button type="button" class="btn outline" id="pcCalendarCancel">Annulla</button><button type="submit" class="btn primary" id="pcCalendarSave">Salva nel calendario</button></div>
+  </form>
+  <p class="pc-calendar-form-hint" id="pcCalendarFormHint" role="status"></p>
+ </section>
+ <div class="pc-calendar-week-grid" id="pcCalendarWeekGrid" aria-live="polite"></div>
+ <p class="footer-note">Il calendario è personale e viene salvato solo in questo browser. Gli appuntamenti non modificano le sedute originali e sono inclusi nel backup PROCOACH.</p>
 </section>
 
 <section class="page" id="page-archive">
@@ -747,7 +812,7 @@ function setMobileNav(open){
  toggle.setAttribute('aria-label',active?'Chiudi menu':'Apri menu');
 }
 
-function showPage(id){setMobileNav(false);activePage=id;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));document.querySelectorAll('.nav[data-page]').forEach(n=>n.classList.toggle('active',n.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='community')renderChat();if(id==='planner')renderPlans();if(id==='archive')window.renderPersonalArchive?.()}
+function showPage(id){setMobileNav(false);activePage=id;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));document.querySelectorAll('.nav[data-page]').forEach(n=>n.classList.toggle('active',n.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='community')renderChat();if(id==='planner')renderPlans();if(id==='archive')window.renderPersonalArchive?.();if(id==='calendar')window.renderTrainingCalendar?.()}
 window.showPage=showPage;
 document.querySelectorAll('.nav[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 const mobileMenuToggle=document.getElementById('mobileMenuToggle');
@@ -783,7 +848,7 @@ function renderPlans(){const plans=read('procoachSavedPlans',[]);$('savedPlans')
 window.renderPlans=renderPlans;
 document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit-plan]');if(edit){const plan=read('procoachSavedPlans',[]).find(p=>String(p.id)===edit.dataset.editPlan);if(plan)createExerciseModal('session',plan);return}const b=e.target.closest('[data-delete-plan]');if(!b)return;write('procoachSavedPlans',read('procoachSavedPlans',[]).filter(p=>String(p.id)!==b.dataset.deletePlan));renderPlans();updateMetrics();toast('Seduta eliminata')});
 $('clearPlans').addEventListener('click',()=>{if(confirm('Vuoi eliminare tutte le sedute salvate in questo browser?')){write('procoachSavedPlans',[]);renderPlans();updateMetrics();toast('Archivio svuotato')}});
-function updateMetrics(){$('savedCount').textContent=read('procoachSavedPlans',[]).length;const e=$('exerciseCount'),g=$('gkExerciseCount');if(e)e.textContent=exercises.length;if(g)g.textContent=gkExercises.length;window.renderPersonalArchive?.()}
+function updateMetrics(){$('savedCount').textContent=read('procoachSavedPlans',[]).length;const e=$('exerciseCount'),g=$('gkExerciseCount');if(e)e.textContent=exercises.length;if(g)g.textContent=gkExercises.length;window.renderPersonalArchive?.();window.renderTrainingCalendar?.()}
 renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics();
 </script>
 <script>
@@ -1510,6 +1575,97 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  }
  document.addEventListener('click',function(e){const b=e.target.closest('[data-edit-tactical-board]');if(!b)return;const ex=lookupExercise(b.dataset.editTacticalBoard);if(ex)openTacticalBoardEditor(ex)});
 
+
+ // Local training calendar. Events reference saved sessions without copying them.
+ const CALENDAR_KEY='procoachCalendarEventsV1';
+ let calendarWeekOffset=0,calendarEditingId=null;
+ const calendarFormCard=$('pcCalendarFormCard');
+ function calendarDateKey(date){return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0')}
+ function calendarDateFromKey(key){const p=String(key||'').split('-').map(Number);if(p.length!==3||!p.every(Number.isFinite))return new Date();return new Date(p[0],p[1]-1,p[2],12)}
+ function calendarDayStart(date){const d=new Date(date.getFullYear(),date.getMonth(),date.getDate(),12);d.setDate(d.getDate()-(d.getDay()+6)%7);return d}
+ function calendarShift(date,days){const d=new Date(date);d.setDate(d.getDate()+days);return d}
+ function calendarPlans(){const a=read('procoachSavedPlans',[]);return Array.isArray(a)?a:[]}
+ function calendarEvents(){const a=read(CALENDAR_KEY,[]);return Array.isArray(a)?a:[]}
+ function calendarPlanFor(id){return calendarPlans().find(p=>String(p.id)===String(id))||null}
+ function calendarFormat(date,options){return date.toLocaleDateString('it-IT',options||{day:'2-digit',month:'short'})}
+ function populateCalendarPlans(selected){
+  const plans=calendarPlans().slice().sort((a,b)=>String(a.title||a.goal||'').localeCompare(String(b.title||b.goal||''),'it'));
+  $('pcCalendarPlan').innerHTML='<option value="">Seleziona una seduta…</option>'+plans.map(p=>'<option value="'+esc(p.id)+'">'+esc(p.title||p.goal||'Sessione PROCOACH')+' · '+esc(p.team||'Categoria da definire')+'</option>').join('');
+  if(selected!=null)$('pcCalendarPlan').value=String(selected);
+  $('pcCalendarFormHint').textContent=plans.length?'Puoi programmare la stessa seduta più volte, in date differenti.':'Non ci sono ancora sedute salvate. Crea prima una seduta nella sezione “Le mie sedute”.';
+  $('pcCalendarSave').disabled=!plans.length;
+ }
+ function openCalendarForm(eventId,dayKey){
+  const existing=eventId?calendarEvents().find(e=>String(e.id)===String(eventId)):null;
+  calendarEditingId=existing?existing.id:null;
+  populateCalendarPlans(existing?existing.planId:null);
+  $('pcCalendarDate').value=existing?existing.date:(dayKey||calendarDateKey(new Date()));
+  $('pcCalendarTime').value=existing?existing.time:'18:00';
+  $('pcCalendarLocation').value=existing?existing.location||'':'';
+  $('pcCalendarNote').value=existing?existing.note||'':'';
+  $('pcCalendarFormTitle').textContent=existing?'Modifica appuntamento':'Programma un allenamento';
+  $('pcCalendarSave').textContent=existing?'Aggiorna appuntamento':'Salva nel calendario';
+  calendarFormCard.hidden=false;
+  calendarFormCard.scrollIntoView({behavior:'smooth',block:'nearest'});
+ }
+ function closeCalendarForm(){
+  calendarEditingId=null;$('pcCalendarForm').reset();$('pcCalendarTime').value='18:00';calendarFormCard.hidden=true;
+  $('pcCalendarFormTitle').textContent='Programma un allenamento';$('pcCalendarSave').textContent='Salva nel calendario';
+ }
+ function renderTrainingCalendar(){
+  const grid=$('pcCalendarWeekGrid');if(!grid)return;
+  const today=new Date(),todayKey=calendarDateKey(today),start=calendarShift(calendarDayStart(today),calendarWeekOffset*7),end=calendarShift(start,6);
+  $('pcCalendarWeekLabel').textContent=calendarFormat(start,{day:'2-digit',month:'long',year:'numeric'})+' – '+calendarFormat(end,{day:'2-digit',month:'long',year:'numeric'});
+  const events=calendarEvents().slice().sort((a,b)=>(String(a.date)+' '+String(a.time)).localeCompare(String(b.date)+' '+String(b.time)));
+  const weekKeys=[];for(let i=0;i<7;i++)weekKeys.push(calendarDateKey(calendarShift(start,i)));
+  const weekEvents=events.filter(e=>weekKeys.includes(e.date));
+  const stamp=todayKey+' '+String(today.getHours()).padStart(2,'0')+':'+String(today.getMinutes()).padStart(2,'0');
+  $('pcCalendarWeekCount').textContent=weekEvents.length;
+  $('pcCalendarNextCount').textContent=events.filter(e=>String(e.date)+' '+String(e.time)>=stamp).length;
+  $('pcCalendarPlanCount').textContent=calendarPlans().length;
+  grid.innerHTML=weekKeys.map(function(key){
+   const date=calendarDateFromKey(key),dayEvents=events.filter(e=>e.date===key);
+   const contents=dayEvents.length?dayEvents.map(function(ev){
+    const plan=calendarPlanFor(ev.planId),title=plan?(plan.title||plan.goal||'Sessione PROCOACH'):'Seduta non più presente nell’archivio';
+    return '<article class="pc-calendar-event"><time>'+esc(ev.time||'Ora da definire')+'</time><strong>'+esc(title)+'</strong>'+
+     (plan?'<small>'+esc(plan.team||'')+(plan.goal?' · '+esc(plan.goal):'')+'</small>':'<small>Seduta eliminata dall’archivio.</small>')+
+     (ev.location?'<small>⌖ '+esc(ev.location)+'</small>':'')+(ev.note?'<small>'+esc(ev.note)+'</small>':'')+
+     '<div class="pc-calendar-event-actions">'+(plan?'<button type="button" class="btn outline small" data-edit-plan="'+esc(plan.id)+'">Apri seduta</button>':'')+
+     '<button type="button" class="btn outline small" data-calendar-edit="'+esc(ev.id)+'">Modifica</button><button type="button" class="btn outline small" data-calendar-delete="'+esc(ev.id)+'">Rimuovi</button></div></article>';
+   }).join(''):'<div class="pc-calendar-empty">Nessuna seduta programmata.</div>';
+   return '<section class="pc-calendar-day'+(key===todayKey?' is-today':'')+'"><div class="pc-calendar-day-head"><div><span class="pc-calendar-day-name">'+esc(date.toLocaleDateString('it-IT',{weekday:'short'}))+'</span><span class="pc-calendar-day-date">'+esc(calendarFormat(date,{day:'2-digit',month:'short'}))+'</span></div><button class="pc-calendar-day-add" type="button" data-calendar-day="'+key+'" aria-label="Programma una seduta per '+esc(calendarFormat(date,{weekday:'long',day:'numeric',month:'long'}))+'">+</button></div>'+contents+'</section>';
+  }).join('');
+ }
+ window.renderTrainingCalendar=renderTrainingCalendar;
+ $('pcCalendarNew').addEventListener('click',()=>openCalendarForm());
+ $('pcCalendarPrev').addEventListener('click',()=>{calendarWeekOffset--;renderTrainingCalendar()});
+ $('pcCalendarNext').addEventListener('click',()=>{calendarWeekOffset++;renderTrainingCalendar()});
+ $('pcCalendarToday').addEventListener('click',()=>{calendarWeekOffset=0;renderTrainingCalendar()});
+ $('pcCalendarCancel').addEventListener('click',closeCalendarForm);
+ $('pcCalendarForm').addEventListener('submit',function(event){
+  event.preventDefault();
+  const planId=$('pcCalendarPlan').value,date=$('pcCalendarDate').value,time=$('pcCalendarTime').value;
+  if(!calendarPlanFor(planId)){toast('Seleziona una seduta valida dal tuo archivio.');return}
+  if(!date||!time){toast('Inserisci data e ora.');return}
+  const events=calendarEvents(),ix=events.findIndex(e=>calendarEditingId!=null&&String(e.id)===String(calendarEditingId));
+  const record={id:calendarEditingId||('cal-'+Date.now().toString(36)),planId:planId,date:date,time:time,location:$('pcCalendarLocation').value.trim(),note:$('pcCalendarNote').value.trim(),updatedAt:new Date().toISOString()};
+  if(ix>=0)events[ix]=record;else events.push(record);
+  if(!write(CALENDAR_KEY,events)){toast('Salvataggio non riuscito: memoria del browser piena o non disponibile.');return}
+  calendarWeekOffset=Math.round((calendarDayStart(calendarDateFromKey(date))-calendarDayStart(new Date()))/(7*86400000));
+  closeCalendarForm();renderTrainingCalendar();toast(ix>=0?'Appuntamento aggiornato':'Seduta aggiunta al calendario');
+ });
+ $('pcCalendarWeekGrid').addEventListener('click',function(event){
+  const edit=event.target.closest('[data-calendar-edit]');
+  if(edit){openCalendarForm(edit.dataset.calendarEdit);return}
+  const del=event.target.closest('[data-calendar-delete]');
+  if(del){
+   if(!confirm('Rimuovere questo appuntamento dal calendario? La seduta resterà nel tuo archivio.'))return;
+   if(!write(CALENDAR_KEY,calendarEvents().filter(e=>String(e.id)!==String(del.dataset.calendarDelete)))){toast('Non è stato possibile aggiornare il calendario.');return}
+   renderTrainingCalendar();toast('Appuntamento rimosso');return;
+  }
+  const day=event.target.closest('[data-calendar-day]');if(day)openCalendarForm(null,day.dataset.calendarDay);
+ });
+
  // Personal archive: one view over local sessions, custom exercises and favourites.
  let archiveFilter='all';
  const archiveHeadings={all:['Tutti i contenuti personali','Le tue sedute e gli esercizi creati da te.'],sessions:['Le mie sedute','Sessioni salvate e modificabili.'],exercises:['I miei esercizi','Schede create da te, con azioni rapide per gestirle.'],favorites:['I miei preferiti','Esercizi salvati dalla libreria, ufficiali o personali.']};
@@ -1689,7 +1845,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  });
 
  // Re-render after augmenting the original built-in exercise list with any local custom entries.
- renderLibrary();renderGoalkeepers();updateMetrics();renderPersonalArchive();
+ renderLibrary();renderGoalkeepers();updateMetrics();renderPersonalArchive();renderTrainingCalendar();
 })();
 
 </script>
