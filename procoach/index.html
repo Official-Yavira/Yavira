@@ -294,6 +294,16 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-custom-source-badge{background:#f0effb!important;color:#51468c!important;border-color:#dedaf5!important}
 .pc-library-scope{margin:14px 0 8px}
 .pc-library-scope-hint{margin:0 0 10px;font-size:11px;line-height:1.6;color:var(--muted)}
+.pc-archive-create{display:flex;gap:8px;flex-wrap:wrap}
+.pc-archive-search{max-width:540px;margin:12px 0 18px}
+.pc-archive-search input{background:#fff}
+.pc-archive-filters{margin:16px 0 10px}
+.pc-archive-card-meta{display:flex;gap:6px;flex-wrap:wrap}
+.pc-archive-card-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px}
+.pc-archive-card-actions .btn{flex:0 1 auto}
+.pc-archive-card .resource-type{display:block}
+.pc-archive-metrics{margin:14px 0 22px}
+@media(max-width:700px){.pc-archive-create{margin-top:12px}.pc-archive-create .btn{flex:1}.pc-archive-search{max-width:none}.pc-archive-metrics .metric{min-width:0}}
 </style>
 </head>
 <body>
@@ -304,6 +314,7 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  <button class="nav active" data-page="home" aria-label="Home"><span class="icon">⌂</span><span>Panoramica</span></button>
  <button class="nav" data-page="library" aria-label="Esercizi"><span class="icon">▤</span><span>Libreria esercizi</span></button>
  <button class="nav" data-page="planner" aria-label="Pianifica seduta"><span class="icon">▦</span><span>Pianifica seduta</span></button>
+ <button class="nav" data-page="archive" aria-label="Il mio archivio"><span class="icon">▣</span><span>Il mio archivio</span></button>
  <button class="nav" data-page="board" aria-label="Lavagnetta libera"><span class="icon">↗</span><span>Lavagnetta libera</span></button>
  <button class="nav" data-page="goalkeepers" aria-label="Area portieri"><span class="icon">🧤</span><span>Area portieri</span></button>
  <div class="nav-label">Community & risorse</div>
@@ -380,6 +391,35 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  </div>
  <div class="section-head"><div><h2>Le mie sedute</h2><p>Piani conservati in questo browser.</p></div><button class="btn outline small" id="clearPlans">Svuota archivio</button></div>
  <div id="savedPlans" class="resource-grid"></div>
+</section>
+
+<section class="page" id="page-archive">
+ <div class="eyebrow">Workspace personale</div>
+ <div class="library-heading">
+  <div><h1 class="page-title">Il mio archivio</h1><p class="subtext">Ritrova in un solo posto le sedute salvate, gli esercizi che hai creato e i tuoi preferiti.</p></div>
+  <div class="pc-archive-create">
+   <button type="button" class="btn outline" data-archive-create="exercise">＋ Nuovo esercizio</button>
+   <button type="button" class="btn primary" data-archive-create="session">＋ Nuova seduta</button>
+  </div>
+ </div>
+ <div class="metrics pc-archive-metrics">
+  <div class="metric"><div class="metric-ico">▦</div><div><strong id="pcArchiveSessionCount">0</strong><small>Sedute salvate</small></div></div>
+  <div class="metric"><div class="metric-ico">⚽</div><div><strong id="pcArchiveExerciseCount">0</strong><small>Esercizi personali</small></div></div>
+  <div class="metric"><div class="metric-ico">♡</div><div><strong id="pcArchiveFavoriteCount">0</strong><small>Preferiti</small></div></div>
+ </div>
+ <div class="toolbar pc-archive-filters" role="group" aria-label="Filtra l'archivio">
+  <button type="button" class="filter active" data-archive-filter="all" aria-pressed="true">Tutto</button>
+  <button type="button" class="filter" data-archive-filter="sessions" aria-pressed="false">Sedute</button>
+  <button type="button" class="filter" data-archive-filter="exercises" aria-pressed="false">I miei esercizi</button>
+  <button type="button" class="filter" data-archive-filter="favorites" aria-pressed="false">Preferiti</button>
+ </div>
+ <div class="pc-archive-search field">
+  <label for="pcArchiveSearch">Cerca nel tuo archivio</label>
+  <input id="pcArchiveSearch" type="search" placeholder="Titolo, obiettivo, categoria o contenuto…">
+ </div>
+ <div class="section-head"><div><h2 id="pcArchiveHeading">Tutti i contenuti personali</h2><p id="pcArchiveHint">Le tue sedute e gli esercizi creati da te.</p></div></div>
+ <div id="pcPersonalArchive" class="resource-grid" aria-live="polite"></div>
+ <p class="footer-note">I contenuti sono ancora conservati in questo browser. Non sono sincronizzati con altri dispositivi e non vengono condivisi online.</p>
 </section>
 
 <section class="page" id="page-goalkeepers">
@@ -624,7 +664,7 @@ function setMobileNav(open){
  toggle.setAttribute('aria-label',active?'Chiudi menu':'Apri menu');
 }
 
-function showPage(id){setMobileNav(false);activePage=id;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));document.querySelectorAll('.nav[data-page]').forEach(n=>n.classList.toggle('active',n.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='community')renderChat();if(id==='planner')renderPlans()}
+function showPage(id){setMobileNav(false);activePage=id;document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+id));document.querySelectorAll('.nav[data-page]').forEach(n=>n.classList.toggle('active',n.dataset.page===id));window.scrollTo({top:0,behavior:'smooth'});if(id==='community')renderChat();if(id==='planner')renderPlans();if(id==='archive')window.renderPersonalArchive?.()}
 window.showPage=showPage;
 document.querySelectorAll('.nav[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 const mobileMenuToggle=document.getElementById('mobileMenuToggle');
@@ -645,7 +685,7 @@ function openModal(title,body,kicker){lastFocus=document.activeElement;$('modalT
 function closeModal(){$('modalBackdrop').classList.remove('open');document.body.style.overflow='';if(lastFocus)lastFocus.focus()}
 $('modalClose').addEventListener('click',closeModal);$('modalBackdrop').addEventListener('click',e=>{if(e.target===$('modalBackdrop'))closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('modalBackdrop').classList.contains('open'))closeModal()});
 function lookupExercise(key){return exercises.concat(gkExercises.map(e=>({...e,id:'gk-'+e.title.replace(/\W/g,'-'),type:'Portieri'}))).find(e=>e.id===key)||exercises.find(e=>e.title===key)||gkExercises.find(e=>('gk-'+e.title.replace(/\W/g,'-'))===key)}
-document.addEventListener('click',e=>{const d=e.target.closest('[data-detail]');if(d){const ex=lookupExercise(d.dataset.detail);if(ex)openExercise(ex);return}const sv=e.target.closest('[data-save-ex]');if(sv){const a=read('procoachFavorites',[]),id=sv.dataset.saveEx;if(a.includes(id)){write('procoachFavorites',a.filter(x=>x!==id));sv.textContent='♡ Salva';toast('Rimosso dai preferiti')}else{a.push(id);write('procoachFavorites',a);sv.textContent='♥ Salvato';toast('Aggiunto ai preferiti')}return}});
+document.addEventListener('click',e=>{const d=e.target.closest('[data-detail]');if(d){const ex=lookupExercise(d.dataset.detail);if(ex)openExercise(ex);return}const sv=e.target.closest('[data-save-ex]');if(sv){const a=read('procoachFavorites',[]),id=sv.dataset.saveEx;if(a.includes(id)){write('procoachFavorites',a.filter(x=>x!==id));sv.textContent='♡ Salva';toast('Rimosso dai preferiti')}else{a.push(id);write('procoachFavorites',a);sv.textContent='♥ Salvato';toast('Aggiunto ai preferiti')}window.renderPersonalArchive?.();return}});
 function openExercise(e){const steps=(e.steps||[]).map(s=>'<li>'+esc(s)+'</li>').join('');openModal(e.title,'<p>'+esc(e.summary)+'</p><div class="resource-meta"><span class="pill">'+esc(e.type)+'</span><span class="pill">'+esc(e.duration)+'</span><span class="pill">'+esc(e.level||'Tutti i livelli')+'</span></div><div class="modal-detail"><strong>Organizzazione</strong><br>'+esc(e.setup||'Adatta spazio e numero di giocatori al tuo gruppo.')+'<br><br><strong>Svolgimento</strong><ol>'+steps+'</ol><strong>Correzioni</strong><br>'+esc(e.coaching||'Osserva la qualità del gesto e dai feedback brevi.')+(e.variant?'<br><br><strong>Variante</strong><br>'+esc(e.variant):'')+'</div><div class="modal-actions"><button class="btn outline" data-modal-close>Chiudi</button><button class="btn primary" data-plan-from="'+esc(e.id||e.title)+'">Usa nella seduta</button></div>','SCHEDA ESERCIZIO')}
 document.addEventListener('click',e=>{if(e.target.closest('[data-modal-close]'))closeModal();const p=e.target.closest('[data-plan-from]');if(p){const ex=lookupExercise(p.dataset.planFrom);if(ex)write('procoachLastExercise',ex);closeModal();showPage('planner');toast('Esercizio pronto da inserire nella tua seduta')}});
 $('topProfile').addEventListener('click',()=>showPage('profile'));$('profileForm').addEventListener('submit',e=>{e.preventDefault();const p={firstName:$('firstName').value.trim(),lastName:$('lastName').value.trim()};if(!p.firstName||!p.lastName)return;write('procoachTemporaryProfileV1',p);updateProfileUI();$('profileStatus').textContent='Profilo aggiornato in questo browser.';toast('Profilo salvato')});
@@ -660,7 +700,7 @@ function renderPlans(){const plans=read('procoachSavedPlans',[]);$('savedPlans')
 window.renderPlans=renderPlans;
 document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit-plan]');if(edit){const plan=read('procoachSavedPlans',[]).find(p=>String(p.id)===edit.dataset.editPlan);if(plan)createExerciseModal('session',plan);return}const b=e.target.closest('[data-delete-plan]');if(!b)return;write('procoachSavedPlans',read('procoachSavedPlans',[]).filter(p=>String(p.id)!==b.dataset.deletePlan));renderPlans();updateMetrics();toast('Seduta eliminata')});
 $('clearPlans').addEventListener('click',()=>{if(confirm('Vuoi eliminare tutte le sedute salvate in questo browser?')){write('procoachSavedPlans',[]);renderPlans();updateMetrics();toast('Archivio svuotato')}});
-function updateMetrics(){$('savedCount').textContent=read('procoachSavedPlans',[]).length;const e=$('exerciseCount'),g=$('gkExerciseCount');if(e)e.textContent=exercises.length;if(g)g.textContent=gkExercises.length}
+function updateMetrics(){$('savedCount').textContent=read('procoachSavedPlans',[]).length;const e=$('exerciseCount'),g=$('gkExerciseCount');if(e)e.textContent=exercises.length;if(g)g.textContent=gkExercises.length;window.renderPersonalArchive?.()}
 renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics();
 </script>
 <script>
@@ -1194,7 +1234,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   popup.document.open();popup.document.write(html);popup.document.close();
   toast('Scheda di stampa aperta: scegli “Salva come PDF” nella finestra di stampa.');
  }
- document.getElementById('savedPlans')?.addEventListener('click',function(event){
+ document.addEventListener('click',function(event){
   const printButton=event.target.closest('[data-print-plan]');
   if(printButton){const plan=read('procoachSavedPlans',[]).find(function(p){return String(p.id)===printButton.dataset.printPlan});if(plan)printSavedPlan(plan);return}
   const duplicateButton=event.target.closest('[data-duplicate-plan]');
@@ -1387,8 +1427,73 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  }
  document.addEventListener('click',function(e){const b=e.target.closest('[data-edit-tactical-board]');if(!b)return;const ex=lookupExercise(b.dataset.editTacticalBoard);if(ex)openTacticalBoardEditor(ex)});
 
+ // Personal archive: one view over local sessions, custom exercises and favourites.
+ let archiveFilter='all';
+ const archiveHeadings={all:['Tutti i contenuti personali','Le tue sedute e gli esercizi creati da te.'],sessions:['Le mie sedute','Sessioni salvate e modificabili.'],exercises:['I miei esercizi','Schede create da te, con azioni rapide per gestirle.'],favorites:['I miei preferiti','Esercizi salvati dalla libreria, ufficiali o personali.']};
+ function archivePlanCard(plan){
+  const title=plan.title||plan.goal||'Sessione PROCOACH';
+  const phaseCount=Array.isArray(plan.blocks)?plan.blocks.length:0;
+  const searchable=[title,plan.team,plan.goal,plan.players,plan.duration,plan.coachNotes].join(' ').toLocaleLowerCase('it');
+  return {searchable,html:'<article class="resource-card pc-archive-card"><span class="resource-type">'+esc(plan.updated?'Aggiornata '+plan.updated:(plan.created||'Seduta salvata'))+'</span><h3>'+esc(title)+'</h3><p>'+esc(plan.team||'Categoria da definire')+' · '+esc(plan.goal||'Obiettivo da definire')+' · '+esc(plan.players||'Giocatori da definire')+' giocatori · '+esc(plan.duration||'—')+' min</p><div class="pc-archive-card-meta"><span class="pill">'+phaseCount+' fasi</span><span class="pill">Seduta personale</span></div><div class="pc-archive-card-actions"><button class="btn primary small" data-edit-plan="'+esc(plan.id)+'">Apri e modifica</button><button class="btn outline small" data-duplicate-plan="'+esc(plan.id)+'">Duplica</button><button class="btn outline small" data-print-plan="'+esc(plan.id)+'">Stampa / PDF</button><button class="btn outline small" data-delete-plan="'+esc(plan.id)+'">Elimina</button></div></article>'};
+ }
+ function archiveExerciseCard(ex,kind){
+  const id=ex.id||ex.title;
+  const isFavorite=kind==='favorite';
+  const label=isFavorite?(ex.official?'Fonte ufficiale':ex.custom?'Creato da me':'Libreria PROCOACH'):'Creato da me';
+  const searchable=[ex.title,ex.type,ex.summary,ex.level,ex.objective,ex.setup,ex.coaching].join(' ').toLocaleLowerCase('it');
+  const actions=isFavorite
+   ?'<button class="btn primary small" data-detail="'+esc(id)+'">Apri scheda</button><button class="btn outline small" data-archive-remove-favorite="'+esc(id)+'">Rimuovi dai preferiti</button>'
+   :'<button class="btn primary small" data-detail="'+esc(id)+'">Apri scheda</button><button class="btn outline small" data-edit-custom="'+esc(id)+'">Modifica</button><button class="btn outline small" data-duplicate-custom="'+esc(id)+'">Duplica</button><button class="btn outline small" data-print-exercise="'+esc(id)+'">Stampa / PDF</button><button class="btn outline small pc-delete-exercise" data-delete-custom="'+esc(id)+'">Elimina</button>';
+  return {searchable,html:'<article class="resource-card pc-archive-card"><span class="resource-type">'+esc(ex.type||'Esercizio')+' · '+esc(ex.duration||'Durata da definire')+'</span><h3>'+esc(ex.title||'Esercizio senza titolo')+'</h3><p>'+esc(ex.summary||ex.objective||'Scheda tecnica personale.')+'</p><div class="pc-archive-card-meta"><span class="pill">'+esc(label)+'</span>'+(ex.level?'<span class="pill">'+esc(ex.level)+'</span>':'')+'</div><div class="pc-archive-card-actions">'+actions+'</div></article>'};
+ }
+ function renderPersonalArchive(){
+  const target=$('pcPersonalArchive');if(!target)return;
+  const plans=read('procoachSavedPlans',[]);const favorites=read('procoachFavorites',[]);
+  $('pcArchiveSessionCount').textContent=plans.length;
+  $('pcArchiveExerciseCount').textContent=customExercises.length;
+  $('pcArchiveFavoriteCount').textContent=favorites.length;
+  document.querySelectorAll('[data-archive-filter]').forEach(function(button){
+   const active=button.dataset.archiveFilter===archiveFilter;
+   button.classList.toggle('active',active);button.setAttribute('aria-pressed',active?'true':'false');
+  });
+  $('pcArchiveHeading').textContent=archiveHeadings[archiveFilter][0];
+  $('pcArchiveHint').textContent=archiveHeadings[archiveFilter][1];
+  const query=$('pcArchiveSearch').value.trim().toLocaleLowerCase('it');
+  const cards=[];
+  if(archiveFilter==='all'||archiveFilter==='sessions'){
+   plans.slice().reverse().forEach(function(plan){const card=archivePlanCard(plan);if(card.searchable.includes(query))cards.push(card.html)});
+  }
+  if(archiveFilter==='all'||archiveFilter==='exercises'){
+   customExercises.slice().reverse().forEach(function(ex){const card=archiveExerciseCard(ex,'personal');if(card.searchable.includes(query))cards.push(card.html)});
+  }
+  if(archiveFilter==='favorites'){
+   favorites.slice().reverse().forEach(function(id){
+    const ex=lookupDetailed(id);if(!ex)return;
+    const card=archiveExerciseCard(ex,'favorite');if(card.searchable.includes(query))cards.push(card.html);
+   });
+  }
+  target.innerHTML=cards.length?cards.join(''):'<div class="empty" style="grid-column:1/-1">'+(
+   archiveFilter==='sessions'?'Non hai ancora sedute salvate. Crea una nuova seduta per iniziare.':
+   archiveFilter==='exercises'?'Non hai ancora creato esercizi personali. Crea il tuo primo esercizio.':
+   archiveFilter==='favorites'?'Non hai ancora salvato preferiti. Aggiungi un esercizio ai preferiti dalla libreria.':
+   'Il tuo archivio è ancora vuoto. Crea una seduta o un esercizio, oppure salva un esercizio tra i preferiti.'
+  )+'</div>';
+ }
+ window.renderPersonalArchive=renderPersonalArchive;
+ document.querySelectorAll('[data-archive-filter]').forEach(function(button){button.addEventListener('click',function(){archiveFilter=button.dataset.archiveFilter;renderPersonalArchive()})});
+ $('pcArchiveSearch').addEventListener('input',renderPersonalArchive);
+ document.querySelectorAll('[data-archive-create]').forEach(function(button){button.addEventListener('click',function(){createExerciseModal(button.dataset.archiveCreate)})});
+ document.addEventListener('click',function(event){
+  const remove=event.target.closest('[data-archive-remove-favorite]');
+  if(!remove)return;
+  const id=remove.dataset.archiveRemoveFavorite;
+  const favorites=read('procoachFavorites',[]);
+  if(!write('procoachFavorites',favorites.filter(function(item){return String(item)!==String(id)}))){toast('Non è stato possibile aggiornare i preferiti.');return}
+  renderPersonalArchive();toast('Rimosso dai preferiti');
+ });
+
  // Re-render after augmenting the original built-in exercise list with any local custom entries.
- renderLibrary();renderGoalkeepers();updateMetrics();
+ renderLibrary();renderGoalkeepers();updateMetrics();renderPersonalArchive();
 })();
 
 </script>
