@@ -303,7 +303,14 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-archive-card-actions .btn{flex:0 1 auto}
 .pc-archive-card .resource-type{display:block}
 .pc-archive-metrics{margin:14px 0 22px}
-@media(max-width:700px){.pc-archive-create{margin-top:12px}.pc-archive-create .btn{flex:1}.pc-archive-search{max-width:none}.pc-archive-metrics .metric{min-width:0}}
+.pc-backup-heading{margin-top:30px}
+.pc-backup-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.pc-backup-card{min-width:0}
+.pc-backup-card .btn{align-self:flex-start}
+.pc-backup-card .field{margin:6px 0 12px}
+.pc-backup-card input[type=file]{width:100%;min-width:0;font-size:11px}
+.pc-backup-status{font-size:10px!important;line-height:1.5!important;margin:10px 0 0!important;overflow-wrap:anywhere}
+@media(max-width:700px){.pc-archive-create{margin-top:12px}.pc-archive-create .btn{flex:1}.pc-archive-search{max-width:none}.pc-archive-metrics .metric{min-width:0}.pc-backup-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -419,7 +426,23 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  </div>
  <div class="section-head"><div><h2 id="pcArchiveHeading">Tutti i contenuti personali</h2><p id="pcArchiveHint">Le tue sedute e gli esercizi creati da te.</p></div></div>
  <div id="pcPersonalArchive" class="resource-grid" aria-live="polite"></div>
- <p class="footer-note">I contenuti sono ancora conservati in questo browser. Non sono sincronizzati con altri dispositivi e non vengono condivisi online.</p>
+ <div class="section-head pc-backup-heading"><div><h2>Proteggi i tuoi dati</h2><p>Crea una copia di sicurezza o ripristina i tuoi contenuti da un file salvato in precedenza.</p></div></div>
+ <div class="pc-backup-grid">
+  <article class="resource-card pc-backup-card">
+   <span class="resource-type">ESPORTAZIONE</span><h3>Scarica un backup</h3>
+   <p>Salva sedute, esercizi personali, lavagnette, preferiti, profilo e altri dati PROCOACH in un file JSON.</p>
+   <button type="button" class="btn primary" id="pcBackupExport">↓ Esporta backup</button>
+  </article>
+  <article class="resource-card pc-backup-card">
+   <span class="resource-type">RIPRISTINO</span><h3>Ripristina da un backup</h3>
+   <p>Seleziona un file JSON esportato da PROCOACH. Puoi sostituire i dati attuali oppure unirli mantenendo le chiavi locali non incluse nel file.</p>
+   <div class="field"><label for="pcBackupFile">File di backup (.json)</label><input id="pcBackupFile" type="file" accept=".json,application/json"></div>
+   <div class="field"><label for="pcBackupMode">Modalità di ripristino</label><select id="pcBackupMode"><option value="replace">Sostituisci tutti i dati PROCOACH attuali</option><option value="merge">Unisci: conserva i dati locali non presenti nel file</option></select></div>
+   <button type="button" class="btn primary" id="pcBackupRestore" disabled>Ripristina backup</button>
+   <p class="pc-backup-status" id="pcBackupStatus" role="status" aria-live="polite">Nessun file selezionato.</p>
+  </article>
+ </div>
+ <p class="footer-note">I contenuti restano conservati in questo browser finché non li esporti. Custodisci il file di backup in un luogo sicuro: può contenere il tuo profilo e le tue conversazioni locali. Il backup non attiva la sincronizzazione online.</p>
 </section>
 
 <section class="page" id="page-goalkeepers">
@@ -1490,6 +1513,119 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   const favorites=read('procoachFavorites',[]);
   if(!write('procoachFavorites',favorites.filter(function(item){return String(item)!==String(id)}))){toast('Non è stato possibile aggiornare i preferiti.');return}
   renderPersonalArchive();toast('Rimosso dai preferiti');
+ });
+
+ // Versioned local backup: export/import only keys in the PROCOACH namespace.
+ const BACKUP_FORMAT='PROCOACH_LOCAL_BACKUP';
+ const BACKUP_VERSION=1;
+ const MAX_BACKUP_BYTES=8*1024*1024;
+ let pendingBackup=null;
+ function getProcoachStorage(){
+  const result={};
+  for(let i=0;i<localStorage.length;i++){
+   const key=localStorage.key(i);
+   if(key&&key.startsWith('procoach'))result[key]=localStorage.getItem(key);
+  }
+  return result;
+ }
+ function setBackupStatus(message,isError){
+  const status=$('pcBackupStatus');if(!status)return;
+  status.textContent=message;
+  status.style.color=isError?'#a33b3b':'#748078';
+ }
+ function exportProcoachBackup(){
+  try{
+   const payload={format:BACKUP_FORMAT,app:'PROCOACH',version:BACKUP_VERSION,exportedAt:new Date().toISOString(),storage:getProcoachStorage()};
+   const json=JSON.stringify(payload,null,2);
+   const blob=new Blob([json],{type:'application/json;charset=utf-8'});
+   const url=URL.createObjectURL(blob),a=document.createElement('a');
+   const stamp=new Date().toISOString().slice(0,10);
+   a.href=url;a.download='procoach-backup-'+stamp+'.json';
+   document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+   const count=Object.keys(payload.storage).length;
+   toast('Backup esportato: '+count+' elementi PROCOACH');
+   setBackupStatus('Backup esportato correttamente. Chiudi questa finestra solo dopo aver verificato che il file sia stato scaricato.',false);
+  }catch(error){
+   toast('Esportazione non riuscita.');
+   setBackupStatus('Impossibile leggere i dati del browser o creare il file di backup.',true);
+  }
+ }
+ function validateProcoachBackup(payload){
+  if(!payload||typeof payload!=='object'||Array.isArray(payload))throw new Error('Il file non contiene un backup valido.');
+  if(payload.format!==BACKUP_FORMAT||payload.app!=='PROCOACH')throw new Error('Il file non è un backup PROCOACH riconosciuto.');
+  if(payload.version!==BACKUP_VERSION)throw new Error('Versione del backup non supportata da questa versione di PROCOACH.');
+  if(!payload.storage||typeof payload.storage!=='object'||Array.isArray(payload.storage))throw new Error('La sezione dei dati del backup non è valida.');
+  const entries=Object.entries(payload.storage);
+  if(entries.length>100)throw new Error('Il backup contiene un numero imprevisto di voci.');
+  let total=0;
+  entries.forEach(function(entry){
+   const key=entry[0],raw=entry[1];
+   if(!/^procoach[A-Za-z0-9_-]+$/.test(key))throw new Error('Il backup contiene una chiave non appartenente a PROCOACH.');
+   if(typeof raw!=='string')throw new Error('Un dato del backup ha un formato non valido.');
+   total+=key.length+raw.length;
+   if(total>MAX_BACKUP_BYTES)throw new Error('Il backup supera la dimensione massima consentita di 8 MB.');
+   let value;
+   try{value=JSON.parse(raw)}catch(error){throw new Error('Il dato “'+key+'” non è leggibile: il file potrebbe essere danneggiato.')}
+   if((key==='procoachSavedPlans'||key==='procoachCustomExercisesV1'||key==='procoachFavorites')&&!Array.isArray(value))throw new Error('Il dato “'+key+'” non ha la struttura prevista.');
+   if((key==='procoachTemporaryProfileV1'||key==='procoachChatMessagesV2'||key==='procoachExerciseBoardsV1'||key==='procoachFreeTacticalBoardV1')&&(!value||typeof value!=='object'||Array.isArray(value)))throw new Error('Il dato “'+key+'” non ha la struttura prevista.');
+  });
+  return {storage:payload.storage,exportedAt:payload.exportedAt||null,count:entries.length,totalChars:total};
+ }
+ function rollbackProcoachStorage(previous){
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&key.startsWith('procoach'))keys.push(key)}
+  keys.forEach(function(key){localStorage.removeItem(key)});
+  Object.keys(previous).forEach(function(key){localStorage.setItem(key,previous[key])});
+ }
+ function applyProcoachBackup(backup,mode){
+  const previous=getProcoachStorage();
+  try{
+   if(mode==='replace'){
+    Object.keys(previous).forEach(function(key){localStorage.removeItem(key)});
+   }
+   Object.keys(backup.storage).forEach(function(key){localStorage.setItem(key,backup.storage[key])});
+   return true;
+  }catch(error){
+   try{rollbackProcoachStorage(previous)}catch(rollbackError){throw new Error('Ripristino interrotto e recupero automatico non riuscito. Non chiudere la pagina e verifica lo spazio disponibile nel browser.')}
+   throw new Error('Spazio o permessi del browser insufficienti. I dati precedenti sono stati ripristinati.');
+  }
+ }
+ $('pcBackupExport').addEventListener('click',exportProcoachBackup);
+ $('pcBackupFile').addEventListener('change',async function(){
+  pendingBackup=null;$('pcBackupRestore').disabled=true;
+  const file=this.files&&this.files[0];
+  if(!file){setBackupStatus('Nessun file selezionato.',false);return}
+  if(file.size>MAX_BACKUP_BYTES){setBackupStatus('Il file supera il limite di 8 MB.',true);this.value='';return}
+  try{
+   const text=await file.text();
+   const backup=validateProcoachBackup(JSON.parse(text));
+   pendingBackup=backup;$('pcBackupRestore').disabled=false;
+   const date=backup.exportedAt&&Number.isFinite(Date.parse(backup.exportedAt))?new Date(backup.exportedAt).toLocaleString('it-IT'):'data non indicata';
+   setBackupStatus('File valido · '+backup.count+' voci PROCOACH · creato il '+date+'. Modalità scelta: '+$('pcBackupMode').selectedOptions[0].text+'.',false);
+  }catch(error){
+   pendingBackup=null;$('pcBackupRestore').disabled=true;
+   setBackupStatus(error&&error.message?error.message:'Impossibile leggere il file selezionato.',true);
+  }
+ });
+ $('pcBackupMode').addEventListener('change',function(){
+  if(!pendingBackup)return;
+  const mode=this.value==='replace'?'sostituire i dati PROCOACH attuali':'unire i dati del file ai dati locali (le chiavi contenute nel file verranno aggiornate)';
+  setBackupStatus('Backup pronto. Il ripristino andrà a '+mode+'.',false);
+ });
+ $('pcBackupRestore').addEventListener('click',function(){
+  if(!pendingBackup){setBackupStatus('Seleziona prima un file di backup valido.',true);return}
+  const mode=$('pcBackupMode').value;
+  const description=mode==='replace'
+   ?'Sostituire tutti i dati PROCOACH presenti in questo browser con quelli del backup? I dati non inclusi nel file verranno rimossi.'
+   :'Unire il backup ai dati PROCOACH presenti? Le chiavi incluse nel file sostituiranno quelle corrispondenti; gli altri dati locali resteranno.';
+  if(!confirm(description+'\n\nPrima di procedere, assicurati di avere una copia del backup.'))return;
+  try{
+   applyProcoachBackup(pendingBackup,mode);
+   alert('Ripristino completato. PROCOACH verrà ricaricato per aggiornare archivio, sedute ed esercizi.');
+   window.location.reload();
+  }catch(error){
+   setBackupStatus(error&&error.message?error.message:'Ripristino non riuscito.',true);
+  }
  });
 
  // Re-render after augmenting the original built-in exercise list with any local custom entries.
