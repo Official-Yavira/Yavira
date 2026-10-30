@@ -290,6 +290,10 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-exercise-form-actions .btn,.pc-session-primary-actions .btn{min-height:42px}
 .pc-session-primary-actions{justify-content:flex-end}
 @media(max-width:560px){.pc-exercise-form-actions,.pc-session-primary-actions{display:grid;grid-template-columns:1fr;width:100%}.pc-exercise-form-actions .btn,.pc-session-primary-actions .btn{width:100%;justify-content:center}}
+
+.pc-custom-source-badge{background:#f0effb!important;color:#51468c!important;border-color:#dedaf5!important}
+.pc-library-scope{margin:14px 0 8px}
+.pc-library-scope-hint{margin:0 0 10px;font-size:11px;line-height:1.6;color:var(--muted)}
 </style>
 </head>
 <body>
@@ -350,7 +354,12 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 </section>
 
 <section class="page" id="page-library">
- <div class="eyebrow">Libreria tecnica</div><div class="library-heading"><div><h1 class="page-title">Esercizi e idee di campo</h1><p class="subtext">Schede operative, disegni tattici e riferimenti per adattare ogni attività alla tua squadra.</p></div><button class="btn primary" id="createExerciseBtn" type="button">＋ Crea esercizio</button></div>
+ <div class="eyebrow">Libreria tecnica</div><div class="library-heading"><div><h1 class="page-title">Esercizi e idee di campo</h1><p class="subtext">Schede operative, disegni tattici e riferimenti per adattare ogni attività alla tua squadra.</p><p class="pc-library-scope-hint" id="pcLibraryScopeHint" aria-live="polite">Tutte le schede: esercizi da fonti esterne e contenuti creati da te.</p></div><button class="btn primary" id="createExerciseBtn" type="button">＋ Crea esercizio</button></div>
+ <div class="toolbar pc-library-scope" role="group" aria-label="Filtra per provenienza">
+  <button type="button" class="filter active" data-library-scope="all" aria-pressed="true">Tutti gli esercizi</button>
+  <button type="button" class="filter" data-library-scope="official" aria-pressed="false">Fonti ufficiali</button>
+  <button type="button" class="filter" data-library-scope="personal" aria-pressed="false">I miei esercizi</button>
+ </div>
  <div class="toolbar" id="exerciseFilters"><button class="filter active" data-filter="Tutti">Tutti</button><button class="filter" data-filter="Possesso">Possesso</button><button class="filter" data-filter="Pressing">Pressing</button><button class="filter" data-filter="Transizioni">Transizioni</button><button class="filter" data-filter="Tecnica">Tecnica</button><button class="filter" data-filter="Portieri">Portieri</button></div>
  <div class="exercise-grid" id="libraryExercises"></div>
 
@@ -625,7 +634,7 @@ mobileNavBackdrop?.addEventListener('click',()=>setMobileNav(false));
 document.addEventListener('keydown',event=>{if(event.key==='Escape')setMobileNav(false)});
 window.addEventListener('resize',()=>{if(window.innerWidth>560)setMobileNav(false)});
 document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.go)));
-function exerciseCard(e){return '<article class="exercise-card" data-exercise="'+esc(e.id||e.title)+'"><div class="exercise-top">'+esc(e.icon)+'</div><div class="exercise-body"><div class="resource-meta"><span class="pill">'+esc(e.type)+'</span><span class="pill">'+esc(e.duration)+'</span>'+(e.official?'<span class="pill pc-source-badge">Fonte ufficiale · '+esc(e.sourceShort||'Federazione')+'</span>':'')+'</div><h3>'+esc(e.title)+'</h3><p>'+esc(e.summary)+'</p><div class="card-actions"><button class="btn outline small" data-detail="'+esc(e.id||e.title)+'">Apri scheda</button><button class="btn outline small" data-save-ex="'+esc(e.id||e.title)+'" aria-label="Salva preferito">♡ Salva</button></div></div></article>'}
+function exerciseCard(e){return '<article class="exercise-card" data-exercise="'+esc(e.id||e.title)+'"><div class="exercise-top">'+esc(e.icon)+'</div><div class="exercise-body"><div class="resource-meta"><span class="pill">'+esc(e.type)+'</span><span class="pill">'+esc(e.duration)+'</span>'+(e.official?'<span class="pill pc-source-badge">Fonte ufficiale · '+esc(e.sourceShort||'Federazione')+'</span>':'')+(e.custom?'<span class="pill pc-custom-source-badge">Creato da me</span>':'')+'</div><h3>'+esc(e.title)+'</h3><p>'+esc(e.summary)+'</p><div class="card-actions"><button class="btn outline small" data-detail="'+esc(e.id||e.title)+'">Apri scheda</button><button class="btn outline small" data-save-ex="'+esc(e.id||e.title)+'" aria-label="Salva preferito">♡ Salva</button></div></div></article>'}
 function renderExerciseLists(){const featured=exercises.slice(0,3);$('homeExercises').innerHTML=featured.map(exerciseCard).join('');renderLibrary();renderGoalkeepers()}
 function renderLibrary(){const q=$('globalSearch').value.trim().toLocaleLowerCase('it');const visible=exercises.filter(e=>(activeFilter==='Tutti'||e.type===activeFilter)&&(e.title+' '+e.type+' '+e.summary+' '+e.level).toLocaleLowerCase('it').includes(q));$('libraryExercises').innerHTML=visible.length?visible.map(exerciseCard).join(''):'<div class="empty" style="grid-column:1/-1">Nessun esercizio trovato. Prova un altro termine o filtro.</div>'}
 function renderGoalkeepers(){const f=document.querySelector('#gkFilters .filter.active')?.dataset.gk||'Tutti';const list=gkExercises.filter(e=>f==='Tutti'||e.type===f);$('goalkeeperExercises').innerHTML=list.map(e=>exerciseCard({...e,id:'gk-'+e.title.replace(/\W/g,'-')})).join('')}
@@ -743,7 +752,7 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    '<div class="modal-detail"><strong>Svolgimento</strong><ol class="pc-step-list">'+steps+'</ol></div>'+
    (e.variant?'<div class="modal-detail"><strong>Variante</strong><p style="margin:6px 0 0">'+esc(e.variant)+'</p></div>':'')+
    sourceBlock(e)+
-   '<div class="modal-actions">'+(custom?'<button type="button" class="btn outline pc-delete-exercise" data-delete-custom="'+esc(e.id)+'">Elimina esercizio</button>':'')+'<button class="btn outline" data-edit-tactical-board="'+esc(e.id||e.title)+'">Personalizza lavagnetta</button><button class="btn outline" data-modal-close>Chiudi</button><button class="btn primary" data-plan-from="'+esc(e.id||e.title)+'">Usa nella seduta</button></div>';
+   '<div class="modal-actions">'+(custom?'<button type="button" class="btn outline" data-edit-custom="'+esc(e.id)+'">Modifica esercizio</button><button type="button" class="btn outline" data-duplicate-custom="'+esc(e.id)+'">Duplica</button><button type="button" class="btn outline pc-delete-exercise" data-delete-custom="'+esc(e.id)+'">Elimina</button>':'')+'<button class="btn outline" data-edit-tactical-board="'+esc(e.id||e.title)+'">Personalizza lavagnetta</button><button class="btn outline" data-modal-close>Chiudi</button><button class="btn primary" data-plan-from="'+esc(e.id||e.title)+'">Usa nella seduta</button></div>';
   openModal(e.title,html,'SCHEDA ESERCIZIO');
  }
  window.openExercise=openDetailedExercise;
@@ -1128,6 +1137,9 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
     customExercises=previousCustom;exercises.splice(0,exercises.length,...previousExercises);
     toast('Salvataggio non riuscito: la memoria del browser potrebbe essere piena o bloccata. Esporta la scheda prima di chiudere.');return;
    }
+   const customBoardStore=read('procoachExerciseBoardsV1',{});
+   customBoardStore[ex.id]=safeBoard(ex.board);
+   write('procoachExerciseBoardsV1',customBoardStore);
    activeFilter='Tutti';document.querySelectorAll('#exerciseFilters .filter').forEach(function(b){b.classList.toggle('active',b.dataset.filter==='Tutti')});
    renderLibrary();renderExerciseLists();showPage('library');closeModal();toast(initialExercise?'Esercizio aggiornato nella tua libreria':'Esercizio salvato nella tua libreria');
   });
@@ -1206,14 +1218,25 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  $('modalBackdrop').addEventListener('click',function(e){if(e.target===$('modalBackdrop'))document.querySelector('#modalBackdrop .modal')?.classList.remove('pc-wide')});
  document.addEventListener('click',function(e){if(e.target.closest('[data-modal-close]')||e.target.closest('[data-plan-from]'))document.querySelector('#modalBackdrop .modal')?.classList.remove('pc-wide')});
  function openDetailedExerciseAndExport(){}
+ let libraryScope='all';
  function renderLibrary(){
   const q=$('globalSearch').value.trim().toLocaleLowerCase('it');
   const visible=exercises.filter(function(e){
    const text=[e.title,e.type,e.summary,e.level,e.objective,e.setup,e.players,e.equipment].join(' ').toLocaleLowerCase('it');
-   return (activeFilter==='Tutti'||e.type===activeFilter)&&text.includes(q);
+   const scopeMatch=libraryScope==='all'||(libraryScope==='official'&&!!e.official)||(libraryScope==='personal'&&!!e.custom);
+   return scopeMatch&&(activeFilter==='Tutti'||e.type===activeFilter)&&text.includes(q);
   });
-  $('libraryExercises').innerHTML=visible.length?visible.map(exerciseCard).join(''):'<div class="empty" style="grid-column:1/-1">Nessun esercizio trovato. Prova un altro termine o filtro.</div>';
+  $('libraryExercises').innerHTML=visible.length?visible.map(exerciseCard).join(''):'<div class="empty" style="grid-column:1/-1">'+(libraryScope==='personal'?'Non hai ancora creato esercizi personali. Usa il pulsante “Crea esercizio” per iniziare.':'Nessun esercizio trovato. Prova un altro termine o filtro.')+'</div>';
+  const hint=$('pcLibraryScopeHint');
+  if(hint)hint.textContent=libraryScope==='personal'?'Qui trovi soltanto gli esercizi creati da te. Puoi aprirli, modificarli, duplicarli e stamparli.':libraryScope==='official'?'Schede di sintesi con riferimenti alle fonti originali. I contenuti ufficiali restano in sola lettura.':'Tutte le schede: esercizi da fonti esterne e contenuti creati da te.';
  }
+ document.querySelectorAll('[data-library-scope]').forEach(function(button){
+  button.addEventListener('click',function(){
+   libraryScope=button.dataset.libraryScope;
+   document.querySelectorAll('[data-library-scope]').forEach(function(item){const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',active?'true':'false')});
+   renderLibrary();
+  });
+ });
  window.renderLibrary=renderLibrary;
  function lookupDetailed(key){
   return exercises.find(function(e){return e.id===key})||exercises.find(function(e){return e.title===key})||gkExercises.find(function(e){return ('gk-'+e.title.replace(/\W/g,'-'))===key})||gkExercises.find(function(e){return e.title===key});
@@ -1251,6 +1274,37 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
   openModal(e.title,html,'SCHEDA ESERCIZIO');
  }
  window.openExercise=openExercise;
+ document.addEventListener('click',function(event){
+  const editButton=event.target.closest('[data-edit-custom]');
+  if(editButton){
+   const exercise=customExercises.find(function(item){return String(item.id)===String(editButton.dataset.editCustom)});
+   if(!exercise){toast('Esercizio personale non trovato.');return}
+   const savedBoards=read('procoachExerciseBoardsV1',{});
+   const editable=Object.assign({},exercise,{board:safeBoard(savedBoards[exercise.id]||exercise.board)});
+   closeModal();
+   createExerciseModal('exercise',null,editable);
+   return;
+  }
+  const duplicateButton=event.target.closest('[data-duplicate-custom]');
+  if(duplicateButton){
+   const original=customExercises.find(function(item){return String(item.id)===String(duplicateButton.dataset.duplicateCustom)});
+   if(!original){toast('Esercizio personale non trovato.');return}
+   const previous=customExercises.slice(),previousExercises=exercises.slice();
+   const savedBoards=read('procoachExerciseBoardsV1',{});
+   const copy=JSON.parse(JSON.stringify(original));
+   copy.id='custom-'+Date.now().toString(36);
+   copy.title='Copia di '+(original.title||'Esercizio');
+   copy.createdAt=new Date().toISOString();copy.updatedAt=null;
+   copy.board=safeBoard(savedBoards[original.id]||original.board);
+   customExercises.push(copy);exercises.push(copy);
+   if(!storeCustom()){
+    customExercises=previous;exercises.splice(0,exercises.length,...previousExercises);
+    toast('Duplicazione non riuscita: memoria del browser piena o non disponibile.');return;
+   }
+   renderLibrary();renderExerciseLists();showPage('library');closeModal();toast('Copia dell’esercizio creata.');
+   return;
+  }
+ });
  document.addEventListener('click',function(event){
   const printButton=event.target.closest('[data-print-exercise]');
   if(!printButton)return;
