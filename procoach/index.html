@@ -311,6 +311,24 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
 .pc-backup-card input[type=file]{width:100%;min-width:0;font-size:11px}
 .pc-backup-status{font-size:10px!important;line-height:1.5!important;margin:10px 0 0!important;overflow-wrap:anywhere}
 @media(max-width:700px){.pc-archive-create{margin-top:12px}.pc-archive-create .btn{flex:1}.pc-archive-search{max-width:none}.pc-archive-metrics .metric{min-width:0}.pc-backup-grid{grid-template-columns:1fr}}
+
+.pc-account-notice{margin:16px 0 0;padding:12px 14px;border:1px solid #dce8de;background:#f0f7f1;border-radius:10px;color:#3f6048;font-size:11px;line-height:1.6}
+.pc-account-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px;align-items:start}
+.pc-account-panel{max-width:none;margin:0;min-width:0}
+.pc-account-panel h2,.pc-account-explainer h2{font-size:16px;margin:7px 0 9px}
+.pc-account-panel form{display:grid;gap:12px;margin-top:16px}
+.pc-account-actions,.pc-account-cloud-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.pc-account-cloud-actions{flex-direction:column;align-items:stretch;margin:18px 0}
+.pc-account-actions .btn{flex:1}
+.pc-account-panel>.link-button{margin-top:12px}
+.pc-account-status{min-height:18px;margin:12px 0 0;color:#69776d;font-size:11px;line-height:1.6;overflow-wrap:anywhere}
+.pc-account-recovery{margin-top:14px;padding:13px;background:#f6f9f6;border-radius:10px}
+.pc-cloud-state{display:flex;align-items:center;gap:8px;margin-top:16px;padding:10px 12px;background:#f6f9f6;border-radius:9px;font-size:11px;color:#56665a}
+.pc-cloud-dot{width:8px;height:8px;border-radius:50%;background:#7c9b82;flex:none}
+.pc-account-explainer{max-width:none;margin:14px 0 0}
+.pc-account-explainer p{font-size:11px;color:#6f7b72;line-height:1.7}
+@media(max-width:780px){.pc-account-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -322,6 +340,7 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
  <button class="nav" data-page="library" aria-label="Esercizi"><span class="icon">▤</span><span>Libreria esercizi</span></button>
  <button class="nav" data-page="planner" aria-label="Pianifica seduta"><span class="icon">▦</span><span>Pianifica seduta</span></button>
  <button class="nav" data-page="archive" aria-label="Il mio archivio"><span class="icon">▣</span><span>Il mio archivio</span></button>
+ <button class="nav" data-page="account" aria-label="Account e sincronizzazione"><span class="icon">◎</span><span>Account PROCOACH</span></button>
  <button class="nav" data-page="board" aria-label="Lavagnetta libera"><span class="icon">↗</span><span>Lavagnetta libera</span></button>
  <button class="nav" data-page="goalkeepers" aria-label="Area portieri"><span class="icon">🧤</span><span>Area portieri</span></button>
  <div class="nav-label">Community & risorse</div>
@@ -443,6 +462,47 @@ main{margin-left:238px;min-height:100vh}.topbar{height:70px;position:sticky;top:
   </article>
  </div>
  <p class="footer-note">I contenuti restano conservati in questo browser finché non li esporti. Custodisci il file di backup in un luogo sicuro: può contenere il tuo profilo e le tue conversazioni locali. Il backup non attiva la sincronizzazione online.</p>
+</section>
+
+<section class="page" id="page-account">
+ <div class="eyebrow">Area personale</div>
+ <h1 class="page-title">Account e sincronizzazione</h1>
+ <p class="subtext">Accedi da più dispositivi con il tuo account PROCOACH. La sincronizzazione è manuale: scegli tu quando caricare o recuperare i tuoi dati.</p>
+ <div class="pc-account-notice" id="pcAccountNotice" role="status" aria-live="polite">Configurazione del servizio cloud in attesa.</div>
+ <div class="pc-account-grid">
+  <section class="profile-card pc-account-panel" id="pcAccountAuthPanel">
+   <div class="eyebrow">Accesso sicuro</div><h2 id="pcAccountAuthTitle">Crea il tuo account</h2>
+   <p class="subtext">Usa un indirizzo email a cui puoi accedere. La conferma dell'email potrebbe essere richiesta prima del primo accesso.</p>
+   <form id="pcAccountForm" autocomplete="on">
+    <div class="field"><label for="pcAccountEmail">Email</label><input id="pcAccountEmail" type="email" autocomplete="email" required placeholder="nome@email.com"></div>
+    <div class="field"><label for="pcAccountPassword">Password</label><input id="pcAccountPassword" type="password" autocomplete="current-password" minlength="8" required placeholder="Almeno 8 caratteri"></div>
+    <div class="pc-account-actions"><button class="btn primary" type="submit" id="pcAccountLogin">Accedi</button><button class="btn outline" type="button" id="pcAccountSignup">Crea account</button></div>
+   </form>
+   <button class="link-button" type="button" id="pcAccountReset">Ho dimenticato la password</button>
+   <div class="pc-account-recovery" id="pcAccountRecovery" hidden>
+    <div class="field"><label for="pcAccountNewPassword">Nuova password</label><input id="pcAccountNewPassword" type="password" minlength="8" autocomplete="new-password" placeholder="Almeno 8 caratteri"></div>
+    <button class="btn primary small" type="button" id="pcAccountUpdatePassword">Aggiorna password</button>
+   </div>
+   <p class="pc-account-status" id="pcAccountAuthStatus" role="status" aria-live="polite"></p>
+  </section>
+  <section class="profile-card pc-account-panel" id="pcAccountCloudPanel" hidden>
+   <div class="eyebrow">Il tuo spazio online</div><h2>Archivio cloud</h2>
+   <p class="subtext">Account attivo: <strong id="pcAccountUserEmail"></strong></p>
+   <div class="pc-cloud-state"><span class="pc-cloud-dot"></span><span id="pcCloudLastSync">Controllo archivio online…</span></div>
+   <div class="pc-account-cloud-actions">
+    <button class="btn primary" type="button" id="pcCloudUpload">↑ Salva i dati locali nel cloud</button>
+    <button class="btn outline" type="button" id="pcCloudDownload">↓ Recupera i dati dal cloud</button>
+   </div>
+   <p class="pc-account-status" id="pcCloudStatus" role="status" aria-live="polite">Dopo il primo accesso, carica l'archivio del dispositivo principale.</p>
+   <button class="link-button" type="button" id="pcAccountSignOut">Esci dall'account</button>
+  </section>
+ </div>
+ <div class="profile-card pc-account-explainer">
+  <h2>Come funziona la sincronizzazione</h2>
+  <p>Il primo caricamento trasferisce al tuo account i dati PROCOACH già presenti su questo dispositivo. Sugli altri dispositivi accedi con la stessa email e recupera l'archivio dal cloud.</p>
+  <p><strong>Per evitare conflitti:</strong> il trasferimento è manuale e non sovrascrive i dati da solo. Caricare nel cloud sostituisce la copia online; recuperare dal cloud sostituisce i dati PROCOACH locali di questo browser. Prima di recuperare, esporta un backup dalla sezione “Il mio archivio”.</p>
+  <p class="subtext">Ogni account può leggere e modificare soltanto il proprio archivio. Le sedute, gli esercizi, le lavagnette, i preferiti e i dati del profilo vengono trasferiti come archivio privato. Non carichiamo password o chiavi di accesso.</p>
+ </div>
 </section>
 
 <section class="page" id="page-goalkeepers">
@@ -1747,6 +1807,166 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
  render();
  if(board.tokens.length||board.arrows.length)setStatus('Lavagnetta ripristinata dal salvataggio precedente.');
 })();
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script>
+
+(function initProcoachCloudAccount(){
+ const $=id=>document.getElementById(id);
+ const config=window.PROCOACH_SUPABASE_CONFIG||{};
+ const notice=$('pcAccountNotice'),authPanel=$('pcAccountAuthPanel'),cloudPanel=$('pcAccountCloudPanel');
+ const authStatus=$('pcAccountAuthStatus'),cloudStatus=$('pcCloudStatus');
+ let client=null,busy=false,currentUser=null;
+ const siteRedirect=window.location.origin+window.location.pathname;
+ function setStatus(el,message,isError){if(!el)return;el.textContent=message||'';el.style.color=isError?'#a33b3b':'#69776d'}
+ function setBusy(value){
+  busy=!!value;
+  ['pcAccountEmail','pcAccountPassword','pcAccountLogin','pcAccountSignup','pcAccountReset','pcCloudUpload','pcCloudDownload','pcAccountSignOut','pcAccountUpdatePassword'].forEach(id=>{const el=$(id);if(el)el.disabled=busy||!client});
+ }
+ function explainError(error){
+  const raw=String(error&&error.message||'Operazione non riuscita.');
+  if(/invalid login credentials/i.test(raw))return 'Email o password non corretti.';
+  if(/email not confirmed/i.test(raw))return 'Conferma prima il tuo indirizzo email usando il link ricevuto.';
+  if(/user already registered/i.test(raw))return 'Questo indirizzo risulta già registrato: prova ad accedere.';
+  if(/fetch/i.test(raw))return 'Connessione non riuscita. Controlla internet e riprova.';
+  if(/relation .* does not exist|could not find the table/i.test(raw))return 'La tabella cloud non è ancora pronta. Esegui prima il file supabase-schema.sql nel progetto Supabase.';
+  if(/row-level security|permission denied|42501/i.test(raw))return 'Accesso al database bloccato. Verifica le policy RLS e i permessi del file SQL.';
+  return raw;
+ }
+ function renderUser(user){
+  currentUser=user||null;authPanel.hidden=!!currentUser;cloudPanel.hidden=!currentUser;
+  if(currentUser){$('pcAccountUserEmail').textContent=currentUser.email||'Account autenticato'}
+  else{$('pcCloudLastSync').textContent='Accedi per controllare il tuo archivio online.'}
+ }
+ function ensureConfigured(){
+  let validUrl=false;
+  try{const parsed=new URL(String(config.url||''));validUrl=parsed.protocol==='https:'&&!!parsed.hostname}catch(error){}
+  const validKey=typeof config.publishableKey==='string'&&config.publishableKey.length>20&&!/INSERISCI|YOUR_|PLACEHOLDER/i.test(config.publishableKey);
+  if(!validUrl||!validKey){
+   notice.textContent='Backend non ancora configurato. La pagina account è pronta, ma per attivare registrazione e sincronizzazione serve collegare un progetto Supabase. Consulta procoach/SUPABASE-SETUP.md nel repository.';
+   setBusy(true);return false;
+  }
+  if(!window.supabase||typeof window.supabase.createClient!=='function'){
+   notice.textContent='Libreria Supabase non caricata. Verifica la connessione e ricarica la pagina.';
+   setBusy(true);return false;
+  }
+  return true;
+ }
+ function localProcoachData(){
+  const storage={};
+  for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&key.startsWith('procoach'))storage[key]=localStorage.getItem(key)}
+  return storage;
+ }
+ function validateCloudStorage(storage){
+  if(!storage||typeof storage!=='object'||Array.isArray(storage))throw new Error('Archivio cloud non valido.');
+  const entries=Object.entries(storage);if(entries.length>100)throw new Error('Il backup cloud contiene troppe voci.');
+  let size=0;
+  entries.forEach(([key,raw])=>{
+   if(!/^procoach[A-Za-z0-9_-]+$/.test(key)||typeof raw!=='string')throw new Error('Il backup cloud contiene dati non riconosciuti.');
+   size+=key.length+raw.length;if(size>8*1024*1024)throw new Error('L’archivio cloud supera il limite di 8 MB.');
+   try{JSON.parse(raw)}catch(error){throw new Error('Un dato cloud è danneggiato ('+key+').')}
+  });
+  return storage;
+ }
+ function applyCloudStorage(storage){
+  const previous=localProcoachData();
+  try{
+   Object.keys(previous).forEach(key=>localStorage.removeItem(key));
+   Object.keys(storage).forEach(key=>localStorage.setItem(key,storage[key]));
+  }catch(error){
+   try{
+    const current=[];for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(key&&key.startsWith('procoach'))current.push(key)}
+    current.forEach(key=>localStorage.removeItem(key));Object.keys(previous).forEach(key=>localStorage.setItem(key,previous[key]));
+   }catch(rollbackError){throw new Error('Ripristino interrotto e recupero automatico non riuscito. Non chiudere la pagina.')}
+   throw new Error('Memoria del browser insufficiente. I dati locali precedenti sono stati ripristinati.');
+  }
+ }
+ async function refreshCloudMetadata(){
+  if(!client||!currentUser)return;
+  const {data,error}=await client.from('procoach_user_data').select('updated_at').eq('user_id',currentUser.id).maybeSingle();
+  if(error)throw error;
+  $('pcCloudLastSync').textContent=data&&data.updated_at?'Ultimo salvataggio cloud: '+new Date(data.updated_at).toLocaleString('it-IT'):'Nessun archivio cloud salvato finora.';
+ }
+ async function withBusy(action){
+  if(busy)return;setBusy(true);
+  try{await action()}catch(error){setStatus(cloudStatus,explainError(error),true)}
+  finally{setBusy(false)}
+ }
+ if(!ensureConfigured())return;
+ try{client=window.supabase.createClient(config.url,config.publishableKey,{auth:{autoRefreshToken:true,persistSession:true,detectSessionInUrl:true}})}
+ catch(error){notice.textContent='Configurazione Supabase non valida. Controlla URL progetto e publishable key nel file supabase-config.js.';setBusy(true);return}
+ notice.textContent='Servizio account configurato. Le operazioni cloud sono protette dalle policy del database; usa il tuo account personale.';
+ setBusy(false);
+ client.auth.onAuthStateChange((event,session)=>{
+  renderUser(session&&session.user?session.user:null);
+  if(event==='PASSWORD_RECOVERY'){$('pcAccountRecovery').hidden=false;window.showPage('account');setStatus(authStatus,'Inserisci la nuova password per completare il recupero.',false)}
+ });
+ client.auth.getSession().then(({data,error})=>{
+  if(error){setStatus(authStatus,explainError(error),true);return}
+  renderUser(data.session&&data.session.user?data.session.user:null);
+  if(currentUser)refreshCloudMetadata().catch(error=>setStatus(cloudStatus,explainError(error),true));
+ });
+ $('pcAccountForm').addEventListener('submit',event=>{
+  event.preventDefault();
+  withBusy(async()=>{
+   const email=$('pcAccountEmail').value.trim(),password=$('pcAccountPassword').value;
+   const {data,error}=await client.auth.signInWithPassword({email,password});if(error)throw error;
+   renderUser(data.user);setStatus(authStatus,'Accesso effettuato.',false);await refreshCloudMetadata();
+  });
+ });
+ $('pcAccountSignup').addEventListener('click',()=>{
+  withBusy(async()=>{
+   const email=$('pcAccountEmail').value.trim(),password=$('pcAccountPassword').value;
+   if(!email)throw new Error('Inserisci prima il tuo indirizzo email.');
+   if(password.length<8)throw new Error('La password deve contenere almeno 8 caratteri.');
+   const {data,error}=await client.auth.signUp({email,password,options:{emailRedirectTo:siteRedirect}});if(error)throw error;
+   if(data.session&&data.user){renderUser(data.user);setStatus(authStatus,'Account creato e accesso effettuato.',false)}
+   else setStatus(authStatus,'Richiesta di registrazione inviata. Controlla la casella email e conferma l’indirizzo prima di accedere.',false);
+  });
+ });
+ $('pcAccountReset').addEventListener('click',()=>{
+  withBusy(async()=>{
+   const email=$('pcAccountEmail').value.trim();if(!email)throw new Error('Inserisci l’email dell’account nel campo qui sopra.');
+   const {error}=await client.auth.resetPasswordForEmail(email,{redirectTo:siteRedirect});if(error)throw error;
+   setStatus(authStatus,'Se l’indirizzo è associato a un account, riceverai un messaggio con le istruzioni per reimpostare la password.',false);
+  });
+ });
+ $('pcAccountUpdatePassword').addEventListener('click',()=>{
+  withBusy(async()=>{
+   const password=$('pcAccountNewPassword').value;if(password.length<8)throw new Error('La nuova password deve contenere almeno 8 caratteri.');
+   const {error}=await client.auth.updateUser({password});if(error)throw error;
+   $('pcAccountNewPassword').value='';$('pcAccountRecovery').hidden=true;setStatus(authStatus,'Password aggiornata correttamente.',false);
+  });
+ });
+ $('pcAccountSignOut').addEventListener('click',()=>{
+  withBusy(async()=>{const {error}=await client.auth.signOut();if(error)throw error;renderUser(null);setStatus(authStatus,'Hai effettuato la disconnessione.',false)});
+ });
+ $('pcCloudUpload').addEventListener('click',()=>{
+  withBusy(async()=>{
+   const {data:userData,error:userError}=await client.auth.getUser();if(userError)throw userError;if(!userData.user)throw new Error('Accedi di nuovo per continuare.');
+   const {data:existing,error:readError}=await client.from('procoach_user_data').select('updated_at').eq('user_id',userData.user.id).maybeSingle();if(readError)throw readError;
+   const count=Object.keys(localProcoachData()).length;if(!count)throw new Error('Non ci sono dati PROCOACH locali da caricare.');
+   const message=existing?'Esiste già un archivio cloud. Vuoi sostituirlo con i dati PROCOACH di questo dispositivo?':'Caricare nel cloud i dati PROCOACH di questo dispositivo?';
+   if(!window.confirm(message+'\n\nPer sicurezza, esporta un backup prima di continuare.'))return;
+   const payload=localProcoachData();
+   const {error}=await client.from('procoach_user_data').upsert({user_id:userData.user.id,payload,updated_at:new Date().toISOString()},{onConflict:'user_id'});if(error)throw error;
+   setStatus(cloudStatus,'Caricamento completato: '+Object.keys(payload).length+' voci salvate nel tuo account.',false);await refreshCloudMetadata();
+  });
+ });
+ $('pcCloudDownload').addEventListener('click',()=>{
+  withBusy(async()=>{
+   const {data:userData,error:userError}=await client.auth.getUser();if(userError)throw userError;if(!userData.user)throw new Error('Accedi di nuovo per continuare.');
+   const {data,error}=await client.from('procoach_user_data').select('payload,updated_at').eq('user_id',userData.user.id).maybeSingle();if(error)throw error;
+   if(!data)throw new Error('Non esiste ancora un archivio cloud per questo account. Carica prima i dati dal dispositivo principale.');
+   const storage=validateCloudStorage(data.payload);if(!Object.keys(storage).length)throw new Error('L’archivio cloud è vuoto.');
+   if(!window.confirm('Recuperare l’archivio dal cloud? I dati PROCOACH attuali di questo browser verranno sostituiti. Esporta prima un backup locale dalla sezione “Il mio archivio”.'))return;
+   applyCloudStorage(storage);setStatus(cloudStatus,'Archivio recuperato. Ricarico PROCOACH per mostrare i dati aggiornati.',false);window.location.reload();
+  });
+ });
+})();
+
 </script>
 
 </body>
