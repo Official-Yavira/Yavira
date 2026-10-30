@@ -642,7 +642,7 @@ $('newQuestionBtn').addEventListener('click',openNewDiscussion);$('newPostBtn').
 function openNewDiscussion(){openModal('Nuova discussione','<p>Condividi una situazione concreta: più contesto dai, più facile sarà per gli altri aiutarti.</p><form id="discussionForm"><div class="field"><label for="discussionTitle">Titolo</label><input id="discussionTitle" maxlength="100" required placeholder="Es. Come allenare la costruzione dal basso?"></div><div class="field" style="margin-top:12px"><label for="discussionChannel">Canale</label><select id="discussionChannel"><option value="generale">Generale</option><option value="giovanile">Settore giovanile</option><option value="tattica">Tattica</option><option value="portieri">Portieri</option><option value="preparazione">Preparazione</option><option value="esercizi">Esercitazioni</option></select></div><div class="field" style="margin-top:12px"><label for="discussionBody">Domanda</label><textarea id="discussionBody" maxlength="1000" required placeholder="Categoria, obiettivo, cosa hai già provato..."></textarea></div><div class="modal-actions"><button type="button" class="btn outline" data-modal-close>Annulla</button><button type="submit" class="btn primary">Pubblica</button></div></form>','COMMUNITY')}
 document.addEventListener('submit',e=>{if(e.target.id!=='discussionForm')return;e.preventDefault();const room=$('discussionChannel').value,all=read('procoachChatMessagesV2',{}),p=profile(),name=((p.firstName||'Allenatore')+' '+(p.lastName||'')).trim(),title=$('discussionTitle').value.trim(),body=$('discussionBody').value.trim();all[room]=all[room]||[];all[room].push({author:name,text:title+'\n'+body,time:new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}),mine:true});write('procoachChatMessagesV2',all);activeRoom=room;showPage('community');document.querySelectorAll('.room').forEach(b=>b.classList.toggle('active',b.dataset.room===room));closeModal();renderChat();toast('Discussione aggiunta al canale')});
 $('plannerForm').addEventListener('submit',e=>{e.preventDefault();const duration=Number($('planDuration').value),team=$('planTeam').value,goal=$('planGoal').value,players=$('planPlayers').value;let blocks;if(duration===60)blocks=[['Attivazione',10],['Tecnica legata all’obiettivo',15],['Gioco a tema',25],['Ritorno alla calma',10]];else if(duration===90)blocks=[['Attivazione',15],['Tecnica legata all’obiettivo',20],['Gioco a tema',30],['Partita condizionata',20],['Ritorno alla calma',5]];else if(duration===105)blocks=[['Attivazione',15],['Tecnica legata all’obiettivo',20],['Gioco a tema',30],['Situazione di partita',30],['Ritorno alla calma',10]];else blocks=[['Attivazione',12],['Tecnica legata all’obiettivo',18],['Gioco a tema',25],['Partita condizionata',15],['Ritorno alla calma',5]];$('planResult').innerHTML='<div class="section-head"><div><h2>Struttura proposta</h2><p>'+esc(team)+' · '+esc(goal)+' · '+esc(players)+' giocatori · '+duration+' minuti</p></div><button class="btn primary small" id="savePlan">Salva seduta</button></div><div class="resource-grid">'+blocks.map((b,i)=>'<article class="resource-card"><span class="resource-type">Blocco '+(i+1)+' · '+b[1]+' min</span><h3>'+esc(b[0])+'</h3><p>'+(i===0?'Mobilità, coordinazione e attivazione con palla.':i===1?'Esercizi semplici orientati a '+esc(goal.toLowerCase())+'.':i===2?'Gioco a tema con vincoli e feedback mirati.':i===blocks.length-1?'Defaticamento e breve riflessione.':'Applicare l’obiettivo in situazione più vicina alla partita.')+'</p></article>').join('')+'</div>';$('savePlan').addEventListener('click',()=>{const plans=read('procoachSavedPlans',[]);plans.push({id:Date.now(),team,goal,players,duration,blocks,created:new Date().toLocaleDateString('it-IT')});write('procoachSavedPlans',plans);renderPlans();updateMetrics();toast('Seduta salvata')})});
-function renderPlans(){const plans=read('procoachSavedPlans',[]);$('savedPlans').innerHTML=plans.length?plans.slice().reverse().map(p=>'<article class="resource-card"><span class="resource-type">'+esc(p.updated?'Aggiornata '+p.updated:(p.created||'Seduta salvata'))+'</span><h3>'+esc(p.title||p.goal||'Sessione PROCOACH')+'</h3><p>'+esc(p.team||'Categoria da definire')+' · '+esc(p.goal||'Obiettivo da definire')+' · '+esc(p.players||'Giocatori da definire')+' giocatori · '+esc(p.duration)+' min</p><p>'+((p.blocks||[]).length)+' fasi · '+((p.blocks||[]).filter(function(b){return b&&b.board}).length)+' esercizi con fonte</p><div class="pc-session-saved-board">'+(p.blocks&&p.blocks[0]&&p.blocks[0].board?boardSvg(p.blocks[0].board,false):'')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary small" data-edit-plan="'+p.id+'">Apri e modifica</button><button class="btn outline small" data-delete-plan="'+p.id+'">Elimina</button></div></article>').join(''):'<div class="empty" style="grid-column:1/-1">Non hai ancora salvato sedute.</div>'}
+function renderPlans(){const plans=read('procoachSavedPlans',[]);$('savedPlans').innerHTML=plans.length?plans.slice().reverse().map(p=>'<article class="resource-card"><span class="resource-type">'+esc(p.updated?'Aggiornata '+p.updated:(p.created||'Seduta salvata'))+'</span><h3>'+esc(p.title||p.goal||'Sessione PROCOACH')+'</h3><p>'+esc(p.team||'Categoria da definire')+' · '+esc(p.goal||'Obiettivo da definire')+' · '+esc(p.players||'Giocatori da definire')+' giocatori · '+esc(p.duration)+' min</p><p>'+((p.blocks||[]).length)+' fasi · '+((p.blocks||[]).filter(function(b){return b&&b.board}).length)+' esercizi con fonte</p><div class="pc-session-saved-board">'+(p.blocks&&p.blocks[0]&&p.blocks[0].board?boardSvg(p.blocks[0].board,false):'')+'</div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn primary small" data-edit-plan="'+p.id+'">Apri e modifica</button><button class="btn outline small" data-duplicate-plan="'+p.id+'">Duplica</button><button class="btn outline small" data-print-plan="'+p.id+'">Stampa / PDF</button><button class="btn outline small" data-delete-plan="'+p.id+'">Elimina</button></div></article>').join(''):'<div class="empty" style="grid-column:1/-1">Non hai ancora salvato sedute.</div>'}
 document.addEventListener('click',e=>{const edit=e.target.closest('[data-edit-plan]');if(edit){const plan=read('procoachSavedPlans',[]).find(p=>String(p.id)===edit.dataset.editPlan);if(plan)createExerciseModal('session',plan);return}const b=e.target.closest('[data-delete-plan]');if(!b)return;write('procoachSavedPlans',read('procoachSavedPlans',[]).filter(p=>String(p.id)!==b.dataset.deletePlan));renderPlans();updateMetrics();toast('Seduta eliminata')});
 $('clearPlans').addEventListener('click',()=>{if(confirm('Vuoi eliminare tutte le sedute salvate in questo browser?')){write('procoachSavedPlans',[]);renderPlans();updateMetrics();toast('Archivio svuotato')}});
 function updateMetrics(){$('savedCount').textContent=read('procoachSavedPlans',[]).length;const e=$('exerciseCount'),g=$('gkExerciseCount');if(e)e.textContent=exercises.length;if(g)g.textContent=gkExercises.length}
@@ -1076,7 +1076,12 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
     const allowed=sessionExerciseChoices(i,phaseGoal);
     const oldId=old&&!Array.isArray(old)?old.exerciseId:null;
     const exercise=allowed.find(function(ex){return ex.id===oldId})||allowed.find(function(ex){return ex.id===fallback.exerciseId})||allowed[0];
-    return sessionBlockFromExercise(exercise,i,minutes,fallback.phaseLabel);
+    const restored=sessionBlockFromExercise(exercise,i,minutes,old&&!Array.isArray(old)&&old.phaseLabel?old.phaseLabel:fallback.phaseLabel);
+    if(old&&!Array.isArray(old)){
+     restored.board=safeBoard(old.board||restored.board);
+     if(Array.isArray(old.steps)&&old.steps.length)restored.steps=old.steps.slice();
+    }
+    return restored;
    });
    sessionActiveBoardIndex=0;sessionBoardTool='select';sessionBoardHistory=[];renderSessionPreview();
   }
@@ -1095,6 +1100,59 @@ renderExerciseLists();updateProfileUI();renderChat();renderPlans();updateMetrics
    renderLibrary();renderExerciseLists();showPage('library');closeModal();toast(initialExercise?'Esercizio aggiornato nella tua libreria':'Esercizio salvato nella tua libreria');
   });
  }
+
+ function planText(value){return esc(value==null?'':String(value))}
+ function planBlockSteps(block){
+  if(Array.isArray(block&&block.steps))return block.steps;
+  if(block&&typeof block.instructions==='string')return block.instructions.split(/\\r?\\n/).map(function(x){return x.trim()}).filter(Boolean);
+  return [];
+ }
+ function printSavedPlan(plan){
+  if(!plan)return;
+  const blocks=Array.isArray(plan.blocks)?plan.blocks:[];
+  const phases=blocks.map(function(raw,index){
+   const block=Array.isArray(raw)?{phaseLabel:raw[0],minutes:raw[1]}:(raw||{});
+   const steps=planBlockSteps(block);
+   const svg=block.board?boardSvg(safeBoard(block.board),false).replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" '):'';
+   const source=block.sourceUrl&&validHttpUrl(block.sourceUrl)?'<a href="'+planText(block.sourceUrl)+'">'+planText(block.sourceName||'Apri la fonte originale')+'</a>':'';
+   return '<section class="phase"><div class="phase-head"><span>FASE '+(index+1)+' · '+planText(block.phaseLabel||('Fase '+(index+1)))+'</span><strong>'+planText(block.minutes||'—')+' min</strong></div>'+
+    '<h2>'+planText(block.title||block.phaseLabel||'Attività')+'</h2>'+
+    (block.objective||block.summary?'<h3>Obiettivo</h3><p>'+planText(block.objective||block.summary)+'</p>':'')+
+    (block.players||block.space||block.equipment?'<div class="facts">'+(block.players?'<div><b>Giocatori</b><span>'+planText(block.players)+'</span></div>':'')+(block.space?'<div><b>Spazio</b><span>'+planText(block.space)+'</span></div>':'')+(block.equipment?'<div><b>Materiale</b><span>'+planText(block.equipment)+'</span></div>':'')+'</div>':'')+
+    (block.organization||block.setup?'<h3>Organizzazione</h3><p>'+planText(block.organization||block.setup)+'</p>':'')+
+    (steps.length?'<h3>Svolgimento</h3><ol>'+steps.map(function(step){return '<li>'+planText(step)+'</li>'}).join('')+'</ol>':'')+
+    (block.coaching?'<h3>Punti chiave dell’allenatore</h3><p>'+planText(block.coaching)+'</p>':'')+
+    (source?'<h3>Fonte</h3><p>'+source+'</p>':'')+
+    (svg?'<div class="board">'+svg+'</div>':'')+'</section>';
+  }).join('');
+  const title=planText(plan.title||plan.goal||'Seduta PROCOACH');
+  const popup=window.open('','_blank');
+  if(!popup){toast('Il browser ha bloccato la finestra di stampa. Consenti i popup per esportare la seduta.');return}
+  const html='<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>'+title+' · PROCOACH</title><style>'+
+   '*{box-sizing:border-box}body{margin:0;background:#f5f7f5;color:#1c2a20;font:14px/1.6 Arial,sans-serif}.sheet{max-width:900px;margin:28px auto;padding:34px;background:#fff;box-shadow:0 8px 32px #14291d12}.brand{color:#267647;font-size:12px;font-weight:900;letter-spacing:2px}.topline{display:flex;justify-content:space-between;align-items:center;gap:14px;border-bottom:2px solid #267647;padding-bottom:14px}.actions{display:flex;gap:8px}.actions button{border:0;border-radius:8px;background:#267647;color:#fff;padding:10px 14px;font-weight:700;cursor:pointer}.actions button.secondary{background:#eaf2ec;color:#235b36}h1{font-size:28px;line-height:1.2;margin:20px 0 8px}.sub{color:#66756a;font-size:13px}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}.facts div{background:#f2f7f2;border:1px solid #dfe9e0;border-radius:8px;padding:9px}.facts b,.facts span{display:block}.facts b{font-size:10px;color:#637267;text-transform:uppercase}.facts span{font-size:12px}.meta{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}.meta span{background:#edf5ef;border-radius:7px;padding:7px 10px;font-size:12px}.phase{padding:20px 0;border-top:1px solid #dfe7df;break-inside:avoid}.phase-head{display:flex;justify-content:space-between;gap:12px;color:#287447;font-size:11px;font-weight:800;letter-spacing:.7px}.phase h2{font-size:19px;margin:7px 0}.phase h3{font-size:12px;text-transform:uppercase;letter-spacing:.6px;margin:14px 0 4px;color:#3e654a}.phase p,.phase li{font-size:12px;line-height:1.65}.phase ol{padding-left:20px;margin:6px 0}.phase li{margin:4px 0}.board{max-width:620px;margin:16px 0}.board svg{display:block;width:100%;height:auto;border:1px solid #d7e5d7;border-radius:8px}.notes{padding:14px;background:#f2f7f2;border-radius:9px;margin:18px 0}.footer{border-top:1px solid #dfe7df;padding-top:12px;color:#718075;font-size:10px}@media(max-width:600px){.sheet{margin:0;padding:18px}.facts{grid-template-columns:1fr}.topline{align-items:flex-start}.actions{flex-direction:column}.actions button{font-size:11px}}@media print{body{background:#fff}.sheet{max-width:none;margin:0;padding:0;box-shadow:none}.actions{display:none}.phase{break-inside:avoid}a{color:#1c2a20;text-decoration:none}@page{size:A4;margin:14mm}}'+
+   '</style></head><body><main class="sheet"><div class="topline"><div><div class="brand">PROCOACH · PIANO DI ALLENAMENTO</div><div class="sub">Scheda di lavoro per lo staff tecnico</div></div><div class="actions"><button onclick="window.print()">Stampa / Salva PDF</button><button class="secondary" onclick="window.close()">Chiudi</button></div></div>'+
+   '<h1>'+title+'</h1><p class="sub">Preparata il '+planText(plan.updated||plan.created||new Date().toLocaleDateString('it-IT'))+'</p><div class="meta"><span><b>Categoria:</b> '+planText(plan.team)+'</span><span><b>Obiettivo:</b> '+planText(plan.goal)+'</span><span><b>Giocatori:</b> '+planText(plan.players)+'</span><span><b>Durata:</b> '+planText(plan.duration)+' min</span></div>'+
+   (plan.space||plan.equipment?'<div class="facts">'+(plan.space?'<div><b>Spazio</b><span>'+planText(plan.space)+'</span></div>':'')+(plan.equipment?'<div><b>Materiale</b><span>'+planText(plan.equipment)+'</span></div>':'')+'</div>':'')+
+   (plan.principles?'<div class="notes"><b>Principi di gioco</b><p>'+planText(plan.principles)+'</p></div>':'')+
+   (plan.coachNotes?'<div class="notes"><b>Indicazioni per lo staff</b><p>'+planText(plan.coachNotes)+'</p></div>':'')+phases+
+   '<div class="footer">Documento generato con PROCOACH. Le schede di esercizio riportano i riferimenti alle fonti originali: verifica sempre il contenuto completo e adatta carichi, spazi e regole alla tua squadra.</div></main></body></html>';
+  popup.document.open();popup.document.write(html);popup.document.close();
+  toast('Scheda di stampa aperta: scegli “Salva come PDF” nella finestra di stampa.');
+ }
+ document.getElementById('savedPlans')?.addEventListener('click',function(event){
+  const printButton=event.target.closest('[data-print-plan]');
+  if(printButton){const plan=read('procoachSavedPlans',[]).find(function(p){return String(p.id)===printButton.dataset.printPlan});if(plan)printSavedPlan(plan);return}
+  const duplicateButton=event.target.closest('[data-duplicate-plan]');
+  if(duplicateButton){
+   const plans=read('procoachSavedPlans',[]),original=plans.find(function(p){return String(p.id)===duplicateButton.dataset.duplicatePlan});
+   if(!original)return;
+   const copy=JSON.parse(JSON.stringify(original));copy.id='copy-'+Date.now().toString(36);copy.title='Copia di '+(original.title||original.goal||'Sessione');copy.created=new Date().toLocaleDateString('it-IT');delete copy.updated;
+   plans.push(copy);
+   if(!write('procoachSavedPlans',plans)){toast('Spazio di archiviazione insufficiente: copia non salvata.');return}
+   renderPlans();updateMetrics();toast('Copia della seduta creata');
+  }
+ });
+
  document.getElementById('createExerciseBtn')?.addEventListener('click',createExerciseModal);
  document.getElementById('createExerciseHomeBtn')?.addEventListener('click',function(){createExerciseModal('exercise')});
  document.getElementById('homeCreateSessionBtn')?.addEventListener('click',function(){createExerciseModal('session')});
